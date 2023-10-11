@@ -36,7 +36,9 @@ struct ContentView: View {
                             .background(Color.blue)
                             .cornerRadius(10)
                             .navigationBarTitleDisplayMode(.inline)
-                    
+                    NavigationLink(destination: MainScreen(), isActive: $isShowingNewView) {
+                           
+                          }
                 }
                 .padding()
                
@@ -57,12 +59,11 @@ struct ContentView: View {
                     }
                     .padding()
                 }
+        
             }
-        NavigationLink(destination: MainScreen(), isActive: $isShowingNewView) {
-         
-        }
+      
        
-            .padding()
+          
          
         }
     
