@@ -7,18 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9404A87D2AD6D2810039434D /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A87C2AD6D2810039434D /* MainScreen.swift */; };
+		9404A87F2AD6D3C10039434D /* FirstScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A87E2AD6D3C10039434D /* FirstScreen.swift */; };
+		9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A8802AD6D3DF0039434D /* SecoundScreen.swift */; };
+		9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A8822AD6D3F70039434D /* ThirdScreen.swift */; };
 		9408E85B2AD134F7006FF31A /* ATGuideApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9408E85A2AD134F7006FF31A /* ATGuideApp.swift */; };
 		9408E85D2AD134F7006FF31A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9408E85C2AD134F7006FF31A /* ContentView.swift */; };
 		9408E85F2AD134F9006FF31A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9408E85E2AD134F9006FF31A /* Assets.xcassets */; };
 		9408E8622AD134F9006FF31A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9408E8612AD134F9006FF31A /* Preview Assets.xcassets */; };
+		9408E8692AD14295006FF31A /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9408E8682AD14295006FF31A /* SignUp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9404A87C2AD6D2810039434D /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		9404A87E2AD6D3C10039434D /* FirstScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstScreen.swift; sourceTree = "<group>"; };
+		9404A8802AD6D3DF0039434D /* SecoundScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecoundScreen.swift; sourceTree = "<group>"; };
+		9404A8822AD6D3F70039434D /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; };
 		9408E8572AD134F7006FF31A /* ATGuide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATGuide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9408E85A2AD134F7006FF31A /* ATGuideApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATGuideApp.swift; sourceTree = "<group>"; };
 		9408E85C2AD134F7006FF31A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9408E85E2AD134F9006FF31A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9408E8612AD134F9006FF31A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9408E8682AD14295006FF31A /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +65,7 @@
 				9408E85C2AD134F7006FF31A /* ContentView.swift */,
 				9408E85E2AD134F9006FF31A /* Assets.xcassets */,
 				9408E8602AD134F9006FF31A /* Preview Content */,
+				9408E8682AD14295006FF31A /* SignUp.swift */,
 			);
 			path = ATGuide;
 			sourceTree = "<group>";
@@ -63,6 +74,10 @@
 			isa = PBXGroup;
 			children = (
 				9408E8612AD134F9006FF31A /* Preview Assets.xcassets */,
+				9404A87C2AD6D2810039434D /* MainScreen.swift */,
+				9404A87E2AD6D3C10039434D /* FirstScreen.swift */,
+				9404A8802AD6D3DF0039434D /* SecoundScreen.swift */,
+				9404A8822AD6D3F70039434D /* ThirdScreen.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -137,8 +152,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9404A87D2AD6D2810039434D /* MainScreen.swift in Sources */,
+				9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */,
+				9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */,
 				9408E85D2AD134F7006FF31A /* ContentView.swift in Sources */,
+				9408E8692AD14295006FF31A /* SignUp.swift in Sources */,
 				9408E85B2AD134F7006FF31A /* ATGuideApp.swift in Sources */,
+				9404A87F2AD6D3C10039434D /* FirstScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
