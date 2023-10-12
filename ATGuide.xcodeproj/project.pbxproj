@@ -23,6 +23,7 @@
 		9404A87E2AD6D3C10039434D /* FirstScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstScreen.swift; sourceTree = "<group>"; };
 		9404A8802AD6D3DF0039434D /* SecoundScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecoundScreen.swift; sourceTree = "<group>"; };
 		9404A8822AD6D3F70039434D /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; };
+		9404A8842AD6FB750039434D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9408E8572AD134F7006FF31A /* ATGuide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATGuide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9408E85A2AD134F7006FF31A /* ATGuideApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATGuideApp.swift; sourceTree = "<group>"; };
 		9408E85C2AD134F7006FF31A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 		9408E8592AD134F7006FF31A /* ATGuide */ = {
 			isa = PBXGroup;
 			children = (
+				9404A8842AD6FB750039434D /* Info.plist */,
 				9408E85A2AD134F7006FF31A /* ATGuideApp.swift */,
 				9408E85C2AD134F7006FF31A /* ContentView.swift */,
 				9408E85E2AD134F9006FF31A /* Assets.xcassets */,
@@ -294,6 +296,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ATGuide/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ATGuide/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) camera use";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -322,6 +326,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ATGuide/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ATGuide/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) camera use";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
