@@ -107,35 +107,13 @@ struct ContentView: View {
                             Text("Login")
                             .frame(maxWidth: .infinity)
                             .padding()
-<<<<<<< HEAD
-                            .foregroundColor(.white) 
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                            .navigationBarTitleDisplayMode(.inline)
-                    NavigationLink(destination: MainScreen(), isActive: $isShowingNewView) {
-                           
-                          }
-                }
-                .padding()
-               
-                    Button(action: {
-                        // Perform signup action
-                      
-                        signUp()
-                    }) {
-                        NavigationLink(destination: SignUp()) {
-                            Text("Sign Up")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-=======
->>>>>>> 34f5e03c22df140e2725d7751aad96f064197cf1
                                 .foregroundColor(.white)
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         
                         
                                 
-                    }  
+                    }
                     .padding(.top,30)
                         .padding(.horizontal,14)
                     .alert(isPresented: $showAlert) {
@@ -160,18 +138,9 @@ struct ContentView: View {
                     .padding(.top,10)
                     .padding(.horizontal,14)
                 }
-<<<<<<< HEAD
-        
-            }
-      
-       
-          
-         
-=======
                 
             }
             
->>>>>>> 34f5e03c22df140e2725d7751aad96f064197cf1
         }
         .background(Color.black.opacity(0.05))
     }
@@ -184,4 +153,3 @@ struct ContentView_Previews1 : PreviewProvider {
 }
 
 // Added a new struct for the main screen view
-
