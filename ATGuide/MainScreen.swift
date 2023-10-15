@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct MainScreen: View {
+    let email: String
+    let username: String
     @State private var isShowingNewView = false
     @State private var presentSideMenu = false
     var body: some View {
         ZStack {
+            
         NavigationView {
+            
             VStack {
-                Text("ATGuide").font(.system(size: 33))
-                    .bold()
-                   
-                
-                
+               
+        
                 TabView {
                     
                     
@@ -28,7 +29,7 @@ struct MainScreen: View {
                             .tabItem {
                                 Image(systemName: "house.fill")
                                 
-                                Text("الرئيسية")
+                                Text("Home")
                             }
                         //   .toolbar(.visible, for: .tabBar)
                         //   .toolbarBackground(Color.yellow, for: .tabBar)
@@ -36,14 +37,14 @@ struct MainScreen: View {
                         SecoundScreen()
                             .tabItem {
                                 Image(systemName: "video.fill")
-                                Text("الحلقات")
+                                Text("hieroglyphics")
                             }
                         
                         
                         ThirdScreen()
                             .tabItem {
                                 Image(systemName: "ellipsis.rectangle")
-                                Text("المزيد")
+                                Text("More")
                             }
                         
                     }
@@ -71,7 +72,7 @@ struct MainScreen: View {
         
         .navigationBarHidden(true)
         if presentSideMenu {
-            SideMenu(presentSideMenu: $presentSideMenu)
+            SideMenu(username: username, email: email, presentSideMenu: $presentSideMenu)
         }
     }
         
@@ -84,6 +85,8 @@ struct MainScreen: View {
 
 
 struct SideMenu: View {
+    let username: String
+    let email: String
     @Binding var presentSideMenu: Bool
     
     var body: some View {
@@ -91,15 +94,27 @@ struct SideMenu: View {
             Color.gray.opacity(0.4).edgesIgnoringSafeArea(.all).onTapGesture { withAnimation { presentSideMenu = false } }
             
             VStack(alignment: .leading) {
-                HStack{
+                VStack(alignment: .leading){
+                    
+                    HStack(alignment: .center){
                     Image(systemName: "person.crop.circle")
                         .resizable()
                         .frame(width: 60, height: 60)
                         .clipShape(Circle())
-                    VStack(alignment:.leading){
-                        Text("User Name").font(.headline)
-                        Text("language").font(.subheadline)
-                    }.padding(.leading, 1)
+                        
+                        
+                        Text(username).font(.headline)
+                          // .padding(.bottom,20)
+                       //    .frame( alignment:.centerFirstTextBaseline)
+                          // .padding(.trailing,5)
+                       
+                        
+                                         
+                    }
+                    .padding(.leading, 5)
+                     
+                    Text(email).padding(.leading,5).font(.system(size: 10))
+                    
                 }.padding(.top, 1).padding(.leading, 10).padding(.bottom, 120)
                  
                 Text("Setting").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
@@ -126,5 +141,5 @@ struct SideMenu: View {
 }
 
 #Preview {
-    MainScreen()
+    MainScreen( email: "", username: "")
 }

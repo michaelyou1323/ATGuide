@@ -78,146 +78,225 @@ struct SignUp: View {
     @State private var showToast = false
     @State private var toastText = ""
     @State private var isLoading = false
-    
+    @State private var isNavigate = false
     
     
     
     @State var firstname = ""
-    @State var lastname = ""
+    @State var email = ""
     @State var phonenumber = ""
     @State var country = ""
-    @State var city = ""
-    @State var region = ""
-    @State var church = ""
-    @State var email = ""
+    @State var language = ""
+    @State var password = ""
+    @State var confirmPassword = ""
+
     
  //   @StateObject var viewModel = WriteViewModel()
     
     var body: some View {
-        VStack {
-            Text("Your Information")
-                .font(.system(size: 27))
-                .bold()
+        VStack(alignment: .center) {
             
-            VStack {
-                ScrollView {
-                    TextField("Name ", text: $firstname)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("E-mail", text: $lastname)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("phone", text: $phonenumber)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("Country", text: $country)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("language", text: $city)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("password", text: $region)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                    TextField("confirm password", text: $church)
-                        .border(Color.black)
-                        .font(.title2)
-                        .padding()
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                    
-                 
-                }
-//                .' '#' '$' '[' or ']
-                Button(action: {
-                    if firstname.isEmpty || firstname.contains(".") || firstname.contains("#") || firstname.contains("$") || firstname.contains("[") || firstname.contains("]") || firstname.contains(" "){
-                        showToast = true
-                        toastText = " Please Enter your name "
-                    }else if lastname.isEmpty || lastname.contains(" "){
-                        showToast = true
-                        toastText = "Please Enter your E-mail "
-                    }else if phonenumber.isEmpty || phonenumber.contains(".") || phonenumber.contains("#") || phonenumber.contains("$") || phonenumber.contains("[") || phonenumber.contains("]") || phonenumber.contains(" ") {
-                        showToast = true
-                        toastText = " Please Enter your Phone "
-                    }else if country.isEmpty || country.contains(" ") {
-                        showToast = true
-                        toastText = " Please Enter your Country "
-                    }else if city.isEmpty || city.contains(" ") {
-                        showToast = true
-                        toastText = "Please Enter your Language "
-                    }else if region.isEmpty || region.contains(" ") {
-                        showToast = true
-                        toastText = "Please Enter valid Password  "
-                    }else if church.isEmpty || church.contains(" ") {
-                        showToast = true
-                        toastText = "Passwords must be idintical "
-                    } else {
+            
+            VStack(alignment: .center) {
+                Text("Your Information")
+                    .font(.system(size: 27))
+                    .bold()
+                    .padding(.bottom,40)
+                    .padding(.top,15)
+                VStack (alignment: .center){
+                    ScrollView {
                         
-                        isLoading = true // Start loading animation
-                        showToast = true
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6 )
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("Name ", text: $firstname)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
                         
-//                                               viewModel.pushObject(firstname: firstname, lastname: lastname, phonenumber: phonenumber, country: country, city: city, region: region, church: church, email: email)
-
-                        toastText = " تم تسجيل بياناتك ٫ سنقوم بالتواصل معك ..."
-                       
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6)
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("E-mail", text: $email)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6 )
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("phone", text: $phonenumber)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6 )
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("Country", text: $country)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6 )
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("language", text: $language)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6)
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("password", text: $password)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
+                        ZStack{
+                            
+                            RoundedRectangle(cornerRadius: 10
+                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                .frame(height: 45)
+                                .padding(.horizontal ,15 )
+                                .padding(.vertical ,6)
+                                .backgroundStyle(Color(.white))
+                                .foregroundColor(.white)
+                            
+                            TextField("confirm password", text: $confirmPassword)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal, 25)
+                            
+                        }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                            isLoading = false // Stop loading animation after 3 seconds
-                            presentationMode.wrappedValue.dismiss()
-                           
-
-//                                                  isLoading = false // Stop loading animation after 3 seconds
-                                              }
-                                                                      
+                        NavigationLink(destination: MainScreen(email: email, username: firstname), isActive: $isNavigate) {
+                                            EmptyView()
+                                        }
+                     
+                        
+                    }
+                    
+                    
+                    
+                                         Button(action: {
+                                             if firstname.isEmpty || firstname.contains(".") || firstname.contains("#") || firstname.contains("$") || firstname.contains("[") || firstname.contains("]") || firstname.contains(" "){
+                                                 showToast = true
+                                                 toastText = " Please Enter your name "
+                                             }else if email.isEmpty || email.contains(" "){
+                                                 showToast = true
+                                                 toastText = "Please Enter your E-mail "
+                                             }else if phonenumber.isEmpty || phonenumber.contains(".") || phonenumber.contains("#") || phonenumber.contains("$") || phonenumber.contains("[") || phonenumber.contains("]") || phonenumber.contains(" ") {
+                                                 showToast = true
+                                                 toastText = " Please Enter your Phone "
+                                             }else if country.isEmpty || country.contains(" ") {
+                                                 showToast = true
+                                                 toastText = " Please Enter your Country "
+                                             }else if language.isEmpty || language.contains(" ") {
+                                                 showToast = true
+                                                 toastText = "Please Enter your Language "
+                                             }else if password.isEmpty || password.contains(" ") {
+                                                 showToast = true
+                                                 toastText = "Please Enter valid Password  "
+                                             }else if confirmPassword.isEmpty || confirmPassword.contains(" ") {
+                                                 showToast = true
+                                                 toastText = "Passwords must be idintical "
+                                             } else {
                                                  
-                      
-                      
-                    }
-                }) {
-                    if isLoading {
-                        ProgressView() // Show loading animation
-                    } else {
-                        Text("Sign Up")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(Color.green)
-                            .cornerRadius(10)
-                    }
+                                                 isLoading = true // Start loading animation
+                                                 showToast = true
+                                                 
+                                                 //                                               viewModel.pushObject(firstname: firstname, lastname: lastname, phonenumber: phonenumber, country: country, city: city, region: region, church: church, email: email)
+                                                 
+                                                 toastText = " تم تسجيل بياناتك ٫ سنقوم بالتواصل معك ..."
+                                                 
+                                                 
+                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                                                     isLoading = false 
+                                                     // Stop loading animation after 3 seconds
+                                                     isNavigate = true
+                                                     
+                                                     
+                                                     
+                                                     //                                                  isLoading = false // Stop loading animation after 3 seconds
+                                                 }
+                                                 
+                                                 
+                                                 
+                                                 
+                                             }
+                                         }) {
+                                             if isLoading {
+                                                 ProgressView() // Show loading animation
+                                             } else {
+                                                 Text("Sign Up")
+                                                     .frame(maxWidth: .infinity)
+                                                     .padding()
+                                                     .foregroundColor(.white)
+                                                     .background(Color.green)
+                                                     .cornerRadius(10)
+                                             }
+                                         }
+                                         .disabled(isLoading) // Disable button while loading
+                                         .padding(.bottom,60)
+                                         .padding(.horizontal,15)
+                    
+                                         
+                    //                .' '#' '$' '[' or ']
+                    
+                    
                 }
-                .disabled(isLoading) // Disable button while loading
-                .padding()
                 
-                .padding(.bottom, 55)
+                .modifier(ToastModifier(showToast: $showToast, toastText: toastText))
             }
-            .modifier(ToastModifier(showToast: $showToast, toastText: toastText))
+            
+            
         }
-        
     }
+        
         
 }
    
