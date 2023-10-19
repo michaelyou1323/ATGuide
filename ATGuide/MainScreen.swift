@@ -10,6 +10,7 @@ import SwiftUI
 struct MainScreen: View {
     let email: String
     let username: String
+
     @State private var isShowingNewView = false
     @State private var presentSideMenu = false
     var body: some View {

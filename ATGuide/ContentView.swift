@@ -4,6 +4,7 @@ struct ToastModifier1: ViewModifier {
     @Binding var showToast: Bool
     let toastText: String
 
+    
     func body(content: Content) -> some View {
         ZStack {
             content

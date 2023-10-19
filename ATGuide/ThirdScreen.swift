@@ -1,12 +1,11 @@
 import SwiftUI
 import UIKit
-import GoogleSignIn
 
 struct ThirdScreen: View {
     @State private var isShowingCamera = false
     @State private var capturedImage: UIImage?
     @State private var recognizedText = ""
-    
+
     var body: some View {
         VStack {
             if let image = capturedImage {
@@ -14,12 +13,12 @@ struct ThirdScreen: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
-                
+
                 Text(recognizedText)
                     .padding()
             } else {
                 Spacer()
-                
+
                 Button(action: {
                     isShowingCamera = true
                 }) {
@@ -30,12 +29,12 @@ struct ThirdScreen: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
-                
+                .sheet(isPresented: $isShowingCamera) {
+                    CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText)
+                }
+
                 Spacer()
             }
-        }
-        .sheet(isPresented: $isShowingCamera) {
-            CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText)
         }
     }
 }
@@ -43,112 +42,75 @@ struct ThirdScreen: View {
 struct CameraView: UIViewControllerRepresentable {
     @Binding var capturedImage: UIImage?
     @Binding var recognizedText: String
-    
-    func makeUIViewController(context: Context) -> CameraViewController {
-        let cameraViewController = CameraViewController()
-        cameraViewController.delegate = context.coordinator
-        return cameraViewController
-    }
-    
-    func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(capturedImage: $capturedImage, recognizedText: $recognizedText)
-    }
-    
-    class Coordinator: NSObject, CameraViewControllerDelegate {
-        @Binding var capturedImage: UIImage?
-        @Binding var recognizedText: String
-        
-        let url: URL
-        
-        init(capturedImage: Binding<UIImage?>, recognizedText: Binding<String>) {
-            _capturedImage = capturedImage
-            _recognizedText = recognizedText
-            url = URL(string: "https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY")!
+
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        var parent: CameraView
+
+        init(parent: CameraView) {
+            self.parent = parent
         }
-        
-        func cameraViewController(_ controller: CameraViewController, didCaptureImage image: UIImage) {
-            capturedImage = image
-            recognizeText(from: image)
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.capturedImage = image
+                // Call the text recognition logic here
+                parent.recognizedText = "Recognizing text..."
+                recognizeText(from: image)
+            }
+
+            picker.dismiss(animated: true, completion: nil)
         }
-        
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true, completion: nil)
+        }
+
         func recognizeText(from image: UIImage) {
             guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
-            
-            // Set up your Google Cloud Vision API credentials and make the API call
-            let apiKey = "YOUR_API_KEY"
-            _ = URL(string: "https://vision.googleapis.com/v1/images:annotate?key=\(apiKey)")!
-            let request = createRequest(with: imageData)
-            
-            let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
-                if let data = data, let response = try? JSONDecoder().decode(VisionAPIResponse.self, from: data) {
-                    let recognizedText = response.responses.first?.fullTextAnnotation?.text ?? "Text recognition failed"
-                    DispatchQueue.main.async {
-                        self?.recognizedText = recognizedText
-                    }
-                } else {
-                    print("Error: \(error?.localizedDescription ?? "Unknown error")")
-                }
-            }
-            
-            task.resume()
-        }
-        
-        func createRequest(with imageData: Data) -> URLRequest {
+
+            let apiKey = "AIzaSyByX8ehTCBZJt3Oc1kODD2K6-5Q5cQSRWo"
+            let url = URL(string: "https://vision.googleapis.com/v1/images:annotate?key=\(apiKey)")!
+
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            
+
             let imageContent = ImageContent(content: imageData.base64EncodedString())
             let feature = Feature(type: "DOCUMENT_TEXT_DETECTION")
             let requestObject = VisionAPIRequest(requests: [VisionAPIRequestItem(image: imageContent, features: [feature])])
-            
+
             let encoder = JSONEncoder()
             encoder.keyEncodingStrategy = .convertToSnakeCase
+
             if let jsonData = try? encoder.encode(requestObject) {
                 request.httpBody = jsonData
+
+                URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
+                    if let data = data, let response = try? JSONDecoder().decode(VisionAPIResponse.self, from: data) {
+                        let recognizedText = response.responses.first?.fullTextAnnotation?.text ?? "Text recognition failed"
+                        DispatchQueue.main.async {
+                            self?.parent.recognizedText = recognizedText
+                        }
+                    } else {
+                        print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                    }
+                }.resume()
             }
-            
-            return request
         }
     }
-}
 
-protocol CameraViewControllerDelegate: AnyObject {
-    func cameraViewController(_ controller: CameraViewController, didCaptureImage image: UIImage)
-}
-
-class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    weak var delegate: CameraViewControllerDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presentCameraPicker()
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
     }
-    
-    private func presentCameraPicker() {
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
-        picker.delegate = self
         picker.sourceType = .camera
-        picker.cameraCaptureMode = .photo
-        picker.allowsEditing = false
-        present(picker, animated: true, completion: nil)
+        picker.delegate = context.coordinator
+        return picker
     }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[.originalImage] as? UIImage else {
-            picker.dismiss(animated: true, completion: nil)
-            return
-        }
-        
-        delegate?.cameraViewController(self, didCaptureImage: image)
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
 
 struct VisionAPIRequest: Codable {
