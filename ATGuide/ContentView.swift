@@ -1,10 +1,11 @@
 import SwiftUI
+import Firebase
+
 
 struct ToastModifier1: ViewModifier {
     @Binding var showToast: Bool
     let toastText: String
 
-    
     func body(content: Content) -> some View {
         ZStack {
             content
@@ -33,17 +34,18 @@ struct ToastModifier1: ViewModifier {
 }
 
 
+
 struct ContentView: View {
     @State private var username: String = ""
-    @State private var password: String = ""
-    @State private var isShowingNewView = false
-    @State private var presentSideMenu = false
-    @State private var showToast = false
-    @State private var toastText = ""
-    @State private var isLoading = false
-    @State private var showAlert = false
-    @State private var alertMessage = ""
-    @State private var signUp = false
+      @State private var password: String = ""
+      @State private var isShowingNewView = false
+      @State private var showToast = false
+      @State private var toastText = ""
+      @State private var showAlert = false
+      @State private var alertMessage = ""
+      @State private var signUp = false
+    @State private var resetPassword = false
+   
     var body: some View {
         ZStack {
             NavigationView {
@@ -89,38 +91,37 @@ struct ContentView: View {
                                         EmptyView()
                                     }
                     Button(action: {
-                        // Perform login action
-                        if username.isEmpty || password.isEmpty {
-                                               showAlert = true
-                                               alertMessage = "Username or password cannot be empty"
-                                           } else if username.count > 16 || password.count > 16 {
-                                               showAlert = true
-                                               alertMessage = "Username or password cannot be longer than 16 characters"
-                                           } else if username.count > 10 || password.count > 10 {
-                                               showAlert = true
-                                               alertMessage = "Username or password cannot be longer than 10 characters"
-                                           } else {
-                                               isShowingNewView = true
+                                           Auth.auth().signIn(withEmail: username, password: password) { result, error in
+                                               if let error = error {
+                                                   showAlert(message: error.localizedDescription)
+                                               } else {
+                                                   isShowingNewView = true
+                                               }
                                            }
-                    })
-                    {
-                       
-                            Text("Login")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                                .foregroundColor(.white)
-                                .background(Color.blue)
-                                .cornerRadius(10)
-                        
-                        
-                                
-                    }
-                    .padding(.top,30)
-                        .padding(.horizontal,14)
-                    .alert(isPresented: $showAlert) {
-                                       Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                                   }
+                                       }) {
+                                           Text("Login")
+                                               .frame(maxWidth: .infinity)
+                                               .padding()
+                                               .foregroundColor(.white)
+                                               .background(Color.blue)
+                                               .cornerRadius(10)
+                                       }
+                                       .padding(.top, 30)
+                                       .padding(.horizontal, 14)
+                                       .alert(isPresented: $showAlert) {
+                                           Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                                       }
                     
+                    Button(action: {
+                                           resetPassword = true
+                                       }) {
+                                           Text("Forgot Password?")
+                                               .foregroundColor(.blue)
+                                               .padding(.top, 8)
+                                       }
+                                       .sheet(isPresented: $resetPassword) {
+                                           PasswordResetView()
+                                       }
                     
                     Button(action: {
                       
@@ -145,8 +146,56 @@ struct ContentView: View {
         }
         .background(Color.black.opacity(0.05))
     }
+    private func showAlert(message: String) {
+           alertMessage = message
+           showAlert = true
+       }
 }
-    
+   
+
+struct PasswordResetView: View {
+    @State private var email: String = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+
+    var body: some View {
+        VStack {
+            Text("Reset Password")
+                .font(.title)
+                .padding()
+
+            TextField("Email", text: $email)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal, 25)
+                .padding(.bottom, 20)
+
+            Button(action: {
+                Auth.auth().sendPasswordReset(withEmail: email) { error in
+                    if let error = error {
+                        alertMessage = error.localizedDescription
+                        showAlert = true
+                    } else {
+                        alertMessage = "Password reset email sent. Check your email."
+                        showAlert = true
+                    }
+                }
+            }) {
+                Text("Reset Password")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+            .padding(.bottom, 30)
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Password Reset"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
+        }
+        .padding()
+    }
+}
+
 struct ContentView_Previews1 : PreviewProvider {
     static var previews : some View{
         ContentView()

@@ -5,6 +5,7 @@ struct ThirdScreen: View {
     @State private var isShowingCamera = false
     @State private var capturedImage: UIImage?
     @State private var recognizedText = ""
+    @State private var translatedText = ""
 
     var body: some View {
         VStack {
@@ -14,7 +15,18 @@ struct ThirdScreen: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
 
+                Text("Recognized Text:")
+                    .font(.headline)
+                    .padding()
+
                 Text(recognizedText)
+                    .padding()
+
+                Text("Translated Text:")
+                    .font(.headline)
+                    .padding()
+
+                Text(translatedText)
                     .padding()
             } else {
                 Spacer()
@@ -30,7 +42,7 @@ struct ThirdScreen: View {
                         .cornerRadius(10)
                 }
                 .sheet(isPresented: $isShowingCamera) {
-                    CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText)
+                    CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText, translatedText: $translatedText)
                 }
 
                 Spacer()
@@ -42,6 +54,7 @@ struct ThirdScreen: View {
 struct CameraView: UIViewControllerRepresentable {
     @Binding var capturedImage: UIImage?
     @Binding var recognizedText: String
+    @Binding var translatedText: String
 
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         var parent: CameraView
@@ -53,7 +66,6 @@ struct CameraView: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.originalImage] as? UIImage {
                 parent.capturedImage = image
-                // Call the text recognition logic here
                 parent.recognizedText = "Recognizing text..."
                 recognizeText(from: image)
             }
@@ -90,9 +102,31 @@ struct CameraView: UIViewControllerRepresentable {
                         let recognizedText = response.responses.first?.fullTextAnnotation?.text ?? "Text recognition failed"
                         DispatchQueue.main.async {
                             self?.parent.recognizedText = recognizedText
+                            self?.translateText(text: recognizedText)
                         }
                     } else {
                         print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                    }
+                }.resume()
+            }
+        }
+
+        func translateText(text: String) {
+            let apiKey = "YOUR_TRANSLATION_API_KEY"
+            let sourceLanguage = "auto"
+            let targetLanguage = "en"
+
+            let urlString = "https://translation.googleapis.com/language/translate/v2?key=\(apiKey)&source=\(sourceLanguage)&target=\(targetLanguage)&q=\(text)"
+
+            if let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+                    if let data = data, let translationResponse = try? JSONDecoder().decode(TranslationAPIResponse.self, from: data) {
+                        let translatedText = translationResponse.data.translations.first?.translatedText ?? "Translation failed"
+                        DispatchQueue.main.async {
+                            self?.parent.translatedText = translatedText
+                        }
+                    } else {
+                        print("Translation Error: \(error?.localizedDescription ?? "Unknown error")")
                     }
                 }.resume()
             }
@@ -142,8 +176,14 @@ struct TextAnnotation: Codable {
     let text: String?
 }
 
-struct ThirdScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        ThirdScreen()
-    }
+struct TranslationAPIResponse: Codable {
+    let data: TranslationData
+}
+
+struct TranslationData: Codable {
+    let translations: [TranslationItem]
+}
+
+struct TranslationItem: Codable {
+    let translatedText: String
 }

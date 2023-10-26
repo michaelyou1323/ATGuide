@@ -34,9 +34,13 @@ struct SecoundScreen: View {
             }
         }
         .sheet(isPresented: $isShowingCamera) {
-            CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText)
+            CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText, translatedText: $recognizedText)
         }
     }
+}
+
+#Preview {
+    SecoundScreen()
 }
 //
 //struct CameraView: UIViewControllerRepresentable {

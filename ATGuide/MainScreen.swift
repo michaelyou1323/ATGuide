@@ -71,7 +71,7 @@ struct MainScreen: View {
             })
         }
         
-        .navigationBarHidden(true)
+        .navigationBarHidden(false)
         if presentSideMenu {
             SideMenu(username: username, email: email, presentSideMenu: $presentSideMenu)
         }

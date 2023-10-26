@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import Firebase
 
 struct VideoThumbnailView: View {
     let videoURL: URL
@@ -122,20 +123,23 @@ struct SignUp: View {
                             
                         }
                         
-                        ZStack{
-                            
-                            RoundedRectangle(cornerRadius: 10
-                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
-                                .frame(height: 45)
-                                .padding(.horizontal ,15 )
-                                .padding(.vertical ,6)
-                                .backgroundStyle(Color(.white))
-                                .foregroundColor(.white)
-                            
-                            TextField("E-mail", text: $email)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .padding(.horizontal, 25)
-                            
+                        
+                        
+                        ZStack {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                                    .frame(height: 45)
+                                                    .padding(.horizontal, 15)
+                                                    .padding(.vertical, 6)
+                                                    .backgroundStyle(Color(.white))
+                                                    .foregroundColor(.white)
+
+                                                TextField("E-mail", text: $email)
+                                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                                    .padding(.horizontal, 25)
+//                                                    .onChange(of: email) { newEmail in
+//                                                        validateEmail(newEmail)
+//                                                    }
                         }
                         ZStack{
                             
@@ -222,68 +226,42 @@ struct SignUp: View {
                     
                     
                     
-                                         Button(action: {
-                                             if firstname.isEmpty || firstname.contains(".") || firstname.contains("#") || firstname.contains("$") || firstname.contains("[") || firstname.contains("]") || firstname.contains(" "){
-                                                 showToast = true
-                                                 toastText = " Please Enter your name "
-                                             }else if email.isEmpty || email.contains(" "){
-                                                 showToast = true
-                                                 toastText = "Please Enter your E-mail "
-                                             }else if phonenumber.isEmpty || phonenumber.contains(".") || phonenumber.contains("#") || phonenumber.contains("$") || phonenumber.contains("[") || phonenumber.contains("]") || phonenumber.contains(" ") {
-                                                 showToast = true
-                                                 toastText = " Please Enter your Phone "
-                                             }else if country.isEmpty || country.contains(" ") {
-                                                 showToast = true
-                                                 toastText = " Please Enter your Country "
-                                             }else if language.isEmpty || language.contains(" ") {
-                                                 showToast = true
-                                                 toastText = "Please Enter your Language "
-                                             }else if password.isEmpty || password.contains(" ") {
-                                                 showToast = true
-                                                 toastText = "Please Enter valid Password  "
-                                             }else if confirmPassword.isEmpty || confirmPassword.contains(" ") {
-                                                 showToast = true
-                                                 toastText = "Passwords must be idintical "
-                                             } else {
-                                                 
-                                                 isLoading = true // Start loading animation
-                                                 showToast = true
-                                                 
-                                                 //                                               viewModel.pushObject(firstname: firstname, lastname: lastname, phonenumber: phonenumber, country: country, city: city, region: region, church: church, email: email)
-                                                 
-                                                 toastText = " تم تسجيل بياناتك ٫ سنقوم بالتواصل معك ..."
-                                                 
-                                                 
-                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                                                     isLoading = false 
-                                                     // Stop loading animation after 3 seconds
-                                                     isNavigate = true
-                                                     
-                                                     
-                                                     
-                                                     //                                                  isLoading = false // Stop loading animation after 3 seconds
+
+                    Button(action: {
+                            if validateData() {
+                                             isLoading = true // Start loading animation
+                                             showToast = true
+                                             toastText = "تم تسجيل بياناتك، سنقوم بالتواصل معك..."
+
+                                             // Perform sign-up logic here
+                                             Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                                                 if let error = error {
+                                                     isLoading = false
+                                                     showToast = true
+                                                     toastText = "Error: \(error.localizedDescription)"
+                                                 } else {
+                                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                                                         isLoading = false
+                                                         isNavigate = true
+                                                     }
                                                  }
-                                                 
-                                                 
-                                                 
-                                                 
-                                             }
-                                         }) {
-                                             if isLoading {
-                                                 ProgressView() // Show loading animation
-                                             } else {
-                                                 Text("Sign Up")
-                                                     .frame(maxWidth: .infinity)
-                                                     .padding()
-                                                     .foregroundColor(.white)
-                                                     .background(Color.green)
-                                                     .cornerRadius(10)
                                              }
                                          }
-                                         .disabled(isLoading) // Disable button while loading
-                                         .padding(.bottom,60)
-                                         .padding(.horizontal,15)
-                    
+                                     }) {
+                                         if isLoading {
+                                             ProgressView() // Show loading animation
+                                         } else {
+                            Text("Sign Up")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .foregroundColor(.white)
+                                .background(Color.green)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .disabled(isLoading) // Disable button while loading
+                    .padding(.bottom, 60)
+                    .padding(.horizontal, 15)
                                          
                     //                .' '#' '$' '[' or ']
                     
@@ -294,10 +272,55 @@ struct SignUp: View {
             }
             
             
-        }
+        } .padding()
+            .background(Color.black.opacity(0.05))
+            
+            .onAppear {
+                // Additional setup on appearance
+            }
     }
+       
         
-        
+    private func validateData() -> Bool {
+        if firstname.isEmpty || firstname.contains(".") || firstname.contains("#") || firstname.contains("$") || firstname.contains("[") || firstname.contains("]") || firstname.contains(" ") {
+            showToast = true
+            toastText = "Please enter your name"
+            return false
+        } else if !isValidEmail(email) {
+            showToast = true
+            toastText = "Please enter a valid email address"
+            return false
+        } else if phonenumber.isEmpty || phonenumber.contains(".") || phonenumber.contains("#") || phonenumber.contains("$") || phonenumber.contains("[") || phonenumber.contains("]") || phonenumber.contains(" ") {
+            showToast = true
+            toastText = "Please enter your phone"
+            return false
+        } else if country.isEmpty || country.contains(" ") {
+            showToast = true
+            toastText = "Please enter your country"
+            return false
+        } else if language.isEmpty || language.contains(" ") {
+            showToast = true
+            toastText = "Please enter your language"
+            return false
+        } else if password.isEmpty || password.contains(" ") {
+            showToast = true
+            toastText = "Please enter a valid password"
+            return false
+        } else if confirmPassword.isEmpty || confirmPassword != password {
+            showToast = true
+            toastText = "Passwords must match"
+            return false
+        }
+
+        return true
+    }
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+    
 }
    
 
