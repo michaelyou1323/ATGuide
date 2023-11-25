@@ -18,18 +18,18 @@ struct MainScreen: View {
             
         NavigationView {
             
-            VStack {
-               
-        
+            VStack(spacing: 0) {
+                
+                
                 TabView {
                     
                     
                     Group{
                         
                         FirstScreen()
+                            
                             .tabItem {
                                 Image(systemName: "house.fill")
-                                
                                 Text("Home")
                             }
                         //   .toolbar(.visible, for: .tabBar)
@@ -42,13 +42,15 @@ struct MainScreen: View {
                             }
                         
                         
-                       FifthScreen()
+                        FifthScreen()
+                            .padding(.bottom,20)
                             .tabItem {
                                 Image(systemName: "ellipsis.rectangle")
                                 Text("More")
                             }
                         
                     }
+                    
                     .toolbarBackground(.indigo, for: .tabBar)
                     .toolbarBackground(.visible, for: .tabBar)
                     .toolbarBackground(Color.blue, for: .tabBar)
@@ -58,6 +60,7 @@ struct MainScreen: View {
                 }
                 
             }
+            
             
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(leading: Button(action: {
@@ -69,17 +72,19 @@ struct MainScreen: View {
                 Image(systemName: "line.horizontal.3")
                     .imageScale(.large)
             })
+            
         }
         
-        .navigationBarHidden(false)
+        .navigationBarHidden(true)
         if presentSideMenu {
             SideMenu(username: username, email: email, presentSideMenu: $presentSideMenu)
         }
     }
-        
+        .padding(0)
     .background(Color.black.opacity(0.05))
 
         }
+        
         
        
     }
@@ -134,7 +139,7 @@ struct SideMenu: View {
                 Text("Contact Us").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                                     .padding(.leading, 8)
                                 
-            }.frame(maxWidth:195, maxHeight:.infinity ,alignment:.topLeading).background(Color.white.ignoresSafeArea(.all)).offset(x:self.presentSideMenu ? 0 : -UIScreen.main.bounds.width/4)
+            }.frame(maxWidth:270, maxHeight:.infinity ,alignment:.topLeading).background(Color.white.ignoresSafeArea(.all)).offset(x:self.presentSideMenu ? 0 : -UIScreen.main.bounds.width/4)
                 
                 
         }

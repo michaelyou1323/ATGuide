@@ -6,172 +6,406 @@ struct TripPlan {
     var totalCost: Double
 }
 
-class TripPlanner {
-    func generatePlan(budget: Double, duration: Int, tripType: String) -> TripPlan {
-        var destination = ""
-        var activities = [String: Double]()
-        var totalCost = 0.0
-
-        // Simple logic for destination based on trip type
-        switch tripType {
-        case "Religious":
-            destination = "Holy City"
-            activities = [
-                "Visit religious sites": 50.0,
-                "Attend religious events": 30.0
-            ]
-        case "Sports":
-            destination = "Sports Hub"
-            activities = [
-                "Attend sports events": 70.0,
-                "Visit sports facilities": 40.0
-            ]
-        case "Desert":
-            destination = "Desert Oasis"
-            activities = [
-                "Explore the desert": 60.0,
-                "Experience local culture": 45.0
-            ]
-        case "Medical":
-            destination = "Health Retreat"
-            activities = [
-                "Medical spa": 80.0,
-                "Wellness activities": 55.0
-            ]
-        case "Festivals":
-            destination = "Festival City"
-            activities = [
-                "Attend festivals": 65.0,
-                "Explore local culture": 35.0
-            ]
-        case "Education":
-            destination = "Knowledge Hub"
-            activities = [
-                "Visit educational institutions": 75.0,
-                "Attend lectures": 50.0
-            ]
-        default:
-            destination = "Generic Destination"
-            activities = [
-                "Explore the area": 40.0,
-                "Enjoy local cuisine": 25.0
-            ]
+struct ArrowShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.closeSubpath()
         }
-
-        // Calculate total cost based on budget
-        for (_, price) in activities {
-            totalCost += price
-        }
-
-        return TripPlan(destination: destination, activities: activities, totalCost: totalCost)
     }
 }
 
 struct FifthScreen: View {
-    // Trip budget variable
+
     @State private var tripBudget: String = ""
-    
-    // Duration variable
     @State private var duration: String = ""
-    
-    // Options for the trip type dropdown menu
     let tripTypes = ["Select trip type", "Religious", "Sports", "Desert", "Medical", "Festivals", "Education"]
-    
-    // Selected trip type variable
+    let Religious = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+    let Sports = ["a", "Siwa", "b", "Luxor", "h", "Assiut"]
+    let Desert = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+    let Medical = ["8787", "dddd", "jh", "jjhj", "Giza", "Assiut"]
+    let Festivals = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+    let Education = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+       @State private var counts: [Int] = Array(repeating: 0, count: 6)
+    let tripPrices = [0, 3000, 2000, 4500, 6000, 7000, 9000] as [Any]
     @State private var selectedTripType = 0
-    
-    // Generated trip plan
+    @State private var chosenTripType = ""
     @State private var generatedPlan: TripPlan? = nil
+    @State private var religiousCityCounts = Array(repeating: 0, count: 6)
+   
+  //  private let tripPlanner = TripPlanner()
     
-    // Trip planner instance
-    private let tripPlanner = TripPlanner()
+    @FocusState private var isBudgetFieldFocused: Bool
+    @FocusState private var isDurationFieldFocused: Bool
+    @State private var showAlert = false
+    @State private var errorMessage = ""
+    @State private var selectedReligiousCity = 0
+    @State private var religiousCityText = "Select trip city"
+   // @State private var religiousCityCount = Array(repeating: 0, count: 7)
+    @State private var showCityList = false
+    @State private var isMenuOpen: Bool = false
+    @State private var generatePlan: Bool = false
+    
+    
+     // @State private var religiousCityCount = Array(repeating: 0, count: 7)
+
     
     var body: some View {
-        VStack {
-            // Planning section text
-            Text("Planning Section")
-                .font(.title)
-                .padding(.top, 1)
-                .padding(.bottom, 30)
+        
+        VStack( ){
+                Text("Planning Section")
+                    .font(.title)
+                    .padding(.bottom, 40)
+            
                 
-            // Trip budget text field with black outline
-            TextField("Enter trip budget", text: $tripBudget)
-                .textFieldStyle(CustomTextFieldStyle())
-                .padding(.bottom, 1)
-                .padding(.horizontal, 15)
-            
-            // Duration text field with black outline
-            TextField("Enter duration", text: $duration)
-                .textFieldStyle(CustomTextFieldStyle())
-                .padding(.top, 8)
-                .padding(.horizontal, 15)
-            
-            // Dropdown menu for trip types
-            Picker("Select trip type", selection: $selectedTripType) {
-                ForEach(0..<tripTypes.count) {
-                    Text(self.tripTypes[$0])
+            ZStack {
+                let shape = RoundedRectangle(cornerRadius: 20)
+                shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                shape.stroke(Color.gray, lineWidth: 1)
+//                    .overlay(ArrowShape()
+//                        .frame(width: 11, height: 11)
+//                        .foregroundColor(.gray)
+//                        .rotationEffect(isMenuOpen ? .degrees(180) : .degrees(0))
+//                        .offset(  x: -95, y: 2)
+//                             
+//                    )
+                Picker("Select trip type", selection: $selectedTripType) {
+                    ForEach(tripTypes.indices, id: \.self) { index in
+                        Text(self.tripTypes[index])
+                      
+                    }
                 }
+                .pickerStyle(MenuPickerStyle())
+                
             }
-            .pickerStyle(MenuPickerStyle())
-            .padding()
+            .frame(height: 35)
+            .padding(.bottom, 10)
+            .padding(.horizontal, 110)
+
             
-            Spacer()
+            TextField("Enter trip budget (Minimum: \(getMinimumPrice()))", text: $tripBudget)
+                .textFieldStyle(CustomTextFieldStyle(isFocused: isBudgetFieldFocused, isEnabled: selectedTripType != 0))
+                .padding(.horizontal, 40)
+                .disabled(selectedTripType == 0)
+                .padding(.bottom, 15)
+                
             
-            // Display the generated plan
-            if let plan = generatedPlan {
-                          VStack {
-                              Text("Generated Plan:")
-                                  .font(.headline)
-                                  .padding()
-
-                              Text("Destination: \(plan.destination)")
-                                  .padding()
-
-                              Text("Activities:")
-                                  .padding()
-
-                              ForEach(plan.activities.keys.sorted(), id: \.self) { activity in
-                                  Text("\(activity): $\(plan.activities[activity] ?? 0)")
-                                      .padding()
-                              }
-
-                              Text("Total Cost: $\(plan.totalCost)")
-                                  .padding()
-                          }
-                      }
             
-            Spacer()
-
-            // Generate a plan button
-            Button(action: {
-                // Generate plan when the button is tapped
-                generatedPlan = tripPlanner.generatePlan(
-                    budget: Double(tripBudget) ?? 0,
-                    duration: Int(duration) ?? 0,
-                    tripType: tripTypes[selectedTripType]
-                )
-            }) {
-                Text("Generate a Plan")
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
+//            
+//                if selectedTripType != 0 {
+//                  
+//                        Text("Choose your preferred city:")
+//                            .font(.headline)
+//                            .padding(.horizontal, 40)
+//                            .padding(.bottom, 10)
+//           
+//                        HStack {
+//                            Text("City")
+//                            Spacer()
+//                            Text("Days     ")
+//                        }
+//                        .foregroundColor(.green)
+//                        .padding(.horizontal,33)
+//                        .padding(.bottom, 5)
+//                        
+//                        
+//                        
+//                    List {
+//                        ForEach(getCitiesForTripType(), id: \.self) { city in
+//                            let index = getCitiesForTripType().firstIndex(of: city) ?? 0
+//                            HStack {
+//                               
+//                                Text(city)
+//                                Spacer()
+//
+//                                Button(action: {
+//                                    self.incrementCount(index)
+//                                }) {
+//                                    Image(systemName: "plus.circle")
+//                                        .foregroundColor(.blue)
+//                                }
+//                                .buttonStyle(BorderlessButtonStyle())
+//
+//                                Text("\(self.counts[getCitiesForTripType().firstIndex(of: city) ?? 0])")
+//                                    .padding(.horizontal, 10)
+//
+//                                Button(action: {
+//                                    self.decrementCount(index)
+//                                }) {
+//                                    Image(systemName: "minus.circle")
+//                                        .foregroundColor(.blue)
+//                                }
+//                                .buttonStyle(BorderlessButtonStyle())
+//                            }
+//                            .contentShape(Rectangle())
+//                        }
+//                    }
+//                        .frame(height: 300)
+//                        .listStyle(.plain)
+//                        .padding(.horizontal, 10)
+//                        .cornerRadius(15)
+//                        .padding(.bottom, 0)
+//                        .transition(.opacity) // Adding transition
+//                        .animation(.smooth) // Adding animation
+//                    
+//                        Button(action: {
+//                            withAnimation {
+//                                selectedTripType = 0
+//                            }
+//                        }) {
+//                            Text("Done")
+//                            
+//                                .foregroundColor(.white)
+//                                .padding(.horizontal, 8)
+//                                .padding(.vertical, 5)
+//                                .background(Color.green)
+//                                .cornerRadius(8)
+//                        }
+//                        .frame(maxWidth: .infinity, alignment: .trailing)
+//                        .padding(.trailing, 20)
+//                        .padding(.bottom, 0) // Adjusted bottom padding
+//                    
+//                }else {
+//                    // Show an empty frame with a height of 400 when no trip type is selected
+//                    VStack {
+//                        Spacer()
+//                        Rectangle()
+//                            .fill(Color.gray.opacity(0.01))
+//                            .frame(height: 400)
+//                        Spacer()
+//                    }
+//                }
+//                
+                
+                
+                if selectedTripType == 0 {
+                  
+                    VStack() {
+                        ScrollView{
+                                              
+                                          
+                        ZStack {
+                            let shape = RoundedRectangle(cornerRadius: 20)
+                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                            shape.stroke(Color.gray, lineWidth: 1)
+                            Text("First Plan")
+                                .font(.headline)
+                                .padding(.bottom, 5)
+                            
+                            
+                        }
+                        .frame(height: 120)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 60)
+                        
+                        ZStack() {
+                            let shape = RoundedRectangle(cornerRadius: 20)
+                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                            shape.stroke(Color.gray, lineWidth: 1)
+                            Text("Second Plan")
+                                .padding(.bottom, 2)
+                                
+                            Text("")
+                            
+                        }
+                        .frame(height: 120)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 60)
+                        
+                        
+                        ZStack {
+                            let shape = RoundedRectangle(cornerRadius: 20)
+                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                            shape.stroke(Color.gray, lineWidth: 1)
+                            Text("Third Plan")
+                                .padding(.bottom, 2)
+                            
+                        }
+                        .frame(height: 120)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 60)
+                        
+                      
+                        
+//                        ForEach(plan.activities.keys.sorted(), id: \.self) { activity in
+//                            Text("\(activity): $\(plan.activities[activity] ?? 0)")
+//                                .padding(.bottom, 2)
+//                        }
+                        
+                      
+                        Spacer()
+                        }
+                    }
+                }
+                
+     
+                Button(action: {
+                    if selectedTripType != 0{
+                    
+                        validateBudget()
+                       
+                    } else{
+                        showAlert = true
+                        errorMessage = "Please select Trip type"
+                    }
+                  
+                }) {
+                    Text("Generate Plan")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }
+            
+                .padding(.bottom, 50)
+                
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Note"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                }
+         
             }
-            .padding()
-        }
-        .padding()
+       
+            
+            .background(Color.gray.opacity(0.1).ignoresSafeArea())
+      
+        
     }
+    
+    
+    
+    func getCitiesForTripType() -> [String] {
+        switch selectedTripType {
+        case 1:
+            return Religious
+        case 2:
+            return Sports
+        case 3:
+            return Desert
+        case 4:
+            return Medical
+        case 5:
+            return Festivals
+        case 6:
+            return Education
+        default:
+            return []
+        }
+    }
+    
+    
+    func incrementCount(_ index: Int) {
+        counts[index] += 1
+    }
+
+    func decrementCount(_ index: Int) {
+        if counts[index] > 0 {
+            counts[index] -= 1
+        }
+    }
+    
+    
+//    struct ReligiousCityRow: View {
+//        let title: String
+//        @Binding var count: Int
+//        
+//        var body: some View {
+//            HStack {
+//                Text(title)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//                
+//                Spacer()
+//                
+//                HStack(spacing: 8) {
+//                    Button(action: {
+//                        if count > 0 {
+//                            count -= 1
+//                            
+//                        }
+//                    }) {
+//                        Image(systemName: "minus.circle")
+//                            .foregroundColor(.blue)
+//                    }
+//                    
+//                    Text("\(count)")
+//                        .padding(.horizontal, 8)
+//                    
+//                    Button(action: {
+//                        count += 1
+//                        
+//                    }) {
+//                        Image(systemName: "plus.circle")
+//                            .foregroundColor(.blue)
+//                    }
+//                }
+//            }
+//            .contentShape(Rectangle())
+//        }
+//        
+//    }
+    
+    func getMinimumPrice() -> String {
+        guard selectedTripType > 0 && selectedTripType < tripPrices.count else { return "" }
+        return "$\(tripPrices[selectedTripType])"
+    }
+   
+    
+    func isBudgetValid() -> Bool {
+        let selectedPrice = getTripPrice(for: selectedTripType)
+        let enteredBudget = Double(tripBudget) ?? 0
+        
+        if let price = selectedPrice as? Int {
+            return Double(price) < enteredBudget
+        }
+        return false
+    }
+
+    func validateBudget() {
+        chosenTripType = tripTypes[selectedTripType]
+        let selectedPrice = getTripPrice(for: selectedTripType)
+        let enteredBudget = Double(tripBudget) ?? 0
+
+        if let price = selectedPrice as? Int, Double(price) > enteredBudget {
+            errorMessage = "Entered budget is less than the minimum trip price!"
+            showAlert = true
+            
+        } else {
+//            generatedPlan = tripPlanner.generatePlan(
+//                budget: enteredBudget,
+//                duration: Int(duration) ?? 0,
+//                tripType: tripTypes[selectedTripType]
+//            )
+            withAnimation {
+                                       selectedTripType = 0
+                                   }
+            generatePlan = true
+        }
+    }
+
+    func getTripPrice(for index: Int) -> Any {
+        guard index > 0 && index < tripPrices.count else { return 0 }
+        return tripPrices[index]
+    }
+    
+    
 }
 
-// Custom TextFieldStyle for black outline
+
 struct CustomTextFieldStyle: TextFieldStyle {
+    var isFocused: Bool = false
+    var isEnabled: Bool = true
+
     func _body(configuration: TextField<_Label>) -> some View {
         configuration
             .padding(10)
-            .overlay(
+            .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.black, lineWidth: 1)
+                    .stroke(isEnabled ? Color.black : Color.gray, lineWidth: 1)
             )
+            .foregroundColor(isEnabled ? .black : .gray) // Change text color based on enabled/disabled state
+            .disabled(!isEnabled)
     }
 }
 
