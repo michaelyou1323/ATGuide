@@ -45,7 +45,8 @@ struct ContentView: View {
       @State private var alertMessage = ""
       @State private var signUp = false
     @State private var resetPassword = false
-   
+    @State private var userData: User? // Add state to hold user data
+
     var body: some View {
         ZStack {
             NavigationView {
@@ -84,21 +85,22 @@ struct ContentView: View {
                     
                    
                     
-                    NavigationLink(destination: MainScreen(email: "", username: ""), isActive: $isShowingNewView) {
+                    NavigationLink(destination: MainScreen(email: userData?.email ?? "", username: userData?.name ?? "", language: userData?.language ?? "" ,country: userData?.country ?? ""), isActive: $isShowingNewView) {
                                         EmptyView()
                                     }
                     NavigationLink(destination: SignUp(), isActive: $signUp ) {
                                         EmptyView()
                                     }
                     Button(action: {
-                                           Auth.auth().signIn(withEmail: username, password: password) { result, error in
-                                               if let error = error {
-                                                   showAlert(message: error.localizedDescription)
-                                               } else {
-                                                   isShowingNewView = true
-                                               }
-                                           }
-                                       }) {
+                                      Auth.auth().signIn(withEmail: username, password: password) { result, error in
+                                          if let error = error {
+                                              showAlert(message: error.localizedDescription)
+                                          } else if let authResult = result {
+                                              isShowingNewView = true
+                                              fetchUserData(uid: authResult.user.uid) // Fetch user data after successful login
+                                          }
+                                      }
+                                  }) {
                                            Text("Login")
                                                .frame(maxWidth: .infinity)
                                                .padding()
@@ -146,6 +148,32 @@ struct ContentView: View {
         }
         .background(Color.black.opacity(0.05))
     }
+    
+    private func fetchUserData(uid: String) {
+          let db = Firestore.firestore()
+          let userRef = db.collection("users").document(uid)
+
+          userRef.getDocument { document, error in
+              if let document = document, document.exists {
+                  if let data = document.data() {
+                      // Assuming User model has 'name' and 'email' properties
+                      let name = data["name"] as? String ?? ""
+                      let email = data["email"] as? String ?? ""
+                      let phonenumber = data["phonenumber"] as? String ?? ""
+                      let country = data["country"] as? String ?? ""
+                      let language = data["language"] as? String ?? ""
+                   
+                      // Fetch other user data properties similarly
+
+                      // Assign fetched data to userData
+                      self.userData = User(id: uid, name: name, email: email, password: password,phonenumber: phonenumber,country: country,language: language )
+                  }
+              } else {
+                  print("User document does not exist")
+              }
+          }
+      }
+    
     private func showAlert(message: String) {
            alertMessage = message
            showAlert = true

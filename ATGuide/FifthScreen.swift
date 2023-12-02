@@ -212,7 +212,7 @@ struct FifthScreen: View {
                             
                         }
                         .frame(height: 120)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 10) 
                         .padding(.horizontal, 60)
                         
                         

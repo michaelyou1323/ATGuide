@@ -1,9 +1,16 @@
 import SwiftUI
 
 struct User: Codable {
+    let id: String // Assuming you're using 'id' instead of 'uid'
     var name: String
     var email: String
     var password: String
+    var phonenumber: String
+    var country: String
+    var language: String
+  
+        // Add other necessary properties
+    
 }
 
 struct FourthScreen: View {
@@ -46,7 +53,7 @@ struct FourthScreen: View {
             return
         }
 
-        let newUser = User(name: "John Doe", email: "john@example.com", password: "securepassword")
+        let newUser = User(id: "String", name: "John Doe", email: "john@example.com", password: "securepassword", phonenumber: "",country: "",language: "")
 
         do {
             if var existingUsers = try? JSONDecoder().decode([User].self, from: Data(contentsOf: fileURL)) {

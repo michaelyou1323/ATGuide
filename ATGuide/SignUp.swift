@@ -217,7 +217,7 @@ struct SignUp: View {
                             
                         }
                         
-                        NavigationLink(destination: MainScreen(email: email, username: firstname), isActive: $isNavigate) {
+                        NavigationLink(destination: MainScreen(email: email, username: firstname, language:language, country:country), isActive: $isNavigate) {
                                             EmptyView()
                                         }
                      
@@ -228,26 +228,28 @@ struct SignUp: View {
                     
 
                     Button(action: {
-                            if validateData() {
-                                             isLoading = true // Start loading animation
-                                             showToast = true
-                                             toastText = "تم تسجيل بياناتك، سنقوم بالتواصل معك..."
+                                if validateData() {
+                                    isLoading = true // Start loading animation
+                                    showToast = true
+                                    toastText = "Signing up, please wait..."
 
-                                             // Perform sign-up logic here
-                                             Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                                                 if let error = error {
-                                                     isLoading = false
-                                                     showToast = true
-                                                     toastText = "Error: \(error.localizedDescription)"
-                                                 } else {
-                                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                                                         isLoading = false
-                                                         isNavigate = true
-                                                     }
-                                                 }
-                                             }
-                                         }
-                                     }) {
+                                    // Perform sign-up logic here
+                                    Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                                        if let error = error {
+                                            isLoading = false
+                                            showToast = true
+                                            toastText = "Error: \(error.localizedDescription)"
+                                        } else if let authResult = authResult {
+                                            let newUser = User(id: authResult.user.uid, name: firstname, email: email, password: password , phonenumber: phonenumber, country: country, language: language )
+                                            saveUserData(user: newUser) // Save user data to Firebase
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                                                isLoading = false
+                                                isNavigate = true
+                                            }
+                                        }
+                                    }
+                                }
+                            }) {
                                          if isLoading {
                                              ProgressView() // Show loading animation
                                          } else {
@@ -268,8 +270,11 @@ struct SignUp: View {
                     
                 }
                 
+                
                 .modifier(ToastModifier(showToast: $showToast, toastText: toastText))
             }
+            
+            
             
             
         } .padding()
@@ -281,6 +286,30 @@ struct SignUp: View {
     }
        
         
+    
+    func saveUserData(user: User) {
+           let db = Firestore.firestore()
+        let userRef = db.collection("users").document(user.id)
+
+           userRef.setData([
+               "name": user.name,
+               "email": user.email,
+                
+               "phonenumber" : phonenumber,
+               "country" : country,
+               "language" : language,
+            
+                 
+           ]) { error in
+               if let error = error {
+                   print("Error adding user data: \(error.localizedDescription)")
+               } else {
+                   print("User data added for \(user.id)")
+               }
+           }
+       }
+
+    
     private func validateData() -> Bool {
         if firstname.isEmpty || firstname.contains(".") || firstname.contains("#") || firstname.contains("$") || firstname.contains("[") || firstname.contains("]") || firstname.contains(" ") {
             showToast = true

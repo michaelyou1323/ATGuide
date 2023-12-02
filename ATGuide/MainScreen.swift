@@ -10,7 +10,8 @@ import SwiftUI
 struct MainScreen: View {
     let email: String
     let username: String
-
+    let language: String
+    let country: String
     @State private var isShowingNewView = false
     @State private var presentSideMenu = false
     var body: some View {
@@ -77,7 +78,7 @@ struct MainScreen: View {
         
         .navigationBarHidden(true)
         if presentSideMenu {
-            SideMenu(username: username, email: email, presentSideMenu: $presentSideMenu)
+            SideMenu(email: email, username: username,language:language,country: country, presentSideMenu: $presentSideMenu)
         }
     }
         .padding(0)
@@ -91,8 +92,11 @@ struct MainScreen: View {
 
 
 struct SideMenu: View {
-    let username: String
     let email: String
+    let username: String
+    let language: String
+    let country: String
+    
     @Binding var presentSideMenu: Bool
     
     var body: some View {
@@ -123,21 +127,21 @@ struct SideMenu: View {
                     
                 }.padding(.top, 1).padding(.leading, 10).padding(.bottom, 120)
                  
-                Text("Setting").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                Text(language).font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     .padding(.leading, 8)
 
-                Text("Planning").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                Text(country).font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     .padding(.leading, 8)
                 
                 
-                Text("about").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
-                    .padding(.leading, 8)
-                
-                Text("Privacy").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
-                    .padding(.leading, 8)
-                
-                Text("Contact Us").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
-                                    .padding(.leading, 8)
+//                Text().font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                    .padding(.leading, 8)
+//                
+//                Text("Privacy").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                    .padding(.leading, 8)
+//                
+//                Text("Contact Us").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                                    .padding(.leading, 8)
                                 
             }.frame(maxWidth:270, maxHeight:.infinity ,alignment:.topLeading).background(Color.white.ignoresSafeArea(.all)).offset(x:self.presentSideMenu ? 0 : -UIScreen.main.bounds.width/4)
                 
@@ -147,5 +151,5 @@ struct SideMenu: View {
 }
 
 #Preview {
-    MainScreen( email: "", username: "")
+    MainScreen( email: "", username: "",language: "", country: "")
 }
