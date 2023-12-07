@@ -4,7 +4,6 @@
 //
 //  Created by Michaelyoussef on 11/10/2023.
 //
-
 import SwiftUI
 
 struct MainScreen: View {
@@ -12,8 +11,11 @@ struct MainScreen: View {
     let username: String
     let language: String
     let country: String
-    @State private var isShowingNewView = false
+    
+    @State private var tabIndex = 0 // Track the selected tab index
     @State private var presentSideMenu = false
+    @State private var title = "Home" // Track the title
+    
     var body: some View {
         ZStack {
             
@@ -22,7 +24,7 @@ struct MainScreen: View {
             VStack(spacing: 0) {
                 
                 
-                TabView {
+                TabView(selection: $tabIndex){
                     
                     
                     Group{
@@ -32,7 +34,7 @@ struct MainScreen: View {
                             .tabItem {
                                 Image(systemName: "house.fill")
                                 Text("Home")
-                            }
+                            }.tag(0)
                         //   .toolbar(.visible, for: .tabBar)
                         //   .toolbarBackground(Color.yellow, for: .tabBar)
                         
@@ -40,7 +42,7 @@ struct MainScreen: View {
                             .tabItem {
                                 Image(systemName: "video.fill")
                                 Text("hieroglyphics")
-                            }
+                            }.tag(1)
                         
                         
                         FifthScreen()
@@ -48,17 +50,31 @@ struct MainScreen: View {
                             .tabItem {
                                 Image(systemName: "ellipsis.rectangle")
                                 Text("More")
-                            }
+                            }.tag(2)
                         
                     }
-                    
+                
+
                     .toolbarBackground(.indigo, for: .tabBar)
                     .toolbarBackground(.visible, for: .tabBar)
-                    .toolbarBackground(Color.blue, for: .tabBar)
+                    .toolbarBackground(Color(UIColor(hex: 0x0bb9c0)), for: .tabBar)
                     .toolbarColorScheme(.dark, for: .tabBar)
                     
                     
                 }
+                .onChange(of: tabIndex) { newValue in
+                                        // Update the title based on the selected tab
+                                        switch newValue {
+                                        case 0:
+                                            title = "Home"
+                                        case 1:
+                                            title = "Hieroglyphics"
+                                        case 2:
+                                            title = "More"
+                                        default:
+                                            title = "Unknown"
+                                        }
+                                    }
                 
             }
             
@@ -70,9 +86,26 @@ struct MainScreen: View {
                     presentSideMenu.toggle()
                 }
             }) {
-                Image(systemName: "line.horizontal.3")
-                    .imageScale(.large)
-            })
+                HStack{
+                    
+                    Image(systemName: "line.horizontal.3")
+                        .imageScale(.large)
+                      
+                    
+                 
+//                    Text("Planning Section")
+//                        .font(.title)
+//                        .padding(.top, 60)
+//                        .padding(.horizontal,50)
+                        
+                    
+                        
+                }
+              
+            }).navigationBarHidden(false)
+            if presentSideMenu {
+                SideMenu(email: email, username: username, language: language, country: country, presentSideMenu: $presentSideMenu)
+            }
             
         }
         
@@ -127,7 +160,7 @@ struct SideMenu: View {
                     
                 }.padding(.top, 1).padding(.leading, 10).padding(.bottom, 120)
                  
-                Text(language).font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+         Text(language).font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     .padding(.leading, 8)
 
                 Text(country).font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
@@ -136,10 +169,10 @@ struct SideMenu: View {
                 
 //                Text().font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 //                    .padding(.leading, 8)
-//                
+//
 //                Text("Privacy").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 //                    .padding(.leading, 8)
-//                
+//
 //                Text("Contact Us").font(.headline).padding().background(Color.white).cornerRadius(10).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 //                                    .padding(.leading, 8)
                                 

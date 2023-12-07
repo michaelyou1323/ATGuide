@@ -18,10 +18,34 @@ struct ArrowShape: Shape {
     }
 }
 
-struct FifthScreen: View {
 
+struct CityInfo {
+    let cityName: String
+    var numberOfDays: Int
+}
+
+
+struct TripDetails {
+    var tripType: String
+    var citiesInfo: [CityInfo]
+    var hotelStars: Int
+    var enteredBudget: String
+}
+
+
+struct FifthScreen: View {
+    @State private var counts: [Int] = Array(repeating: 0, count: 6)
+    @State private var citiesInfo: [CityInfo] = [
+          CityInfo(cityName: "Cairo", numberOfDays: 0),
+          CityInfo(cityName: "Siwa", numberOfDays: 0),
+          CityInfo(cityName: "Aswan", numberOfDays: 0),
+          CityInfo(cityName: "Luxor", numberOfDays: 0),
+          CityInfo(cityName: "Giza", numberOfDays: 0),
+          CityInfo(cityName: "Assiut", numberOfDays: 0)
+      ]
     @State private var tripBudget: String = ""
     @State private var duration: String = ""
+    
     let tripTypes = ["Select trip type", "Religious", "Sports", "Desert", "Medical", "Festivals", "Education"]
     let Religious = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
     let Sports = ["a", "Siwa", "b", "Luxor", "h", "Assiut"]
@@ -29,9 +53,25 @@ struct FifthScreen: View {
     let Medical = ["8787", "dddd", "jh", "jjhj", "Giza", "Assiut"]
     let Festivals = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
     let Education = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
-       @State private var counts: [Int] = Array(repeating: 0, count: 6)
+    
+    
+    
+    let Cairo = ["A1", "A2", "A3", "A4", "A5", "A6"]
+    let Siwa = ["B1", "B2", "B3", "B4", "B5", "B6"]
+    let Aswan = ["c1", "c2", "c3", "c4", "c5", "c6"]
+    let Lucor = ["D1", "d2", "d3", "d4", "d5", "d6"]
+    let Giza = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+    let Assiut = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+    
+    
+      
     let tripPrices = [0, 3000, 2000, 4500, 6000, 7000, 9000] as [Any]
     @State private var selectedTripType = 0
+    @State private var selectedHotelRoom = 0
+    @State private var showGeneratButton = 0
+    @State private var showResetButton = 0
+    
+    @State private var showCities = true
     @State private var chosenTripType = ""
     @State private var generatedPlan: TripPlan? = nil
     @State private var religiousCityCounts = Array(repeating: 0, count: 6)
@@ -49,16 +89,20 @@ struct FifthScreen: View {
     @State private var isMenuOpen: Bool = false
     @State private var generatePlan: Bool = false
     
-    
-     // @State private var religiousCityCount = Array(repeating: 0, count: 7)
+    @State private var showPlann = 0
+    @State private var navigateToNextView = false
 
+     // @State private var religiousCityCount = Array(repeating: 0, count: 7)
+   
+
+       @State private var selectedStars = 1
     
     var body: some View {
-        
+      
         VStack( ){
-                Text("Planning Section")
-                    .font(.title)
-                    .padding(.bottom, 40)
+//                Text("Planning Section")
+//                    .font(.title)
+//                    .padding(.bottom, 40)
             
                 
             ZStack {
@@ -72,6 +116,7 @@ struct FifthScreen: View {
 //                        .offset(  x: -95, y: 2)
 //                             
 //                    )
+                
                 Picker("Select trip type", selection: $selectedTripType) {
                     ForEach(tripTypes.indices, id: \.self) { index in
                         Text(self.tripTypes[index])
@@ -82,6 +127,7 @@ struct FifthScreen: View {
                 
             }
             .frame(height: 35)
+            .padding(.top,0)
             .padding(.bottom, 10)
             .padding(.horizontal, 110)
 
@@ -94,136 +140,197 @@ struct FifthScreen: View {
                 
             
             
-//            
-//                if selectedTripType != 0 {
-//                  
-//                        Text("Choose your preferred city:")
-//                            .font(.headline)
-//                            .padding(.horizontal, 40)
-//                            .padding(.bottom, 10)
-//           
-//                        HStack {
-//                            Text("City")
-//                            Spacer()
-//                            Text("Days     ")
-//                        }
-//                        .foregroundColor(.green)
-//                        .padding(.horizontal,33)
-//                        .padding(.bottom, 5)
-//                        
-//                        
-//                        
-//                    List {
-//                        ForEach(getCitiesForTripType(), id: \.self) { city in
-//                            let index = getCitiesForTripType().firstIndex(of: city) ?? 0
-//                            HStack {
-//                               
-//                                Text(city)
-//                                Spacer()
-//
-//                                Button(action: {
-//                                    self.incrementCount(index)
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .foregroundColor(.blue)
-//                                }
-//                                .buttonStyle(BorderlessButtonStyle())
-//
-//                                Text("\(self.counts[getCitiesForTripType().firstIndex(of: city) ?? 0])")
-//                                    .padding(.horizontal, 10)
-//
-//                                Button(action: {
-//                                    self.decrementCount(index)
-//                                }) {
-//                                    Image(systemName: "minus.circle")
-//                                        .foregroundColor(.blue)
-//                                }
-//                                .buttonStyle(BorderlessButtonStyle())
-//                            }
-//                            .contentShape(Rectangle())
-//                        }
-//                    }
-//                        .frame(height: 300)
-//                        .listStyle(.plain)
-//                        .padding(.horizontal, 10)
-//                        .cornerRadius(15)
-//                        .padding(.bottom, 0)
-//                        .transition(.opacity) // Adding transition
-//                        .animation(.smooth) // Adding animation
-//                    
-//                        Button(action: {
-//                            withAnimation {
-//                                selectedTripType = 0
-//                            }
-//                        }) {
-//                            Text("Done")
-//                            
-//                                .foregroundColor(.white)
-//                                .padding(.horizontal, 8)
-//                                .padding(.vertical, 5)
-//                                .background(Color.green)
-//                                .cornerRadius(8)
-//                        }
-//                        .frame(maxWidth: .infinity, alignment: .trailing)
-//                        .padding(.trailing, 20)
-//                        .padding(.bottom, 0) // Adjusted bottom padding
-//                    
-//                }else {
-//                    // Show an empty frame with a height of 400 when no trip type is selected
-//                    VStack {
-//                        Spacer()
-//                        Rectangle()
-//                            .fill(Color.gray.opacity(0.01))
-//                            .frame(height: 400)
-//                        Spacer()
-//                    }
-//                }
-//                
+            
+                if selectedTripType != 0  && showCities == true {
+                  
+                        Text("Choose your preferred city:")
+                            .font(.headline)
+                            .padding(.horizontal, 40)
+                            .padding(.bottom, 10)
+           
+                        HStack {
+                            Text("City")
+                            Spacer()
+                            Text("Days     ")
+                        }
+                        .foregroundColor(.green)
+                        .padding(.horizontal,33)
+                        .padding(.bottom, 5)
+                        
+                        
+                        
+                    List {
+                                   ForEach(getCitiesForTripType(), id: \.self) { city in
+                                       let index = getCitiesForTripType().firstIndex(of: city) ?? 0
+                                       HStack {
+                                           Text(city)
+                                           Spacer()
+
+                                           Button(action: {
+                                               self.incrementCount(index)
+                                           }) {
+                                               Image(systemName: "plus.circle")
+                                                   .foregroundColor(.blue)
+                                           }
+                                           .buttonStyle(BorderlessButtonStyle())
+
+                                           Text("\(self.counts[index])")
+                                               .padding(.horizontal, 10)
+
+                                           Button(action: {
+                                               self.decrementCount(index)
+                                           }) {
+                                               Image(systemName: "minus.circle")
+                                                   .foregroundColor(.blue)
+                                           }
+                                           .buttonStyle(BorderlessButtonStyle())
+                                       }
+                                       .contentShape(Rectangle())
+                                   }
+                               }
+//                    NavigationLink(destination: NextView(citiesInfo: citiesInfo), isActive: $navigateToNextView) {
+//                                  EmptyView()
+//                              }
+//                              .hidden()
+
+                               Button(action: {
+                                   nextButtonAction()
+                               }) {
+                                   Text("Next")
+                                       .foregroundColor(.white)
+                                       .padding(.horizontal, 8)
+                                       .padding(.vertical, 5)
+                                       .background(Color.green)
+                                       .cornerRadius(8)
+                               }
+                               .frame(maxWidth: .infinity, alignment: .trailing)
+                               .padding(.trailing, 20)
+                               .padding(.bottom, 0)
+                           }
+            
+            else if( selectedTripType == 0 && showPlann == 0 && selectedHotelRoom == 0) {
+                    // Show an empty frame with a height of 400 when no trip type is selected
+                    VStack {
+                        Spacer()
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.01))
+                            .frame(height: 400)
+                        Spacer()
+                    }
+                }
+                
+            if selectedHotelRoom != 0 {
+              
+                Rectangle()
+                    .fill(Color.gray.opacity(0.01))
+                    .frame(height: 200)
+       
+                Text("Select Number Of Stars For your Hotel")
+                    .font(.headline)
+                    .padding(.bottom, 60)
+                   
+
+                    
+                        HStack {
+                            ForEach(1..<6) { star in
+                                Image(systemName: selectedStars >= star ? "star.fill" : "star")
+                                    .foregroundColor(selectedStars >= star ? .yellow : .gray)
+                                    .onTapGesture {
+                                        selectedStars = star
+                                    }
+                            }
+                        }
+                        .font(.system(size: 24))
+                    
+           
+             
+                
+                    Button(action: {
+                        withAnimation {
+                            selectedHotelRoom = 0
+                           
+                            showGeneratButton = 1
+                        }
+                    }) {
+                        Text("Done")
+                        
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 5)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 0) // Adjusted bottom padding
                 
                 
-                if selectedTripType == 0 {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.01))
+                    .frame(height: 300)
+            }
+                
+                if showPlann == 1 {
                   
                     VStack() {
                         ScrollView{
                                               
                                           
-                        ZStack {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                            shape.stroke(Color.gray, lineWidth: 1)
-                            Text("First Plan")
-                                .font(.headline)
-                                .padding(.bottom, 5)
+                            NavigationLink(destination: DetailsScreen(tripDetails: TripDetails(tripType: chosenTripType,
+                                                                                               citiesInfo: citiesInfo,
+                                                                                               hotelStars: selectedStars,
+                                                                                               enteredBudget: tripBudget)),
+                                           isActive: $navigateToNextView) {
                             
+                                                       ZStack(alignment:.center) {
+                                                           let shape = RoundedRectangle(cornerRadius: 20)
+                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                                                           shape.stroke(Color.gray, lineWidth: 1)
+                                                           Text("First Plan")
+                                                               .font(.headline)
+                                                               .padding(.bottom, 60)
+                                                       }
+                                                       .frame(height: 120)
+                                                       .padding(.vertical, 10)
+                                                       .padding(.horizontal, 60)
+                            }
+                         
                             
-                        }
                         .frame(height: 120)
                         .padding(.vertical, 10)
                         .padding(.horizontal, 60)
                         
-                        ZStack() {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                            shape.stroke(Color.gray, lineWidth: 1)
-                            Text("Second Plan")
-                                .padding(.bottom, 2)
-                                
-                            Text("")
-                            
-                        }
+//                            NavigationLink(destination: DetailsScreen()) {
+                                                       ZStack(alignment:.center) {
+                                                           let shape = RoundedRectangle(cornerRadius: 20)
+                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                                                           shape.stroke(Color.gray, lineWidth: 1)
+                                                           Text("Second Plan")
+                                                               .font(.headline)
+                                                               .padding(.bottom, 60)
+                                                       }
+                                                       .frame(height: 120)
+                                                       .padding(.vertical, 10)
+                                                       .padding(.horizontal, 60)
+                                                  // }
                         .frame(height: 120)
                         .padding(.vertical, 10) 
                         .padding(.horizontal, 60)
                         
                         
-                        ZStack {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                            shape.stroke(Color.gray, lineWidth: 1)
-                            Text("Third Plan")
-                                .padding(.bottom, 2)
-                            
-                        }
+                          //  NavigationLink(destination: DetailsScreen()) {
+                                                       ZStack(alignment:.center) {
+                                                           let shape = RoundedRectangle(cornerRadius: 20)
+                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                                                           shape.stroke(Color.gray, lineWidth: 1)
+                                                           Text("Third Plan")
+                                                               .font(.headline)
+                                                               .padding(.bottom, 60)
+                                                       }
+                                                       .frame(height: 120)
+                                                       .padding(.vertical, 10)
+                                                       .padding(.horizontal, 60)
+                                         //          }
                         .frame(height: 120)
                         .padding(.vertical, 10)
                         .padding(.horizontal, 60)
@@ -242,16 +349,20 @@ struct FifthScreen: View {
                 }
                 
      
+            if showGeneratButton != 0 {
+                
+                
                 Button(action: {
                     if selectedTripType != 0{
-                    
+                        
                         validateBudget()
-                       
+                      
+                        
                     } else{
                         showAlert = true
                         errorMessage = "Please select Trip type"
                     }
-                  
+                    
                 }) {
                     Text("Generate Plan")
                         .foregroundColor(.white)
@@ -259,13 +370,31 @@ struct FifthScreen: View {
                         .background(Color.blue)
                         .cornerRadius(8)
                 }
-            
-                .padding(.bottom, 50)
+                
+                .padding(.bottom, 10)
                 
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("Note"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
                 }
-         
+                
+            }
+            
+            if showResetButton != 0 {
+                
+                Button(action: {
+                    // Reset choices action
+                    showResetButton = 0
+                    resetChoices()
+                }) {
+                    Text("Reset Choices")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(8)
+                }
+                .padding(.bottom, 10)
+            }
+            
             }
        
             
@@ -274,6 +403,31 @@ struct FifthScreen: View {
         
     }
     
+    func resetChoices() {
+           // Reset all choices and states here
+           // Reset selectedTripType, counts, citiesInfo, selectedHotelRoom, etc.
+         showCities = true
+           selectedTripType = 0
+           counts = Array(repeating: 0, count: 6)
+           citiesInfo = [
+               CityInfo(cityName: "Cairo", numberOfDays: 0),
+               // Rest of the cities...
+           ]
+           showPlann = 0
+           selectedHotelRoom = 0
+           showGeneratButton = 0
+           generatedPlan = nil
+           generatePlan = false // Reset the flag to hide generated plan content
+        
+       }
+    
+    
+    func nextButtonAction() {
+     
+        showCities = false
+        selectedHotelRoom = 1
+     }
+
     
     
     func getCitiesForTripType() -> [String] {
@@ -297,56 +451,19 @@ struct FifthScreen: View {
     
     
     func incrementCount(_ index: Int) {
-        counts[index] += 1
-    }
+           counts[index] += 1
+           citiesInfo[index].numberOfDays += 1
+       }
 
-    func decrementCount(_ index: Int) {
-        if counts[index] > 0 {
-            counts[index] -= 1
-        }
-    }
+       func decrementCount(_ index: Int) {
+           if counts[index] > 0 {
+               counts[index] -= 1
+               citiesInfo[index].numberOfDays -= 1
+           }
+       }
     
     
-//    struct ReligiousCityRow: View {
-//        let title: String
-//        @Binding var count: Int
-//        
-//        var body: some View {
-//            HStack {
-//                Text(title)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                
-//                Spacer()
-//                
-//                HStack(spacing: 8) {
-//                    Button(action: {
-//                        if count > 0 {
-//                            count -= 1
-//                            
-//                        }
-//                    }) {
-//                        Image(systemName: "minus.circle")
-//                            .foregroundColor(.blue)
-//                    }
-//                    
-//                    Text("\(count)")
-//                        .padding(.horizontal, 8)
-//                    
-//                    Button(action: {
-//                        count += 1
-//                        
-//                    }) {
-//                        Image(systemName: "plus.circle")
-//                            .foregroundColor(.blue)
-//                    }
-//                }
-//            }
-//            .contentShape(Rectangle())
-//        }
-//        
-//    }
-    
-    func getMinimumPrice() -> String {
+        func getMinimumPrice() -> String {
         guard selectedTripType > 0 && selectedTripType < tripPrices.count else { return "" }
         return "$\(tripPrices[selectedTripType])"
     }
@@ -372,6 +489,9 @@ struct FifthScreen: View {
             showAlert = true
             
         } else {
+            showPlann = 1
+            showResetButton = 1
+            showGeneratButton = 0
 //            generatedPlan = tripPlanner.generatePlan(
 //                budget: enteredBudget,
 //                duration: Int(duration) ?? 0,

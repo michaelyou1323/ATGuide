@@ -361,33 +361,3 @@ struct FormScreen_Previews: PreviewProvider {
     }
 }
 
-//
-//
-//if firstname.isEmpty{
-//
-//    showToast = true
-//    toastText = "برجاء كتابة الأسم الأول"
-//}else if lastname.isEmpty{
-//    showToast = true
-//    toastText = "برجاء كتابة آسم العائلة"
-//}else if phonenumber.isEmpty{
-//    showToast = true
-//    toastText = " برجاء كتابة رقم الموبايل "
-//}else if country.isEmpty{
-//    showToast = true
-//    toastText = " برجاء كتابة الدولة"
-//}else if city.isEmpty{
-//    showToast = true
-//    toastText = "برجاء كتابة المدينة"
-//}else if region.isEmpty{
-//    showToast = true
-//    toastText = "برجاء كتابة المنطقة "
-//}else if church.isEmpty{
-//    showToast = true
-//    toastText = "برجاء كتابة آسم الكنيسة"
-//}else {
-//    viewModel.pushObject(firstname: firstname, lastname: lastname, phonenumber: phonenumber, country: country, city: city, region: region, church: church, email: email)
-//    presentationMode.wrappedValue.dismiss()
-//}
-
-// Rest of the code remains the same

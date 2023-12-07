@@ -13,7 +13,7 @@ struct FirstScreen: View {
             }) {
                 Text("Scan Text")
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(red: 0.776, green: 0.357, blue: 0.145))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
