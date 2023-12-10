@@ -82,6 +82,7 @@ struct SecoundScreen: View {
                         NavigationLink(destination: WebView(url: url)) {
                             Text("Open URL")
                                 .padding()
+                                .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                         }
                     } else {
                         Text("Scanned code: \(scannedCode)")
@@ -95,13 +96,13 @@ struct SecoundScreen: View {
                             self.isScannerSheetPresented.toggle()
                         } label: {
                             HStack{
-                                Image(systemName:"qrcode.viewfinder") // Use a QR code icon
+                                Image(systemName:"qrcode.viewfinder")// Use a QR code icon
                                         Text("Scan QR Code")
                                 
                             }
                         }
                         .padding()
-                        .background(Color(red: 0.043, green: 0.725, blue: 0.753)) // Set the background color
+                        .background(Color(red: 0.192, green: 0.259, blue: 0.333)) // Set the background color
                         .foregroundColor(.white) // Set the text color to white
                         .cornerRadius(8) // Optional: Add corner radius for a rounded button appearance
                         .overlay(
@@ -136,6 +137,7 @@ struct SecoundScreen: View {
                 }
             }
             .navigationBarTitle("QR Code Scanner")
+            .foregroundColor(Color(UIColor(hex: 0x313F54)))
         }
     }
 }

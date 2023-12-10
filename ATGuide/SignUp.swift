@@ -101,6 +101,7 @@ struct SignUp: View {
             VStack(alignment: .center) {
                 Text("Your Information")
                     .font(.system(size: 27))
+                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
                     .bold()
                     .padding(.bottom,40)
                     .padding(.top,15)
@@ -257,7 +258,7 @@ struct SignUp: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .foregroundColor(.white)
-                                .background(Color.green)
+                                .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                                 .cornerRadius(10)
                         }
                     }

@@ -227,7 +227,7 @@ struct LoginScreen: View {
                                             resetPassword = true
                                         }) {
                                             Text("Forgot Password?")
-                                                .foregroundColor(.blue)
+                                                .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                                                 .padding(.top, 8)
                                         }
                                         .sheet(isPresented: $resetPassword) {
@@ -299,6 +299,7 @@ struct PasswordResetView: View {
         VStack {
             Text("Reset Password")
                 .font(.title)
+                .foregroundColor(Color(UIColor(hex: 0x313F54)))
                 .padding()
 
             TextField("Email", text: $email)
@@ -321,7 +322,7 @@ struct PasswordResetView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .foregroundColor(.white)
-                    .background(Color.blue)
+                    .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                     .cornerRadius(10)
             }
             .padding(.bottom, 30)

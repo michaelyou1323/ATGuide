@@ -13,8 +13,7 @@ struct ScannScreen: View {
             }) {
                 Text("Scan Text")
                     .padding()
-                    .background(Color(red: 0.776, green: 0.357, blue: 0.145))
-                    .foregroundColor(.white)
+                    .background(Color(red: 0.192, green: 0.259, blue: 0.333))                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
             .sheet(isPresented: $isShowingScanner) {

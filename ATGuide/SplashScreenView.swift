@@ -53,7 +53,7 @@ struct SplashScreenView: View {
                          
                         Text("Guide")
                             .font(Font.custom("Baskerville-Bold", size: 40))
-                            .foregroundColor(.black.opacity(0.80))
+                            .foregroundColor(Color(UIColor(hex: 0x313F54)))
                             .opacity(self.tOffsetY == 0 ? 1 : 0) // Show Guide after T appears
                             .onAppear {
                                 withAnimation(.easeIn(duration: 1.5).delay(2.6)) {
@@ -74,7 +74,7 @@ struct SplashScreenView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     withAnimation {
                         self.isActive = true
                     }
