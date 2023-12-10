@@ -151,7 +151,7 @@ struct LoginScreen: View {
                                  .background(Color(.white))
                                  .foregroundColor(.white)
                              
-                             TextField("Username", text: $username)
+                             TextField("E-mail", text: $username)
                                  .textFieldStyle(RoundedBorderTextFieldStyle())
                                  .padding(.horizontal, 25)
                          }
