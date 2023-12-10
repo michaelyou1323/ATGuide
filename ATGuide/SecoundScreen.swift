@@ -136,7 +136,7 @@ struct SecoundScreen: View {
                     
                 }
             }
-            .navigationBarTitle("QR Code Scanner")
+          
             .foregroundColor(Color(UIColor(hex: 0x313F54)))
         }
     }

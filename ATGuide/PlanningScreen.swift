@@ -119,8 +119,8 @@ struct PlanningScreen: View {
        @State private var selectedStars = 1
     @State private var showPlannPlans: [TripPlan] = []
 //    @State private var currencies: [Currency] = []
+ @State private var isShowingFavouriteScreen = false
 //
-//    
 //
 //    func fetchData() {
 //        let headers = [
@@ -383,7 +383,7 @@ struct PlanningScreen: View {
                 
                 Rectangle()
                     .fill(Color.gray.opacity(0.01))
-                    .frame(height: 300)
+                    .frame(height: 50)
             }
                 
             if showPlann == 1 {
@@ -503,6 +503,27 @@ struct PlanningScreen: View {
                 }
                 .padding(.bottom, 10)
             }
+            
+            
+            Spacer()
+
+
+//                           NavigationLink(destination: FavoriteScreen(), isActive: $isShowingFavouriteScreen) {
+//                               EmptyView()
+//                           }
+//                           .hidden()
+//
+//                           Button(action: {
+//                               isShowingFavouriteScreen = true
+//                           }) {
+//                               Image(systemName: "heart.fill")
+//                                   .foregroundColor(.red)
+//                                   .padding()
+//                                   .background(Color.white)
+//                                   .clipShape(Circle())
+//                                   .shadow(radius: 4)
+//                           }
+//                           .padding()
             
             }
        

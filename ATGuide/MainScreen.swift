@@ -39,17 +39,24 @@ struct MainScreen: View {
                         
                         SecoundScreen()
                             .tabItem {
-                                Image(systemName: "video.fill")
-                                Text("hieroglyphics")
+                                Image(systemName: "qrcode.viewfinder")
+                                Text("QR")
                             }.tag(1)
                         
                         
                         ScannScreen()
                             .padding(.bottom,20)
                             .tabItem {
-                                Image(systemName: "ellipsis.rectangle")
-                                Text("More")
+                                Image(systemName: "scroll")
+                                Text("Hieroglyphics")
                             }.tag(2)
+                        
+                        FavoriteScreen()
+                            .padding(.bottom,20)
+                            .tabItem {
+                                Image(systemName: "heart.fill")
+                                Text("Fav")
+                            }.tag(3)
                         
                     }
                   
@@ -65,47 +72,61 @@ struct MainScreen: View {
                 }
                
                 .onChange(of: tabIndex) { newValue in
-                                        // Update the title based on the selected tab
-                                        switch newValue {
-                                        case 0:
-                                            title = "Home"
-                                        case 1:
-                                            title = "Hieroglyphics"
-                                        case 2:
-                                            title = "More"
-                                        default:
-                                            title = "Unknown"
-                                        }
-                                    }
-                
+                                       // Update the title based on the selected tab
+                                       switch newValue {
+                                           case 0:
+                                               title = "Planning Section"
+                                           case 1:
+                                               title = "QR Code Scanner"
+                                           case 2:
+                                               title = "Hieroglyphics"
+                                           case 3:
+                                               title = "Fav"
+                                           default:
+                                               title = "Unknown"
+                                       }
+                                   }
             }
             
-            
-            .navigationBarTitleDisplayMode(.automatic)
-            
-            .navigationBarItems(leading: Button(action: {
-                // Toggle side menu visibility
-                withAnimation(.easeInOut) {
-                    presentSideMenu.toggle()
+            .navigationBarTitleDisplayMode(.inline) // Display the title inline
+                .navigationBarItems(leading:  HStack {
+                    
+                    Text(title)
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                    
+                    
+                    
+                    
                 }
-            }) {
-                HStack{
-                    
-                    Image(systemName: "line.horizontal.3")
-                        .imageScale(.large)
-                      
-                    
-                 
-//                    Text("Planning Section")
-//                        .font(.title)
-//                        .padding(.top, 60)
-//                        .padding(.horizontal,50)
+                .frame(height:35)
+                .padding(.bottom,5)
+                                    
+                                    
+                                    
+                                    , trailing:
+                                        HStack {
+                        Button(action: {
+                            // Toggle side menu visibility
+                            withAnimation(.easeInOut) {
+                                presentSideMenu.toggle()
+                            }
+                        }) {
+                            Image(systemName: "line.horizontal.3")
+                                .imageScale(.large)
+                        }
                         
+                       
                     
-                        
-                }
+//                        Text() // Display the changing title
+//                            .font(.headline)
+//                            .multilineTextAlignment(.center) // Align the text in the center
+                   
+                    }
               
-            }).navigationBarHidden(false)
+              
+            ).navigationBarHidden(false)
             if presentSideMenu {
                 SideMenu(email: email, username: username, language: language, country: country, presentSideMenu: $presentSideMenu)
             }
@@ -136,7 +157,7 @@ struct SideMenu: View {
     @Binding var presentSideMenu: Bool
     
     var body: some View {
-        ZStack(alignment: .leading ) {
+        ZStack(alignment: .trailing ) {
             Color.gray.opacity(0.4).edgesIgnoringSafeArea(.all).onTapGesture { withAnimation { presentSideMenu = false } }
             
             VStack(alignment: .leading) {
