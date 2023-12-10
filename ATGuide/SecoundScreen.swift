@@ -1,177 +1,170 @@
 import SwiftUI
-import UIKit
+import AVFoundation
+import WebKit
 
-struct SecoundScreen: View {
-    @State private var isShowingCamera = false
-    @State private var capturedImage: UIImage?
-    @State private var recognizedText = ""
-    
-    var body: some View {
-        VStack {
-            if let image = capturedImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-                
-                Text(recognizedText)
-                    .padding()
-            } else {
-                Spacer()
-                
-                Button(action: {
-                    isShowingCamera = true
-                }) {
-                    Text("Capture Photo")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                
-                Spacer()
+struct QRCodeScannerView: UIViewControllerRepresentable {
+    class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+        var parent: QRCodeScannerView
+
+        init(parent: QRCodeScannerView) {
+            self.parent = parent
+        }
+
+        func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+            if let metadataObject = metadataObjects.first {
+                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
+                guard let stringValue = readableObject.stringValue else { return }
+                AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+                parent.didFindCode(stringValue, metadataObject)
             }
         }
-        .sheet(isPresented: $isShowingCamera) {
-            CameraView(capturedImage: $capturedImage, recognizedText: $recognizedText, translatedText: $recognizedText)
+    }
+
+    var didFindCode: (String, AVMetadataObject) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(parent: self)
+    }
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        let viewController = UIViewController()
+        let session = AVCaptureSession()
+
+        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return viewController }
+        let videoInput: AVCaptureDeviceInput
+
+        do {
+            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+        } catch {
+            return viewController
+        }
+
+        if (session.canAddInput(videoInput)) {
+            session.addInput(videoInput)
+        } else {
+            return viewController
+        }
+
+        let metadataOutput = AVCaptureMetadataOutput()
+
+        if (session.canAddOutput(metadataOutput)) {
+            session.addOutput(metadataOutput)
+
+            metadataOutput.setMetadataObjectsDelegate(context.coordinator, queue: DispatchQueue.main)
+            metadataOutput.metadataObjectTypes = [.qr]
+        } else {
+            return viewController
+        }
+
+        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        previewLayer.frame = viewController.view.layer.bounds
+        previewLayer.videoGravity = .resizeAspectFill
+        viewController.view.layer.addSublayer(previewLayer)
+
+        session.startRunning()
+
+        return viewController
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
+struct SecoundScreen: View {
+    @State private var scannedCode: String?
+    @State private var isScannerSheetPresented = false
+    @State private var highlightFrame: CGRect?
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                if let scannedCode = scannedCode {
+                    if let url = URL(string: scannedCode), UIApplication.shared.canOpenURL(url) {
+                        NavigationLink(destination: WebView(url: url)) {
+                            Text("Open URL")
+                                .padding()
+                        }
+                    } else {
+                        Text("Scanned code: \(scannedCode)")
+                            .padding()
+                    }
+                } else {
+
+                    VStack{
+                        
+                        Button {
+                            self.isScannerSheetPresented.toggle()
+                        } label: {
+                            HStack{
+                                Image(systemName:"qrcode.viewfinder") // Use a QR code icon
+                                        Text("Scan QR Code")
+                                
+                            }
+                        }
+                        .padding()
+                        .background(Color(red: 0.043, green: 0.725, blue: 0.753)) // Set the background color
+                        .foregroundColor(.white) // Set the text color to white
+                        .cornerRadius(8) // Optional: Add corner radius for a rounded button appearance
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.white, lineWidth: 2)
+                        )
+                        .sheet(isPresented: $isScannerSheetPresented) {
+                            QRCodeScannerView { code, metadataObject in
+                                self.scannedCode = code
+                                self.isScannerSheetPresented = false
+                                if let visualCodeObject = metadataObject as? AVMetadataMachineReadableCodeObject {
+                                    let visualCodeBounds = visualCodeObject.bounds
+                                    self.highlightFrame = visualCodeBounds
+                                }
+                            }
+                        }
+                        .overlay(
+                            highlightFrame.map { frame in
+                                Rectangle()
+                                    .stroke(Color.green, lineWidth: 2)
+                                    .frame(width: frame.width, height: frame.height)
+                                    .offset(x: frame.minX, y: frame.minY)
+                            }
+                        )
+                        
+                        
+//                        Image("phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed")
+//                            .frame(width:50,height: 50)// Use a QR code icon
+                            
+                    }
+                    
+                }
+            }
+            .navigationBarTitle("QR Code Scanner")
         }
     }
 }
 
-#Preview {
-    SecoundScreen()
+
+
+struct WebView: View {
+    let url: URL
+
+    var body: some View {
+        WebViewRepresentable(url: url)
+            .navigationBarTitle("Web View")
+    }
 }
-//
-//struct CameraView: UIViewControllerRepresentable {
-//    @Binding var capturedImage: UIImage?
-//    @Binding var recognizedText: String
-//    
-//    func makeUIViewController(context: Context) -> CameraViewController {
-//        let cameraViewController = CameraViewController()
-//        cameraViewController.delegate = context.coordinator
-//        return cameraViewController
-//    }
-//    
-//    func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {}
-//    
-//    func makeCoordinator() -> Coordinator {
-//        Coordinator(capturedImage: $capturedImage, recognizedText: $recognizedText)
-//    }
-//    
-//    class Coordinator: NSObject, CameraViewControllerDelegate {
-//        @Binding var capturedImage: UIImage?
-//        @Binding var recognizedText: String
-//        
-//        init(capturedImage: Binding<UIImage?>, recognizedText: Binding<String>) {
-//            _capturedImage = capturedImage
-//            _recognizedText = recognizedText
-//        }
-//        
-//        func cameraViewController(_ controller: CameraViewController, didCaptureImage image: UIImage) {
-//            capturedImage = image
-//            recognizeText(from: image)
-//        }
-//        
-//        func recognizeText(from image: UIImage) {
-//            guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
-//            
-//            // Set up your Google Cloud Vision API credentials and make the API call
-//            let apiKey = "YOUR_API_KEY"
-//            let urlString = "https://vision.googleapis.com/v1/images:annotate?key=\(apiKey)"
-//            let url = URL(string: urlString)!
-//            
-//            var request = URLRequest(url: url)
-//            request.httpMethod = "POST"
-//            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//            
-//            let imageContent = ImageContent(content: imageData.base64EncodedString())
-//            let feature = Feature(type: "TEXT_DETECTION")
-//            let requestObject = VisionAPIRequest(requests: [VisionAPIRequestItem(image: imageContent, features: [feature])])
-//            
-//            let encoder = JSONEncoder()
-//            encoder.keyEncodingStrategy = .convertToSnakeCase
-//            if let jsonData = try? encoder.encode(requestObject) {
-//                request.httpBody = jsonData
-//                
-//                let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
-//                    if let data = data, let response = try? JSONDecoder().decode(VisionAPIResponse.self, from: data) {
-//                        let recognizedText = response.responses.first?.textAnnotations.first?.description ?? "Text recognition failed"
-//                        DispatchQueue.main.async {
-//                            self?.recognizedText = recognizedText
-//                        }
-//                    } else {
-//                        print("Error: \(error?.localizedDescription ?? "Unknown error")")
-//                    }
-//                }
-//                
-//                task.resume()
-//            }
-//        }
-//    }
-//}
-//
-//protocol CameraViewControllerDelegate: AnyObject {
-//    func cameraViewController(_ controller: CameraViewController, didCaptureImage image: UIImage)
-//}
-//
-//class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-//    weak var delegate: CameraViewControllerDelegate?
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        presentCameraPicker()
-//    }
-//    
-//    private func presentCameraPicker() {
-//        let picker = UIImagePickerController()
-//        picker.delegate = self
-//        picker.sourceType = .camera
-//        picker.cameraCaptureMode = .photo
-//        picker.allowsEditing = false
-//        present(picker, animated: true, completion: nil)
-//    }
-//    
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//        guard let image = info[.originalImage] as? UIImage else {
-//            picker.dismiss(animated: true, completion: nil)
-//            return
-//        }
-//        
-//        delegate?.cameraViewController(self, didCaptureImage: image)
-//        picker.dismiss(animated: true, completion: nil)
-//    }
-//    
-//    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//        picker.dismiss(animated: true, completion: nil)
-//    }
-//}
-//
-//struct VisionAPIRequest: Codable {
-//    let requests: [VisionAPIRequestItem]
-//}
-//
-//structVisionAPIRequestItem: Codable {
-//    let image: ImageContent
-//    let features: [Feature]
-//}
-//
-//struct ImageContent: Codable {
-//    let content: String
-//}
-//
-//struct Feature: Codable {
-//    let type: String
-//}
-//
-//struct VisionAPIResponse: Codable {
-//    let responses: [VisionAPIResponseItem]
-//}
-//
-//struct VisionAPIResponseItem: Codable {
-//    let textAnnotations: [TextAnnotation]?
-//}
-//
-//struct TextAnnotation: Codable {
-//    let description: String
-//}
+
+struct WebViewRepresentable: UIViewRepresentable {
+    let url: URL
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
+
+struct SecoundScreen_Previews4: PreviewProvider {
+    static var previews: some View {
+        SecoundScreen()
+    }
+}

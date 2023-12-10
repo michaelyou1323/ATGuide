@@ -29,8 +29,7 @@ struct MainScreen: View {
                     
                     Group{
                         
-                        FirstScreen()
-                            
+                        PlanningScreen()
                             .tabItem {
                                 Image(systemName: "house.fill")
                                 Text("Home")
@@ -45,7 +44,7 @@ struct MainScreen: View {
                             }.tag(1)
                         
                         
-                        FifthScreen()
+                        ScannScreen()
                             .padding(.bottom,20)
                             .tabItem {
                                 Image(systemName: "ellipsis.rectangle")
@@ -53,6 +52,8 @@ struct MainScreen: View {
                             }.tag(2)
                         
                     }
+                  
+                    
                 
 
                     .toolbarBackground(.indigo, for: .tabBar)
@@ -62,6 +63,7 @@ struct MainScreen: View {
                     
                     
                 }
+               
                 .onChange(of: tabIndex) { newValue in
                                         // Update the title based on the selected tab
                                         switch newValue {
@@ -80,6 +82,7 @@ struct MainScreen: View {
             
             
             .navigationBarTitleDisplayMode(.automatic)
+            
             .navigationBarItems(leading: Button(action: {
                 // Toggle side menu visibility
                 withAnimation(.easeInOut) {

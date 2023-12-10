@@ -194,7 +194,7 @@ struct LoginScreen: View {
                                                .frame(maxWidth: .infinity)
                                                .padding()
                                                .foregroundColor(.white)
-                                               .background(Color(UIColor(hex: 0x0bb9c0)))
+                                               .background(Color(red: 0.043, green: 0.725, blue: 0.753))
                                                .cornerRadius(10)
                                        }
                                        .padding(.top, 30)
@@ -215,7 +215,7 @@ struct LoginScreen: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.white)
-                            .background(Color(red: 0.776, green: 0.357, blue: 0.145))
+                            .background(Color(red: 0.192, green: 0.259, blue: 0.333) )
                      //   #c65b25
                             .cornerRadius(10)
                            

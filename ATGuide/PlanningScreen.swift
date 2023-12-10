@@ -24,16 +24,37 @@ struct CityInfo {
     var numberOfDays: Int
 }
 
+struct TripPlanDetails {
+    var destination: String
+    var totalCost: Double
+    // Add other relevant properties from your TripPlan structure
+}
 
-struct TripDetails {
+struct tripPlan {
     var tripType: String
     var citiesInfo: [CityInfo]
     var hotelStars: Int
-    var enteredBudget: String
+    var enteredBudget: Int
 }
 
 
-struct FifthScreen: View {
+extension PlanningScreen {
+    var totalNumberOfDays: Int {
+        citiesInfo.reduce(0) { $0 + $1.numberOfDays }
+    }
+}
+
+extension PlanningScreen {
+    var convertedBudget: Int {
+        guard let budget = Int(tripBudget) else {
+            return 0 // Return a default value if conversion fails
+        }
+        return budget
+    }
+}
+
+
+struct PlanningScreen: View {
     @State private var counts: [Int] = Array(repeating: 0, count: 6)
     @State private var citiesInfo: [CityInfo] = [
           CityInfo(cityName: "Cairo", numberOfDays: 0),
@@ -45,7 +66,7 @@ struct FifthScreen: View {
       ]
     @State private var tripBudget: String = ""
     @State private var duration: String = ""
-    
+    @State  var apiUrl: String = ""
     let tripTypes = ["Select trip type", "Religious", "Sports", "Desert", "Medical", "Festivals", "Education"]
     let Religious = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
     let Sports = ["a", "Siwa", "b", "Luxor", "h", "Assiut"]
@@ -96,8 +117,91 @@ struct FifthScreen: View {
    
 
        @State private var selectedStars = 1
+    @State private var showPlannPlans: [TripPlan] = []
+//    @State private var currencies: [Currency] = []
+//
+//    
+//
+//    func fetchData() {
+//        let headers = [
+//            "X-RapidAPI-Key": "fd2ecd8edfmsh2d4087af4cccd54p1cb248jsnd0edafdaa13b",
+//            "X-RapidAPI-Host": "tourist-attraction.p.rapidapi.com"
+//        ]
+//
+//        guard let url = URL(string: "https://tourist-attraction.p.rapidapi.com/currencies") else {
+//            return
+//        }
+//
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "GET"
+//        request.allHTTPHeaderFields = headers
+//
+//        let session = URLSession.shared
+//        let dataTask = session.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                print("Error: \(error)")
+//            } else if let data = data {
+//                do {
+//                    let decodedData = try JSONDecoder().decode(CurrenciesResponse.self, from: data)
+//                    
+//                    DispatchQueue.main.async {
+//                        self.currencies = decodedData.results
+//                    }
+//                } catch {
+//                    print("Error decoding JSON: \(error)")
+//                }
+//            }
+//        }
+//        dataTask.resume()
+//    }
+//    
+    func fetchDataBasedOnChoices() {
+           if !chosenTripType.isEmpty && convertedBudget > 0 && totalNumberOfDays > 0 {
+               // Call the fetchPlansData function here
+               fetchPlansData(chosenTripType: chosenTripType, convertedBudget: convertedBudget, totalNumberOfDays: totalNumberOfDays)
+           } else {
+               // Handle incomplete data scenario, such as showing an error message to the user
+               print("Please select trip type, enter budget, and calculate total number of days.")
+           }
+       }
+    
+    
+    func fetchPlansData(chosenTripType: String, convertedBudget: Int, totalNumberOfDays: Int) {
+           let urlString = "https://8422-197-54-130-239.ngrok-free.app/recommendations/\(chosenTripType)/\(convertedBudget)/\(totalNumberOfDays)"
+           
+           if let url = URL(string: urlString) {
+               let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                   guard let data = data, error == nil else {
+                       print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                       return
+                   }
+                   
+                   do {
+                       let decodedData = try JSONDecoder().decode(PlanData.self, from: data)
+                       let fetchedPlans = decodedData.bestRecommendationsPlans
+                       
+                       DispatchQueue.main.async {
+                           if fetchedPlans.count >= 3 {
+                               self.showPlannPlans = [
+                                   TripPlan(destination: fetchedPlans[0].day1.place, activities: [:], totalCost: Double(fetchedPlans[0].day1.totalCost)),
+                                   TripPlan(destination: fetchedPlans[1].day2.place, activities: [:], totalCost: Double(fetchedPlans[1].day2.totalCost)),
+                                   TripPlan(destination: fetchedPlans[2].day3.place, activities: [:], totalCost: Double(fetchedPlans[2].day3.totalCost))
+                               ]
+                               // Once plans are fetched, display them by setting showPlann = 1
+                               self.showPlann = 1
+                           }
+                       }
+                   } catch {
+                       print("Error decoding JSON: \(error.localizedDescription)")
+                   }
+               }
+               task.resume()
+           }
+       }
     
     var body: some View {
+        
+        
       
         VStack( ){
 //                Text("Planning Section")
@@ -117,14 +221,17 @@ struct FifthScreen: View {
 //                             
 //                    )
                 
-                Picker("Select trip type", selection: $selectedTripType) {
-                    ForEach(tripTypes.indices, id: \.self) { index in
-                        Text(self.tripTypes[index])
-                      
-                    }
-                }
-                .pickerStyle(MenuPickerStyle())
                 
+                    Picker(selection: $selectedTripType, label: Text("Select trip type")) {
+                        ForEach(tripTypes.indices, id: \.self) { index in
+                            Text(self.tripTypes[index])
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    
+                   
+          
+
             }
             .frame(height: 35)
             .padding(.top,0)
@@ -138,22 +245,25 @@ struct FifthScreen: View {
                 .disabled(selectedTripType == 0)
                 .padding(.bottom, 15)
                 
+                
             
             
             
                 if selectedTripType != 0  && showCities == true {
                   
-                        Text("Choose your preferred city:")
-                            .font(.headline)
-                            .padding(.horizontal, 40)
-                            .padding(.bottom, 10)
+                    Text("Choose your preferred city:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 10)
+                            
            
                         HStack {
                             Text("City")
                             Spacer()
                             Text("Days     ")
                         }
-                        .foregroundColor(.green)
+                        .foregroundColor(.black)
                         .padding(.horizontal,33)
                         .padding(.bottom, 5)
                         
@@ -170,7 +280,7 @@ struct FifthScreen: View {
                                                self.incrementCount(index)
                                            }) {
                                                Image(systemName: "plus.circle")
-                                                   .foregroundColor(.blue)
+                                                   .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
                                            }
                                            .buttonStyle(BorderlessButtonStyle())
 
@@ -181,13 +291,14 @@ struct FifthScreen: View {
                                                self.decrementCount(index)
                                            }) {
                                                Image(systemName: "minus.circle")
-                                                   .foregroundColor(.blue)
+                                                   .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
                                            }
                                            .buttonStyle(BorderlessButtonStyle())
                                        }
                                        .contentShape(Rectangle())
                                    }
                                }
+                    .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
 //                    NavigationLink(destination: NextView(citiesInfo: citiesInfo), isActive: $navigateToNextView) {
 //                                  EmptyView()
 //                              }
@@ -200,12 +311,12 @@ struct FifthScreen: View {
                                        .foregroundColor(.white)
                                        .padding(.horizontal, 8)
                                        .padding(.vertical, 5)
-                                       .background(Color.green)
+                                       .background(Color(red: 0.043, green: 0.725, blue: 0.753))
                                        .cornerRadius(8)
                                }
                                .frame(maxWidth: .infinity, alignment: .trailing)
-                               .padding(.trailing, 20)
-                               .padding(.bottom, 0)
+                               .padding(.trailing, 30)
+                               .padding(.bottom, 90)
                            }
             
             else if( selectedTripType == 0 && showPlann == 0 && selectedHotelRoom == 0) {
@@ -223,13 +334,15 @@ struct FifthScreen: View {
               
                 Rectangle()
                     .fill(Color.gray.opacity(0.01))
-                    .frame(height: 200)
+                    .frame(height: 100)
        
                 Text("Select Number Of Stars For your Hotel")
                     .font(.headline)
-                    .padding(.bottom, 60)
+                    
                    
-
+                Rectangle()
+                    .fill(Color.gray.opacity(0.01))
+                    .frame(height: 50)
                     
                         HStack {
                             ForEach(1..<6) { star in
@@ -242,7 +355,10 @@ struct FifthScreen: View {
                         }
                         .font(.system(size: 24))
                     
-           
+                Rectangle()
+                    .fill(Color.gray.opacity(0.01))
+                    .frame(height: 50)
+                    
              
                 
                     Button(action: {
@@ -257,7 +373,7 @@ struct FifthScreen: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 5)
-                            .background(Color.green)
+                            .background(Color(red: 0.043, green: 0.725, blue: 0.753))
                             .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -270,86 +386,79 @@ struct FifthScreen: View {
                     .frame(height: 300)
             }
                 
-                if showPlann == 1 {
-                  
-                    VStack() {
-                        ScrollView{
-                                              
-                                          
-                            NavigationLink(destination: DetailsScreen(tripDetails: TripDetails(tripType: chosenTripType,
-                                                                                               citiesInfo: citiesInfo,
-                                                                                               hotelStars: selectedStars,
-                                                                                               enteredBudget: tripBudget)),
-                                           isActive: $navigateToNextView) {
-                            
-                                                       ZStack(alignment:.center) {
-                                                           let shape = RoundedRectangle(cornerRadius: 20)
-                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                                                           shape.stroke(Color.gray, lineWidth: 1)
-                                                           Text("First Plan")
-                                                               .font(.headline)
-                                                               .padding(.bottom, 60)
-                                                       }
-                                                       .frame(height: 120)
-                                                       .padding(.vertical, 10)
-                                                       .padding(.horizontal, 60)
+            if showPlann == 1 {
+                       ForEach(showPlannPlans.indices, id: \.self) { index in
+                           NavigationLink( destination: DetailsScreen()) {
+                               VStack {
+                                   Text("Destination: \(showPlannPlans[index].destination)")
+                                   Text("Total Cost: \(showPlannPlans[index].totalCost)")
+                                   // Add other relevant plan details here...
+                               }
+                               .padding()
+                               .background(Color.white)
+                               .cornerRadius(10)
+                               .shadow(radius: 3)
+                               .padding()
+                               
+                               
+                               
+                           }
+                       }
+                NavigationLink( destination: DetailsScreen()) {
+                    ZStack(alignment: .center) {
+                        let shape = RoundedRectangle(cornerRadius: 20)
+                        shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                        
+                        
+                        VStack {
+                            HStack {
+                                Text("Your Headline Text")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                                    .padding(.top, 10)
+                                    .padding(.leading, 10) // Align to the left
+                                Spacer() // Pushes text to the left
                             }
-                         
                             
-                        .frame(height: 120)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 60)
-                        
-//                            NavigationLink(destination: DetailsScreen()) {
-                                                       ZStack(alignment:.center) {
-                                                           let shape = RoundedRectangle(cornerRadius: 20)
-                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                                                           shape.stroke(Color.gray, lineWidth: 1)
-                                                           Text("Second Plan")
-                                                               .font(.headline)
-                                                               .padding(.bottom, 60)
-                                                       }
-                                                       .frame(height: 120)
-                                                       .padding(.vertical, 10)
-                                                       .padding(.horizontal, 60)
-                                                  // }
-                        .frame(height: 120)
-                        .padding(.vertical, 10) 
-                        .padding(.horizontal, 60)
-                        
-                        
-                          //  NavigationLink(destination: DetailsScreen()) {
-                                                       ZStack(alignment:.center) {
-                                                           let shape = RoundedRectangle(cornerRadius: 20)
-                                                           shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                                                           shape.stroke(Color.gray, lineWidth: 1)
-                                                           Text("Third Plan")
-                                                               .font(.headline)
-                                                               .padding(.bottom, 60)
-                                                       }
-                                                       .frame(height: 120)
-                                                       .padding(.vertical, 10)
-                                                       .padding(.horizontal, 60)
-                                         //          }
-                        .frame(height: 120)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 60)
-                        
-                      
-                        
-//                        ForEach(plan.activities.keys.sorted(), id: \.self) { activity in
-//                            Text("\(activity): $\(plan.activities[activity] ?? 0)")
-//                                .padding(.bottom, 2)
-//                        }
-                        
-                      
-                        Spacer()
+                            VStack {
+                                Image("1024 1")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: .infinity) // Stretches horizontally
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5) // Add padding to the image
+                            }
+                            .background(Color.white) // Add a white background for the image container
+                            .cornerRadius(10) // Round corners of the image container
+                            
+                            HStack {
+                                Spacer() // Pushes text to the right
+                                Text("#1") // Replace with your card number
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 20)
+                            }
                         }
+                        .padding(10) // Add padding for the whole content
+                        
                     }
+                    .frame(height: 160) // Adjust the height as needed
+                    .padding(.vertical, 10)
+                    
+                    .background(Color.white) // Add a white background to the entire card
+                    .cornerRadius(20) // Round corners of the card
+                    .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 4) // Add a shadow effect
+                    .padding(.horizontal, 40)
                 }
+                   }
                 
      
             if showGeneratButton != 0 {
+                
+                
+            Rectangle()
+                .fill(Color.gray.opacity(0.01))
+                .frame(height: 300)
                 
                 
                 Button(action: {
@@ -399,7 +508,7 @@ struct FifthScreen: View {
        
             
             .background(Color.gray.opacity(0.1).ignoresSafeArea())
-      
+          //  .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
         
     }
     
@@ -529,8 +638,67 @@ struct CustomTextFieldStyle: TextFieldStyle {
     }
 }
 
+struct PlanData: Decodable {
+    struct DayDetails: Decodable {
+        let hotel: String
+        let place: String
+        let restaurant: String
+        let totalCost: Int
+    }
+    
+    struct RecommendationPlan: Decodable {
+        var day1: DayDetails
+        var day2: DayDetails
+        var day3: DayDetails
+    }
+    
+    var bestRecommendationsPlans: [RecommendationPlan]
+}
+
+
+//func fetchPlansData(chosenTripType: String, convertedBudget: Int, totalNumberOfDays: Int) {
+//    // Prepare the API URL string by interpolating the values
+//    let urlString = "https://8422-197-54-130-239.ngrok-free.app/recommendations/\(chosenTripType)/\(convertedBudget)/\(totalNumberOfDays)"
+//    
+//    if let url = URL(string: urlString) {
+//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//            guard let data = data, error == nil else {
+//                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+//                return
+//            }
+//            
+//            do {
+//                let decodedData = try JSONDecoder().decode(PlanData.self, from: data)
+//                // Access the fetched plans here
+//                let fetchedPlans = decodedData.bestRecommendationsPlans
+//                
+//                // Process or use the fetched plans as needed
+//                print("Fetched Plans: \(fetchedPlans)")
+//            } catch {
+//                print("Error decoding JSON: \(error.localizedDescription)")
+//            }
+//        }
+//        task.resume()
+//    }
+//}
+
+//struct Currency: Codable {
+//    let name: String
+//    let code: String
+//    // Add other properties as needed
+//}
+//
+//
+//
+//struct CurrenciesResponse: Codable {
+//    let status: Int
+//    let msg: String?
+//    let results: [Currency]
+//}
+
+
 struct FifthScreen_Previews: PreviewProvider {
     static var previews: some View {
-        FifthScreen()
+        PlanningScreen()
     }
 }

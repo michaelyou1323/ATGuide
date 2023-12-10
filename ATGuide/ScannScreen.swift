@@ -2,7 +2,7 @@ import SwiftUI
 import Vision
 import VisionKit
 
-struct FirstScreen: View {
+struct ScannScreen: View {
     @State private var scannedText: String = ""
     @State private var isShowingScanner: Bool = false
     
@@ -102,6 +102,6 @@ struct ScannerView: UIViewControllerRepresentable {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        FirstScreen()
+        ScannScreen()
     }
 }
