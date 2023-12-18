@@ -279,7 +279,7 @@ struct SignUp: View {
             
             
         } .padding()
-            .background(Color.black.opacity(0.05))
+            .background(Color.white)
             
             .onAppear {
                 // Additional setup on appearance

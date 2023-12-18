@@ -140,7 +140,26 @@ struct LoginScreen: View {
                     
                      .frame( height:150)
                      
-            
+                     HStack(spacing: 0) {
+                         Text("A")
+                             .font(Font.custom("Baskerville-Bold", size: 30))
+                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                          
+                             
+                         
+                         
+                         
+                         Text("T")
+                             .font(Font.custom("Baskerville-Bold", size: 30))
+                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                            
+                            
+                          
+                         Text("Guide")
+                             .font(Font.custom("Baskerville-Bold", size: 30))
+                             .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                            
+                     }
                      VStack {
                          ZStack {
                              RoundedRectangle(cornerRadius: 10)

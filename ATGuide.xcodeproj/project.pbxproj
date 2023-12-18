@@ -51,6 +51,7 @@
 		9444A2872B25C91A00E12827 /* FavoriteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444A2862B25C91900E12827 /* FavoriteScreen.swift */; };
 		9464CEFF2B1EA7A20020299A /* DetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */; };
 		947788092B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */; };
+		9477880B2B26204A00C6AEA1 /* demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9477880A2B26204A00C6AEA1 /* demo.swift */; };
 		9497CF532B1CE7440056B59E /* 1024 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9497CF522B1CE7440056B59E /* 1024 1.png */; };
 		94BBE8412AD8681800C3FC07 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 94BBE8402AD8681800C3FC07 /* FirebaseAnalytics */; };
 		94BBE8432AD8681800C3FC07 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 94BBE8422AD8681800C3FC07 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -86,6 +87,7 @@
 		94BBE87F2AD8686200C3FC07 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 94BBE87E2AD8686200C3FC07 /* FirebaseStorageCombine-Community */; };
 		94BBE8822AD868AF00C3FC07 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 94BBE8812AD868AF00C3FC07 /* GoogleSignIn */; };
 		94BBE8842AD868AF00C3FC07 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 94BBE8832AD868AF00C3FC07 /* GoogleSignInSwift */; };
+		94D1145D2B2695080094F1A3 /* fotor-ai-2023121125256.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */; };
 		94D5332C2AE44BEE0087D117 /* FourthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5332B2AE44BE30087D117 /* FourthScreen.swift */; };
 		94E5FBC82AD84499007BC416 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 94E5FBC72AD84499007BC416 /* FirebaseAnalytics */; };
 		94E5FBCA2AD84499007BC416 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 94E5FBC92AD84499007BC416 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -116,7 +118,9 @@
 		9444A2862B25C91900E12827 /* FavoriteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreen.swift; sourceTree = "<group>"; };
 		9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsScreen.swift; sourceTree = "<group>"; };
 		947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreenDetails.swift; sourceTree = "<group>"; };
+		9477880A2B26204A00C6AEA1 /* demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demo.swift; sourceTree = "<group>"; };
 		9497CF522B1CE7440056B59E /* 1024 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1024 1.png"; path = "Assets.xcassets/AppIcon.appiconset/1024 1.png"; sourceTree = "<group>"; };
+		94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "fotor-ai-2023121125256.jpg"; sourceTree = "<group>"; };
 		94D5332A2AE4498D0087D117 /* AT Guide Database.bak */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AT Guide Database.bak"; sourceTree = "<group>"; };
 		94D5332B2AE44BE30087D117 /* FourthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthScreen.swift; sourceTree = "<group>"; };
 		94ECE90F2B23A4CC00EE11D9 /* screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = screen.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
 				9497CF522B1CE7440056B59E /* 1024 1.png */,
 				9408E85E2AD134F9006FF31A /* Assets.xcassets */,
+				94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */,
 				9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */,
 				9408E8602AD134F9006FF31A /* Preview Content */,
 				AC18DB682ADC5311005BED40 /* SplashScreenView.swift */,
@@ -258,6 +263,7 @@
 			children = (
 				940915AC2B23A30B00DCACA6 /* DataTry.swift */,
 				94ECE90F2B23A4CC00EE11D9 /* screen.swift */,
+				9477880A2B26204A00C6AEA1 /* demo.swift */,
 			);
 			path = "New Group";
 			sourceTree = "<group>";
@@ -393,6 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9408E8622AD134F9006FF31A /* Preview Assets.xcassets in Resources */,
+				94D1145D2B2695080094F1A3 /* fotor-ai-2023121125256.jpg in Resources */,
 				9444A2852B252A7300E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg in Resources */,
 				9408E85F2AD134F9006FF31A /* Assets.xcassets in Resources */,
 				9497CF532B1CE7440056B59E /* 1024 1.png in Resources */,
@@ -418,6 +425,7 @@
 				9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */,
 				9408E85D2AD134F7006FF31A /* LoginScreen.swift in Sources */,
 				94D5332C2AE44BEE0087D117 /* FourthScreen.swift in Sources */,
+				9477880B2B26204A00C6AEA1 /* demo.swift in Sources */,
 				9408E8692AD14295006FF31A /* SignUp.swift in Sources */,
 				9408E85B2AD134F7006FF31A /* ATGuideApp.swift in Sources */,
 				9444A2872B25C91A00E12827 /* FavoriteScreen.swift in Sources */,

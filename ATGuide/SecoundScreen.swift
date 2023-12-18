@@ -87,6 +87,8 @@ struct SecoundScreen: View {
                     } else {
                         Text("Scanned code: \(scannedCode)")
                             .padding()
+                        
+                      
                     }
                 } else {
 
