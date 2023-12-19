@@ -14,7 +14,7 @@ struct MainScreen: View {
     
     @State private var tabIndex = 0 // Track the selected tab index
     @State private var presentSideMenu = false
-    @State private var title = "Home" // Track the title
+    @State private var title = "Planning Section" // Track the title
     
     var body: some View {
         ZStack {
@@ -31,8 +31,9 @@ struct MainScreen: View {
                         
                         PlanningScreen()
                             .tabItem {
-                                Image(systemName: "house.fill")
-                                Text("Home")
+                                Image(systemName: "calendar")
+                              //  Image(systemName: "map")
+                                Text("Plan")
                             }.tag(0)
                         //   .toolbar(.visible, for: .tabBar)
                         //   .toolbarBackground(Color.yellow, for: .tabBar)
@@ -264,15 +265,15 @@ struct SideMenu: View {
                                .background(
                                    // Instead of using NavigationLink here directly,
                                    // use it at the appropriate place in your view hierarchy
-                                   NavigationLink(destination: Profile(), isActive: $isProfileScreenActive) {
+                                   NavigationLink(destination: Profile(email: email, username: username,language:language,country: country), isActive: $isProfileScreenActive) {
                                        
                                        EmptyView()
                                    }
                                )
-                        Text("username")
+                        Text(username)
                             .font(.headline)
                         
-                        Text("email")
+                        Text(email)
                             .padding(.leading, 5)
                             .font(.system(size: 15))
                             .foregroundColor(.white)
@@ -292,31 +293,74 @@ struct SideMenu: View {
                     .padding(.bottom,0)
                     
                     // Language with padding, background, border, and corner radius
-                    Text("language")
-                        .padding(.leading,5)
-                        .font(.headline)
-                        .background(Color.white)
-                        .padding(.top,0)
-                    //                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
-                    //                    .border(Color.gray, width: 1) // Adding a border
-                    
+                    HStack {
+                                    Image(systemName: "globe")
+                            .padding(.leading,10)
+                                    Text("language")
+                                        .padding(.leading, 5)
+                                        .font(.headline)
+                                        .background(Color.white)
+                                        .padding(.top, 0)
+                    Spacer()
+                        Text(language)
+                            .padding(.trailing, 5)
+                            .font(.headline)
+                            .foregroundColor(Color.gray).opacity(0.6)
+                            .padding(.top, 0)
+                                }
+                                .padding(.top, 5)
+                                .background(Color.white)
+                                .cornerRadius(5)
+    //                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
+    //                    .border(Color.gray, width: 1) // Adding a border
+                
                     Divider().background(.black)
                     
-                    Text("country")
-                        .padding(.leading,5)
-                        .font(.headline)
-                        .background(Color.white)
-                    
+                    HStack {
+                        Image(systemName: "flag")
+                            .padding(.leading,10)
+                                    Text("Country")
+                                        .padding(.leading, 5)
+                                        .font(.headline)
+                                        .background(Color.white)
+                                        .padding(.top, 0)
+                        
+                        Spacer()
+                            Text(country)
+                                .padding(.trailing, 5)
+                                .font(.headline)
+                                .foregroundColor(Color.gray).opacity(0.6)
+                                .padding(.top, 0)
+                                }
+                                .padding(.top, 5)
+                                .background(Color.white)
+                                .cornerRadius(5)
+                       
                     Divider().background(.black)
-                    //                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
-                    //                    .border(Color.gray, width: 1) // Adding a border
+    //                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
+    //                    .border(Color.gray, width: 1) // Adding a border
                     
-                    Text("phone")
-                        .padding(.leading,5)
-                        .font(.headline)
-                        .background(Color.white)
-                    
+                    HStack {
+                                    Image(systemName: "phone")
+                            .padding(.leading,10)
+                                    Text("Phone")
+                                        .padding(.leading, 5)
+                                        .font(.headline)
+                                        .background(Color.white)
+                                        .padding(.top, 0)
+                        Spacer()
+                            Text("phone")
+                                .padding(.trailing, 5)
+                                .font(.headline)
+                                .foregroundColor(Color.gray).opacity(0.6)
+                                .padding(.top, 0)
+                                }
+                                .padding(.top, 5)
+                                .background(Color.white)
+                                .cornerRadius(5)
+                       
                     Divider().background(.black)
+                    
                     
                 }
                 .frame(maxWidth: 270, maxHeight: .infinity, alignment: .top)

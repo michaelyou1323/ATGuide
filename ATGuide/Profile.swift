@@ -90,10 +90,18 @@ struct ImagePicker: UIViewControllerRepresentable {
 
 
 struct Profile: View {
-
- 
+    let email: String
+    let username: String
+    let language: String
+    let country: String
+    @State private var editedUsername = ""
+       @State private var editedEmail = ""
+       @State private var editedLanguage = "language"
+       @State private var editedCountry = ""
+       @State private var editedPhone = ""
     @State private var isImagePickerPresented = false
-
+    @State private var isEditing = false
+       
       @State private var selectedImage: UIImage? = UserDefaults.standard.getImage(forKey: "profileImage")
 
 
@@ -117,13 +125,41 @@ struct Profile: View {
                             .onTapGesture {
                                 isImagePickerPresented = true
                             }
-                        Text("username")
+                        Text(username)
                             .font(.headline)
                         
-                        Text("email")
+                        Text(email)
                             .padding(.leading, 5)
                             .font(.system(size: 15))
                             .foregroundColor(.white)
+                            .padding(.bottom, 20)
+                    
+                        HStack(alignment:.bottom) {
+                                           Spacer()
+                                           if isEditing {
+                                               Image(systemName: "checkmark.circle.fill")
+                                                   .padding(.horizontal, 18)
+                                                   .font(.system(size: 20))
+                                                   .foregroundColor(.white)
+                                                   .clipShape(Circle())
+                                                   .onTapGesture {
+                                                       // Handle save logic
+                                                       isEditing = false
+                                                   }
+                                           } else {
+                                               Image(systemName: "pencil")
+                                                   .padding(.horizontal, 20)
+                                                   .font(.system(size: 25))
+                                                   .foregroundColor(.white)
+                                                   .clipShape(Circle())
+                                                   .onTapGesture {
+                                                       // Handle enabling editing mode
+                                                       isEditing = true
+                                                   }
+                                           }
+                                       }
+                                   
+                        
                     }
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     .frame(maxWidth: .infinity, minHeight: 250, alignment: .center)
@@ -140,32 +176,87 @@ struct Profile: View {
                     .padding(.bottom,0)
             
                 // Language with padding, background, border, and corner radius
-                Text("language")
-                    .padding(.leading,5)
-                    .font(.headline)
-                    .background(Color.white)
-                    .padding(.top,0)
-//                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
-//                    .border(Color.gray, width: 1) // Adding a border
+                HStack {
+                    
+                        Image(systemName: "globe")
+                            .padding(.leading,10)
+                        
+                   
+                        Text("language")
+                            .padding(.leading, 5)
+                            .font(.headline)
+                            .background(Color.white)
+                            .padding(.top, 0)
+                    
+                   
+                    Spacer()
+                if isEditing {
+                    
+                    Spacer()
+                    TextField("", text: $editedLanguage)
+                        .padding(.trailing, 5)
+                        .font(.headline)
+                        .foregroundColor(Color.gray).opacity(0.6)
+                        .padding(.top, 0)
+                       
+                }else{
+                    Spacer()
+                    Text(language)
+                        .padding(.trailing, 5)
+                        .font(.headline)
+                        .foregroundColor(Color.gray).opacity(0.6)
+                        .padding(.top, 0)
+                }
+                }
+                           
+
             
                 Divider().background(.black)
                 
-                Text("country")
-                    .padding(.leading,5)
-                    .font(.headline)
-                    .background(Color.white)
+                HStack {
+                    Image(systemName: "flag")
+                        .padding(.leading,10)
+                                Text("Country")
+                                    .padding(.leading, 5)
+                                    .font(.headline)
+                                    .background(Color.white)
+                                    .padding(.top, 0)
+                    
+                    Spacer()
+                        Text(country)
+                            .padding(.trailing, 5)
+                            .font(.headline)
+                            .foregroundColor(Color.gray).opacity(0.6)
+                            .padding(.top, 0)
+                            }
+                            .padding(.top, 5)
+                            .background(Color.white)
+                            .cornerRadius(5)
                    
                 Divider().background(.black)
 //                    .frame(maxWidth: .infinity,minHeight:50 ,alignment: .leading)
 //                    .border(Color.gray, width: 1) // Adding a border
                 
-                Text("phone")
-                    .padding(.leading,5)
-                    .font(.headline)
-                    .background(Color.white)
+                HStack {
+                                Image(systemName: "phone")
+                        .padding(.leading,10)
+                                Text("Phone")
+                                    .padding(.leading, 5)
+                                    .font(.headline)
+                                    .background(Color.white)
+                                    .padding(.top, 0)
+                    Spacer()
+                        Text("phone")
+                            .padding(.trailing, 5)
+                            .font(.headline)
+                            .foregroundColor(Color.gray).opacity(0.6)
+                            .padding(.top, 0)
+                            }
+                            .padding(.top, 5)
+                            .background(Color.white)
+                            .cornerRadius(5)
                    
                 Divider().background(.black)
-                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Color.white.ignoresSafeArea(.all))
@@ -196,5 +287,5 @@ extension UserDefaults {
 }
 
 #Preview {
-    Profile()
+    Profile(email: "michaelyou200@gmail.com", username: "Michaelyou", language: "English", country: "Egypt")
 }
