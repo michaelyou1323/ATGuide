@@ -21,7 +21,7 @@ struct DetailsScreen: View {
     @State private var recommendationsPlan1: [Recommendation] = []
     @State private var recommendationsPlan2: [Recommendation] = []
     @State private var recommendationsPlan3: [Recommendation] = []
-    
+   
     var body: some View {
         VStack() {
             HStack {
@@ -56,8 +56,7 @@ struct DetailsScreen: View {
                 
                 VStack(spacing: 20) {
                     
-
-                   
+              
                     ForEach(selectedRecommendationPlan(), id: \.self) { recommendation in
                         RecommendationView(recommendation: recommendation)
                             .id(UUID()) // Force view update
@@ -89,7 +88,7 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://2537-156-210-170-81.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://f769-197-54-160-20.ngrok-free.app/recommendations") else {
             return
         }
 
@@ -250,94 +249,112 @@ struct RecommendationView: View {
                             .padding(.leading, 10) // Align to the left
                         Spacer()
                     }
-                    
-                    HStack{    
-                        AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: recommendation.Image) ?? "")) { phase in
-                                       switch phase {
-                                       case.empty:
-                                           ProgressView()
-                                       case.success(let image):
-                                           image
-                                               .resizable()
-                                               .aspectRatio(contentMode: .fit)
-                                       case.failure:
-                                           Image("1024 1")
-                                               .resizable()
-                                               .aspectRatio(contentMode: .fit)
-                                       @unknown default:
-                                           EmptyView()
-                                       }
-                            
-                                   }
-                        .frame(maxWidth: .infinity)
+                    .frame(minWidth: 100)
+                    Spacer()
+//                    HStack{
+                        AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: "recommendation.Image") ?? ""))
+                          {
+                        phase in
+                                 switch phase {
+                                 case.empty:
+                                     ProgressView()
+                                 case.success(let image):
+                                     image
+                                         .resizable()
+                                         .aspectRatio(contentMode: .fit)
+                                 case.failure:
+                                     Image("1024 1")
+                                         .resizable()
+                                         .aspectRatio(contentMode: .fit)
+                                 @unknown default:
+                                     EmptyView()
+                                 }
+                      
+                             }
+                        .cornerRadius(20)
+                        .frame(minWidth: 150,maxHeight: 150)
                        
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .cornerRadius(10)
-                             
+                       
+                    
                   
                     
-                    }
-                    
+//                    }
+//
                
                     
                 }
                 
-                HStack{
+                HStack(alignment: .top){
                     
-                    HStack{
+                    HStack(alignment: .center){
                         
                         
-                        VStack {
+                        VStack(alignment: .leading) {
                             
-                            Text("Hotel: \(recommendation.hotel)") // Replace with your card number
-                                .font(.system(size: 14))
+                            Text("Hotel: \(recommendation.hotel)") // Replace with your card number Replace with your card number
+                                .font(.system(size: 13))
+                               
+                             
+                            Text("Restorant: \(recommendation.Restaurant) ")// Replace with your card number
+                                .font(.system(size: 13))
+                                .multilineTextAlignment(.center)
+                              
                             
-                            Text("Restorant: \(recommendation.Restaurant) ") // Replace with your card number
-                                .font(.system(size: 14))
-                            
-                        }.frame(height:30)
-                            .padding(.top, 5)
+                        }.frame(minWidth: 280, minHeight:80)
+                            .padding(.top, 1)
+                          
                             .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                            
                         Spacer()
-                        Text(" \(recommendation.TotalCost) ")
-                            .font(.headline)
-                            .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                            .padding(.top, 10)
-                            .padding(.trailing, 10) // Align to the left
+                        ZStack{
+                            
+                            let shape = RoundedRectangle(cornerRadius: 8)
+                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                            shape.stroke(Color.gray, lineWidth: 1)
+                            
+                            
+                            Text(" \(recommendation.TotalCost) $")
+                                .font(.headline)
+                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                               // Align to the left
+                        }
+                        .frame(width: 50, height:30)
+                       
                     }
-                    .padding(10)
+                    .padding(.horizontal,5)
                 }
-                
+              
             }.cornerRadius(20)
-          
+             
             
         }
-        .frame(height: 220) // Adjust the height as needed
+        .frame(height: 240) // Adjust the height as needed
         
         .background(Color.white) // Add a white background to the entire card
         .cornerRadius(20) // Round corners of the card
         .shadow(color: Color.black.opacity(0.4), radius: 5, x: 0, y: 0) // Add a shadow effect
-        .padding(.horizontal, 40)
-        .padding(.vertical, 10)
-        
+        .padding(.horizontal, 20)
+        .padding(.vertical, 5)
+       
     }
 }
 
 struct DetailsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        DetailsScreen(TripType: "culture_places", budget: 30004, selectedDaysList:[
+        DetailsScreen(TripType: "culture_places", budget: 89898, selectedDaysList:[
             [
-            "city":"Cairo",
-            "days":3
+            "city":"Cairo", 
+            "days":4
             ],
             [
             "city":"Alexandria",
-            "days":1
+            "days":15
             ],
              [
             "city":"Luxor",
-            "days":2
+            "days":1
             ]
 
         ] , PlanNumber: 0)
