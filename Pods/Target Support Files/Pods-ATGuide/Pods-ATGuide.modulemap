@@ -1,0 +1,6 @@
+framework module Pods_ATGuide {
+  umbrella header "Pods-ATGuide-umbrella.h"
+
+  export *
+  module * { export * }
+}

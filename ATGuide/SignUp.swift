@@ -90,7 +90,7 @@ struct SignUp: View {
     @State var language = ""
     @State var password = ""
     @State var confirmPassword = ""
-
+    @State private var userID: String = ""
     
  //   @StateObject var viewModel = WriteViewModel()
     
@@ -218,7 +218,7 @@ struct SignUp: View {
                             
                         }
                         
-                        NavigationLink(destination: MainScreen(email: email, username: firstname, language:language, country:country), isActive: $isNavigate) {
+                        NavigationLink(destination: MainScreen(email: email, username: firstname, language:language, country:country, phone: phonenumber, userID: userID), isActive: $isNavigate) {
                                             EmptyView()
                                         }
                      
@@ -242,6 +242,7 @@ struct SignUp: View {
                                             toastText = "Error: \(error.localizedDescription)"
                                         } else if let authResult = authResult {
                                             let newUser = User(id: authResult.user.uid, name: firstname, email: email, password: password , phonenumber: phonenumber, country: country, language: language )
+                                            userID = authResult.user.uid // Capture user ID here
                                             saveUserData(user: newUser) // Save user data to Firebase
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
                                                 isLoading = false

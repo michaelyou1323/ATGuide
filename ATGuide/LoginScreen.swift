@@ -55,8 +55,7 @@ struct ContentView: View {
                              if let userData = getUserDataFromUserDefaults() {
                                  MainScreen(email: userData["email"] as? String ?? "",
                                             username: userData["name"] as? String ?? "",
-                                            language: userData["language"] as? String ?? "",
-                                            country: userData["country"] as? String ?? "")
+                                            language: userData["language"] as? String ?? "",country: userData["country"] as? String ?? "", phone: userData["phonenumber"] as? String ?? "", userID:  userData["id"] as? String ?? "")
                              } else {
                                  LoginScreen(isShowingLogin: $isShowingLogin)
                                      .onDisappear {
@@ -89,16 +88,16 @@ struct ContentView: View {
                          MainScreen(email: userData["email"] as? String ?? "",
                                     username: userData["name"] as? String ?? "",
                                     language: userData["language"] as? String ?? "",
-                                    country: userData["country"] as? String ?? "")
+                                    country: userData["country"] as? String ?? "", phone: userData["phonenumber"] as? String ?? "", userID:  userData["id"] as? String ?? "")
                      } else {
-                         MainScreen(email: "", username: "", language: "", country: "")
+                         MainScreen(email: "", username: "", language: "", country: "", phone: "", userID: "")
                      }
                  }
              }
 
     // Check if the user is logged in
     func isLoggedIn() -> Bool {
-        // Add your logic to check if the user is logged in
+        // Add your logic to check if the user is logged in"
         // For example, check if the user session is still valid
         return /* Your logic to check if user is logged in */ true
     }
@@ -128,38 +127,33 @@ struct LoginScreen: View {
             NavigationView {
                  VStack {
                      GeometryReader { geometry in
-                         Image("1024 1")
+                         Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
                             
                              .resizable()
                              .aspectRatio(contentMode: .fit)
                             // Adjust the height as needed
-                             .frame(width: geometry.size.width, height:150)
+                             .frame(width: geometry.size.width, height:230)
                              .clipped()
                              .padding(.bottom, 20)
                      }
                     
-                     .frame( height:150)
+                     .frame( height:230)
                      
-                     HStack(spacing: 0) {
-                         Text("A")
-                             .font(Font.custom("Baskerville-Bold", size: 30))
-                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
-                          
-                             
-                         
-                         
-                         
-                         Text("T")
-                             .font(Font.custom("Baskerville-Bold", size: 30))
-                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
-                            
-                            
-                          
-                         Text("Guide")
-                             .font(Font.custom("Baskerville-Bold", size: 30))
-                             .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                            
-                     }
+//                     HStack(spacing: 0) {
+//                         Text("A")
+//                             .font(Font.custom("Baskerville-BoldItalic", size: 30))
+//                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+//                
+//                         Text("T")
+//                             .font(Font.custom("Baskerville-Bold", size: 30))
+//                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+//                            
+//                    
+//                         Text("Guide")
+//                             .font(Font.custom("Baskerville-Bold", size: 30))
+//                             .foregroundColor(Color(UIColor(hex: 0x313F54)))
+//                            
+//                     }
                      VStack {
                          ZStack {
                              RoundedRectangle(cornerRadius: 10)
@@ -193,7 +187,7 @@ struct LoginScreen: View {
                     
                    
                     
-                    NavigationLink(destination: MainScreen(email: userData?.email ?? "", username: userData?.name ?? "", language: userData?.language ?? "" ,country: userData?.country ?? ""), isActive: $isShowingNewView) {
+                     NavigationLink(destination: MainScreen(email: userData?.email ?? "", username: userData?.name ?? "", language: userData?.language ?? "" ,country: userData?.country ?? "", phone: userData?.phonenumber ?? "", userID: userData?.id ?? ""), isActive: $isShowingNewView) {
                                         EmptyView()
                                     }
                     NavigationLink(destination: SignUp(), isActive: $signUp ) {
@@ -246,7 +240,7 @@ struct LoginScreen: View {
                                             resetPassword = true
                                         }) {
                                             Text("Forgot Password?")
-                                                .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                                                .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
                                                 .padding(.top, 8)
                                         }
                                         .sheet(isPresented: $resetPassword) {

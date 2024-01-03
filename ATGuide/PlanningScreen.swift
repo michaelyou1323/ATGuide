@@ -2,7 +2,9 @@
 
 
     import SwiftUI
-
+    import QuartzCore
+    import SDWebImageSwiftUI
+import UIKit
     struct TripPlan {
         var destination: String
         var activities: [String: Double]
@@ -22,10 +24,7 @@
     }
 
 
-    struct CityInfo {
-        let cityName: String
-        var numberOfDays: Int
-    }
+
 
     struct TripPlanDetails {
         var destination: String
@@ -57,41 +56,74 @@
     }
 
 
+
+
+extension AnyTransition {
+    static var moveAndFade: AnyTransition {
+        AnyTransition.slide
+    }
+}
+
+
+
+struct CityInfo {
+    let cityName: String
+    var numberOfDays: Int
+}
+
+
+
     struct PlanningScreen: View {
+        let userID: String
+        
         @State private var counts: [Int] = Array(repeating: 0, count: 6)
-        @State private var citiesInfo: [CityInfo] = [
-              CityInfo(cityName: "Cairo", numberOfDays: 0),
-              CityInfo(cityName: "Siwa", numberOfDays: 0),
-              CityInfo(cityName: "Aswan", numberOfDays: 0),
-              CityInfo(cityName: "Luxor", numberOfDays: 0),
-              CityInfo(cityName: "Giza", numberOfDays: 0),
-              CityInfo(cityName: "Assiut", numberOfDays: 0)
+        
+      
+         @State private var citiesInfo: [CityInfo] = Array(repeating: CityInfo(cityName: "", numberOfDays: 0), count: 6)
+        let cityInformation: [Int: [String]] = [
+              1: ["Cairo", "Alexandria", "Aswan", "Luxor"], // culture_places
+              2: ["Siwa", "Luxor", "Assiut"], // sports_places
+              3: ["Fayoum", "Ras Sudr", "Nuweiba"], // desert_places
+              4: ["Cairo", "Alexandria", "Aswan", "Luxor"], // medical_places
+              5: ["Siwa", "Luxor", "Assiut"], // festival_places
+              6: ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"], // conference_places
+              7: ["Siwa", "Luxor", "Assiut"], // pleasure_places
+              8: ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"], // religious_places
+              
           ]
+  
+        
         @State private var tripBudget: String = ""
         @State private var duration: String = ""
         @State  var apiUrl: String = ""
-        let tripTypes = ["Select trip type", "culture_places", "sports_places", "desert_places", "medical_places", "festival_places", "education_places"]
+        let tripTypes = ["Select trip type", "Culture", "Sports", "Desert", "Medical", "Festival", "Conference","Pleasure","Religious"]
+
         
-        let Religious = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
-        
-        let Sports = ["a", "Siwa", "b", "Luxor", "h", "Assiut"]
-        let Desert = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
-        let Medical = ["8787", "dddd", "jh", "jjhj", "Giza", "Assiut"]
-        let Festivals = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
-        let Education = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
-        
+       
+//        let Religious = ["Cairo", "Alexandria", "Aswan", "Luxor"]
+//        
+//        let Sports = ["a", "Siwa", "b", "Luxor", "h", "Assiut"]
+//        let Desert = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+//        let Medical = ["8787", "dddd", "jh", "jjhj", "Giza", "Assiut"]
+//        let Festivals = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
+//        let conference_places = ["Cairo", "Alexandria", "Marsa Alam", "Sharm El Sheikh"]
+//        
         
         
 //        let Cairo = ["A1", "A2", "A3", "A4", "A5", "A6"]
 //        let Siwa = ["B1", "B2", "B3", "B4", "B5", "B6"]
 //        let Aswan = ["c1", "c2", "c3", "c4", "c5", "c6"]
-//        let Lucor = ["D1", "d2", "d3", "d4", "d5", "d6"]
+//        let Lucor = ["D1", "d2", "d3", "d4", "d5", "d6"] 
 //        let Giza = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
 //        let Assiut = ["Cairo", "Siwa", "Aswan", "Luxor", "Giza", "Assiut"]
         
         
+        @State private var recommendationsPlan12: [Recommendation] = []
+        @State private var recommendationsPlan22: [Recommendation] = []
+        @State private var recommendationsPlan32: [Recommendation] = []
+      
           
-        let tripPrices = [0, 3000, 2000, 4500, 6000, 7000, 9000] as [Any]
+        let tripPrices = [0, 3000, 2000, 4500, 6000, 7000, 9000,1000,11111] as [Any]
         @State private var selectedTripType = 0
         @State private var selectedHotelRoom = 0
         @State private var showGeneratButton = 0
@@ -117,9 +149,22 @@
         
         @State private var showPlann = 0
         @State private var navigateToNextView = false
-
+        @State private var isBudgetFieldEnabled = false
+        @State private var showBudgetField = false
+        @State private var isPickerEnabled = true
+     
          // @State private var religiousCityCount = Array(repeating: 0, count: 7)
-       
+        let Triptype = [
+               "",
+               "culture_places", // Religious
+               "sports_places", // Sports
+               "desert_places", // Desert
+               "medical_places", // Religious 
+               "festival_places", // Sports
+               "conference_places", // Desert
+               "pleasure_places", // Sports
+               "religious_places", // Desert
+          ]
 
            @State private var selectedStars = 1
         @State private var showPlannPlans: [TripPlan] = []
@@ -139,76 +184,209 @@
            }
         
         
-     //   func fetchPlansData(chosenTripType: String, convertedBudget: Int, totalNumberOfDays:
+        func fetchData() {
+            guard let url = URL(string: "https://468c-156-209-212-138.ngrok-free.app/recommendations") else {
+                return
+            }
+
+            print(getSelectedTrip() + "-----------")
+            let body: [String: Any] = [
+                "place_type":getSelectedTrip(),
+                "budget": Double(tripBudget) ??  0.0,
+                 "rating":selectedStars,
+                "city_day":reverseCityDaysPosition(getSelectedDaysForCities())
+            ]
+
+            let jsonData = try? JSONSerialization.data(withJSONObject: body)
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = jsonData
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("Invalid response")
+                    return
+                }
+
+                print("HTTP Status Code: \(httpResponse.statusCode)")
+
+                if let data = data {
+                    do {
+                        if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
+                            for plan in jsonResponse {
+                                if let recommendations = plan["best_recommendations_plan_1"] as? [[String: Any]] {
+                                    for recommendationData in recommendations {
+                                        if let recommendation = createRecommendation2(from: recommendationData) {
+                                            DispatchQueue.main.async {
+                                                self.recommendationsPlan12.append(recommendation)
+//                                                print(recommendationsPlan1)
+                                            }
+                                        }
+                                    }
+                                } else if let recommendations = plan["best_recommendations_plan_2"] as? [[String: Any]] {
+                                    for recommendationData in recommendations {
+                                        if let recommendation = createRecommendation2(from: recommendationData) {
+                                            DispatchQueue.main.async {
+                                                self.recommendationsPlan22.append(recommendation)
+                                            }
+                                        }
+                                    }
+                                } else if let recommendations = plan["best_recommendations_plan_3"] as? [[String: Any]] {
+                                    for recommendationData in recommendations {
+                                        if let recommendation = createRecommendation2(from: recommendationData) {
+                                            DispatchQueue.main.async {
+                                                self.recommendationsPlan32.append(recommendation)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch {
+                      //  print("JSON serialization error: \(error.localizedDescription)")
+                    }
+                }
+            }.resume()
+        }
+        
+        func createRecommendation2(from data: [String: Any]) -> Recommendation? {
+            
+            guard let hotel = data["Hotel"] as? String,
+                  let image = data["Image"] as? String,
+                  let location = data["Location"] as? String,
+                  let place = data["Place"] as? String,
+                  let restaurant = data["Restaurant"] as? String,
+                  let totalCost = data["Total Cost"] as? Int else {
+                
+                return nil
+            }
+            
+
+           
+               return Recommendation(hotel: hotel, Image: image, location: location, place: place, Restaurant: restaurant, TotalCost: "\(totalCost)")
+        }
+        
+        
+   
 
         var body: some View {
             
             
           
             VStack( ){
-    //                Text("Planning Section")
-    //                    .font(.title)
-    //                    .padding(.bottom, 40)
+    //
                 
                     
                 ZStack {
                     let shape = RoundedRectangle(cornerRadius: 20)
-                    shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                    shape.stroke(Color.gray, lineWidth: 1)
-    //                    .overlay(ArrowShape()
-    //                        .frame(width: 11, height: 11)
-    //                        .foregroundColor(.gray)
-    //                        .rotationEffect(isMenuOpen ? .degrees(180) : .degrees(0))
-    //                        .offset(  x: -95, y: 2)
+                    if isPickerEnabled {
+                        shape.fill().foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                    }
+                    else {
+                        
+                        shape.fill().foregroundColor(Color.gray)
+                    }
+                  
+//                    shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
     //
-    //                    )
                     
                     
-                        Picker(selection: $selectedTripType, label: Text("Select trip type")) {
+                        Picker(selection: $selectedTripType, label: Text("Select trip type").font(Font.custom("Zapfino", size: 20))) {
                             ForEach(tripTypes.indices, id: \.self) { index in
                                 Text(self.tripTypes[index])
+                                    .font(Font.custom("Zapfino", size: 20))
                             }
                         }
+                    
+
+                        .accentColor(.white)
+                        .onChange(of: selectedTripType, initial: false){ initial, _ in
+                                       updateCitiesInfo()
+                                       updateCounts()
+                                       getSelectedTrip()
+                                   }
+                    
                         .pickerStyle(MenuPickerStyle())
-                        
-                        
+                    
+                        .disabled(!isPickerEnabled)
                
 
                 }
                 .frame(height: 35)
-                .padding(.top,0)
+                .padding(.top,10)
                 .padding(.bottom, 10)
                 .padding(.horizontal, 110)
-
+//                .onChange(of: selectedTripType) { newValue in
+//                            resetChoices() // Reset counts and days selected for cities
+//                        }
+//                
                 
-                TextField("Enter trip budget (Minimum: \(getMinimumPrice()))", text: $tripBudget)
-                    .keyboardType(.numberPad)
-                    .textFieldStyle(CustomTextFieldStyle(isFocused: isBudgetFieldFocused, isEnabled: selectedTripType != 0))
-                    .padding(.horizontal, 40)
-                    .disabled(selectedTripType == 0)
-                    .padding(.bottom, 15)
-                    .onChange(of: tripBudget) { newValue in
-                        let filtered = newValue.filter { "0123456789".contains($0) }
-                        if filtered != newValue {
-                            tripBudget = filtered
+                if showBudgetField == true {
+                    VStack(spacing: 0) {
+                     
+                   
+                    TextField("Enter trip budget", text: $tripBudget)
+                           
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(CustomTextFieldStyle(isFocused: isBudgetFieldFocused, isEnabled: isBudgetFieldEnabled))
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .disabled(selectedTripType == 0)
+                        .lineLimit(5...10)
+                        .onChange(of: tripBudget, initial: true){ initial, newValue in
+                            let filtered = newValue.filter { "0123456789".contains($0) }
+                            if filtered != newValue {
+                                tripBudget = filtered
+                            }
                         }
+                        
+                        HStack(){
+                            Spacer()
+                            Text("Minimum: (\(getMinimumPrice())) for this type")
+                                .font(Font.custom("Cochin-BoldItalic", size: 13))
+                                .padding(.top,0)
+                        }
+                    
+                    
+                    
                     }
-                
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 15)
+                }
                 
                 
                     if selectedTripType != 0  && showCities == true {
-                      
-                        Text("Choose your preferred city:")
-                            .font(.headline)
-                            .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
-                            .padding(.horizontal, 40)
-                            .padding(.bottom, 10)
-                                
-               
+                        ZStack{
+                            let shape = RoundedRectangle(cornerRadius: 9)
+                            shape.fill().foregroundColor(.white)
+                            shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
+                            Text("Choose your preferred city:")
+                            
+                                .font(Font.custom("Cochin-BoldItalic", size: 28))
+                                .padding(.bottom,2)
+                            //  SnellRoundhand-Bold
+                            //
+                        }
+                        
+                        .frame(height: 45)
+                        .padding(.top,10)
+                        .padding(.bottom, 20)
+                        .padding(.horizontal, 30)
                             HStack {
                                 Text("City")
+                                    .padding(.leading,7)
+                                    .font(Font.custom("DINCondensed-Bold", size: 21))
                                 Spacer()
-                                Text("Days     ")
+                                Text("Days")
+                                    .padding(.trailing,35)
+                                    .font(Font.custom("DINCondensed-Bold", size: 21))
+                                //
                             }
                             .foregroundColor(.black)
                             .padding(.horizontal,33)
@@ -227,7 +405,7 @@
                                                    self.incrementCount(index)
                                                }) {
                                                    Image(systemName: "plus.circle")
-                                                       .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                       .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
                                                }
                                                .buttonStyle(BorderlessButtonStyle())
 
@@ -238,41 +416,60 @@
                                                    self.decrementCount(index)
                                                }) {
                                                    Image(systemName: "minus.circle")
-                                                       .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                       .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
                                                }
                                                .buttonStyle(BorderlessButtonStyle())
                                            }
                                            .contentShape(Rectangle())
+                                          
                                        }
+                                       
+                            
+                            Button(action: {
+                                nextButtonAction()
+                                showBudgetField = true
+                                isBudgetFieldEnabled = true
+                            }) {
+                                Text("Next")
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal,110)
+                                    .padding(.vertical, 5)
+                                    .background(Color(red: 0.192, green: 0.259, blue: 0.333))
+                                    .cornerRadius(8)
+                                    .font(Font.custom("Baskerville-Bold", size: 16))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+//                                   .padding(.trailing, 30)
+                            .padding(.top,30)
                                    }
-                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
-    //                    NavigationLink(destination: NextView(citiesInfo: citiesInfo), isActive: $navigateToNextView) {
-    //                                  EmptyView()
-    //                              }
-    //                              .hidden()
+                        .accentColor(.blue)
+                       // .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+    
+                       
 
-                                   Button(action: {
-                                       nextButtonAction()
-                                   }) {
-                                       Text("Next")
-                                           .foregroundColor(.white)
-                                           .padding(.horizontal, 8)
-                                           .padding(.vertical, 5)
-                                           .background(Color(red: 0.043, green: 0.725, blue: 0.753))
-                                           .cornerRadius(8)
-                                   }
-                                   .frame(maxWidth: .infinity, alignment: .trailing)
-                                   .padding(.trailing, 30)
-                                   .padding(.bottom, 90)
+                                   
                                }
+                    
                 
                 else if( selectedTripType == 0 && showPlann == 0 && selectedHotelRoom == 0) {
                         // Show an empty frame with a height of 400 when no trip type is selected
                         VStack {
                             Spacer()
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.01))
-                                .frame(height: 400)
+//
+//                            if let gifImage = UIImage(named: "image_processing20220708-21892-cye7ve.gif") {
+//                                           Image(uiImage: gifImage)
+//                                               .resizable()
+//                                               .aspectRatio(contentMode: .fill)
+//                                              
+//                                             .frame(width: 500, height: 500)
+//                                       }
+                            
+                            AnimatedImage(name: "image_processing20220708-21892-cye7ve.gif")
+                                .resizable()
+                                                                              .aspectRatio(contentMode: .fill)
+                            
+                                                                            .frame(width: 1, height: 470)
+                                                                            .padding(.leading,80)
                             Spacer()
                         }
                     }
@@ -281,227 +478,415 @@
                   
                     Rectangle()
                         .fill(Color.gray.opacity(0.01))
-                        .frame(height: 100)
+                        .frame(height: 50)
            
-                    Text("Select Number Of Stars For your Hotel")
-                        .font(.headline)
+                    Text("Select Hotel Stars")
                         
                        
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.01))
-                        .frame(height: 50)
+                        .bold()
+                        .padding(.bottom,10)
+                        .font(Font.custom("Zapfino", size: 25))
+                       
+                 
                         
                             HStack {
                                 ForEach(1..<6) { star in
                                     Image(systemName: selectedStars >= star ? "star.fill" : "star")
-                                        .foregroundColor(selectedStars >= star ? .yellow : .gray)
+                                        .foregroundColor(selectedStars >= star ? .yellow : .yellow)
+                                       
                                         .onTapGesture {
                                             selectedStars = star
                                         }
                                 }
                             }
-                            .font(.system(size: 24))
-                        
+                            .font(Font.custom("Zapfino", size: 25))
+                           
                     Rectangle()
-                        .fill(Color.gray.opacity(0.01))
-                        .frame(height: 50)
+                        .fill(.white)
+                        .frame(height: 15)
                         
                  
                     
                         Button(action: {
                             withAnimation {
-                                selectedHotelRoom = 0
+                                
+                             
                                
-                                showGeneratButton = 1
+                                //showGeneratButton = 1
+                                let selectedDaysList = getSelectedDaysForCities()
+                               // print(selectedDaysList) // This list is in the format you requested
+                               // ensureCityBeforeDays(selectedDaysList)
+                                let selectedDaysList2 =  ensureCityBeforeDays(selectedDaysList)
+                                reverseCityDaysPosition(selectedDaysList2)
+                                
+                               
+                                    validateBudget()
+                                    fetchData()
+                                
                             }
                         }) {
-                            Text("Done")
-                            
+                            Text("Generat Plan")
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 5)
-                                .background(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                .padding(.horizontal,110)
+                                .padding(.vertical, 10)
+                                .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                                 .cornerRadius(8)
+                                .font(Font.custom("Baskerville-Bold", size: 16))
                         }
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .padding(.trailing, 20)
-                        .padding(.bottom, 0) // Adjusted bottom padding
-                    
+                        .frame(maxWidth: .infinity, alignment: .center)
+
+                        .padding(.top,30)
+                        .alert(isPresented: $showAlert) {
+                            Alert(title: Text("Note"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                        }
                     
                     Rectangle()
-                        .fill(Color.gray.opacity(0.01))
+                        .fill(Color.white)
                         .frame(height: 50)
                 }
-                    
+                  
                 if showPlann == 1 {
-    //                       ForEach(showPlannPlans.indices, id: \.self) { index in
-    //                           NavigationLink( destination: DetailsScreen()) {
-    //                               VStack {
-    //                                   Text("Destination: \(showPlannPlans[index].destination)")
-    //                                   Text("Total Cost: \(showPlannPlans[index].totalCost)")
-    //                                   // Add other relevant plan details here...
-    //                               }
-    //                               .padding()
-    //                               .background(Color.white)
-    //                               .cornerRadius(10)
-    //                               .shadow(radius: 3)
-    //                               .padding()
-    //
-    //
-    //
-    //                           }
-    //                       }
+    
+                    ZStack{
+                        let shape = RoundedRectangle(cornerRadius: 9)
+                        shape.fill().foregroundColor(.white)
+                        shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
+                        HStack{
+                            Text("We plan... ")
+                                .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                                .font(Font.custom("Cochin-BoldItalic", size: 28))
+                                .padding(.bottom,2)
+                            //  SnellRoundhand-Bold
+                            Text("You choose")
+                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                .font(Font.custom("SnellRoundhand-Bold", size: 28))
+                                .padding(.bottom,2)
+                        }
+                        
+                    }
+                    
+                    .frame(height: 45)
+                    .padding(.top,5)
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 40)
+                    .onAppear{
+                        withAnimation {
+                            
+                        }
+                    }
+                    
+                        
                     ScrollView{
                         
                     
-                    NavigationLink( destination: DetailsScreen(TripType: chosenTripType , budget: Double(tripBudget) ??  0.0, selectedDaysList: getSelectedDaysForCities(), PlanNumber: 0)) {
-                        ZStack(alignment: .center) {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                            
-                              
-                            VStack {
-                                HStack {
-                                    Text("Your First Plan")
-                                        .font(.headline)
-                                        .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                        .padding(.top, 10)
-                                        .fontWeight(.bold)
-                                        .padding(.leading, 10) // Align to the left
-                                    Spacer() // Pushes text to the left
-                                }
+                        NavigationLink( destination: DetailsScreen(TripType: getSelectedTrip() , budget: Double(tripBudget) ??  0.0, selectedDaysList: reverseCityDaysPosition(getSelectedDaysForCities()), PlanNumber: 0, HotelStars: selectedStars, userID:userID ,planId:generateRandomPlanID() )) {
+                            ZStack(alignment: .center) {
                                 
+                                
+                                Image("Modern and Minimal Company Profile Presentation (2)") // Replace "your_background_image" with your image name
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fill)
+                                       .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                       .edgesIgnoringSafeArea(.all)
+                                       .opacity(0.8)
+                                       .frame(maxWidth: 175)
+            //                                   RoundedRectangle(cornerRadius: 20)
+            //                                       .fill(Color.white) // Background color of the card
+            //                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Shadow effect
+
+                                let shape = RoundedRectangle(cornerRadius: 20)
+                                shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                                
+                                  
                                 VStack {
-                                    Image("1024 1")
+                                  
                                     
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(maxWidth: .infinity) // Stretches horizontally
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 5) // Add padding to the image
+                                 
+                                    
+                                    
+                                    HStack {
+                                        if let firstLocation = recommendationsPlan12.first?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 10) // Align to the left
+                                            Spacer() // Pushes text to the left
+                                            // Cochin-Bold
+                                            Text("Plan 1")
+                                            .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.trailing, 5) // Al
+                                            
+                                          }
+            //
+            //
+                                    }
+                                    Spacer()
+                                    VStack {
+                                       if let firstImage = recommendationsPlan12.first?.Image {
+                                            AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: firstImage) ?? "")) { phase in
+                                                switch phase {
+                                                    case .empty:
+                                                    ProgressView()
+                                                    case .success(let image):
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fill) // Maintain the aspect ratio by filling the frame
+                                                            .frame(maxWidth: 185, maxHeight: 110) // Set the fixed size of the image
+                                                    case .failure:
+                                                        Image("1024 1")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit) // Maintain the aspect ratio by filling the frame
+                                                        .frame(maxWidth: 185, maxHeight: 110)
+                                                @unknown default:
+                                                    fatalError()
+                                                }
+                                            }
+                                            .cornerRadius(20)
+                                        }
+            //
+                                    }
+                                    .frame(minWidth: 185, minHeight: 120)
+                                    .background(Color.white) // Add a white background for the image container
+                                    .cornerRadius(10) // Round corners of the image container
+                          
+                                    Spacer()
+                                    HStack {
+                                      
+                                       if let firstplace = recommendationsPlan12.first?.place {// Pushes text to the right
+                                            Text(firstplace) // Replace with your card number
+                                            .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                
+                                                .padding(.bottom,5)
+                                       }
+                                    }
                                 }
-                                .background(Color.white) // Add a white background for the image container
-                                .cornerRadius(10) // Round corners of the image container
                                 
-                                HStack {
-                                    Spacer() // Pushes text to the right
-                                    Text("1") // Replace with your card number
-                                        .font(.headline)
-                                        .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                                        .padding(.trailing, 20)
-                                }
+                                
+                           
                             }
-                            .padding(10) // Add padding for the whole content
+                            .frame(maxHeight: 175) // Adjust the height as needed
+                                                       .padding(.vertical, 10)
+                                                       
+                                                       .background(Color.white) // Add a white background to the entire card
+                                                       .cornerRadius(20) // Round corners of the card
+                                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Add a shadow effect
+                                                       .padding(.horizontal, 40)
                             
-                        }
-                        .frame(height: 160) // Adjust the height as needed
-                        .padding(.vertical, 10)
-                        
-                        .background(Color.white) // Add a white background to the entire card
-                        .cornerRadius(20) // Round corners of the card
-                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 4) // Add a shadow effect
-                        .padding(.horizontal, 40)
+                            
                     }
                     .padding(.bottom, 5) 
                     
                     
-                    NavigationLink( destination: DetailsScreen(TripType: chosenTripType, budget: Double(tripBudget) ??  0.0, selectedDaysList: getSelectedDaysForCities(), PlanNumber:1 )) {
-                        ZStack(alignment: .center) {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            shape.fill().foregroundColor(Color.gray.opacity(0.01))
-                            
-                            
-                            VStack {
-                                HStack {
-                                    Text("Your Secound Plan")
-                                        .font(.headline)
-                                        .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                        .padding(.top, 10)
-                                        .fontWeight(.bold)
-                                        .padding(.leading, 10) // Align to the left
-                                    Spacer() // Pushes text to the left
-                                }
-                                
-                                VStack {
-                                    Image("1024 1")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(maxWidth: .infinity) // Stretches horizontally
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 5) // Add padding to the image
-                                }
-                                .background(Color.white) // Add a white background for the image container
-                                .cornerRadius(10) // Round corners of the image container
-                                
-                                HStack {
-                                    Spacer() // Pushes text to the right
-                                    Text("2") // Replace with your card number
-                                        .font(.headline)
-                                        .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                                        .padding(.trailing, 20)
-                                }
-                            }
-                            .padding(10) // Add padding for the whole content
-                            
-                        }
-                        .frame(height: 160) // Adjust the height as needed
-                        .padding(.vertical, 10)
-                        
-                        .background(Color.white) // Add a white background to the entire card
-                        .cornerRadius(20) // Round corners of the card
-                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 4) // Add a shadow effect
-                        .padding(.horizontal, 40)
-                    }
-                    .padding(.bottom, 5)
-                    
-                        NavigationLink( destination: DetailsScreen(TripType: chosenTripType, budget: Double(tripBudget) ??  0.0, selectedDaysList: getSelectedDaysForCities(), PlanNumber:2)) {
+                        NavigationLink( destination: DetailsScreen(TripType: Triptype[selectedTripType], budget: Double(tripBudget) ??  0.0, selectedDaysList: reverseCityDaysPosition(getSelectedDaysForCities()), PlanNumber: 1, HotelStars: selectedStars, userID:userID ,planId:generateRandomPlanID() )) {
                             ZStack(alignment: .center) {
+                                
+                                
+                                Image("Modern and Minimal Company Profile Presentation (2)") // Replace "your_background_image" with your image name
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fill)
+                                       .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                       .edgesIgnoringSafeArea(.all)
+                                       .opacity(0.8)
+                                       .frame(maxWidth: 175)
+            //                                   RoundedRectangle(cornerRadius: 20)
+            //                                       .fill(Color.white) // Background color of the card
+            //                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Shadow effect
+
                                 let shape = RoundedRectangle(cornerRadius: 20)
                                 shape.fill().foregroundColor(Color.gray.opacity(0.01))
                                 
-                                
+                                  
                                 VStack {
-                                    HStack {
-                                        Text("Your Third Plan")
-                                            .font(.headline)
-                                            .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                            .padding(.top, 10)
-                                            .fontWeight(.bold)
-                                            .padding(.leading, 10) // Align to the left
-                                        Spacer() // Pushes text to the left
-                                    }
+                                  
                                     
-                                    VStack {
-                                        Image("1024 1")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(maxWidth: .infinity) // Stretches horizontally
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 5) // Add padding to the image
+                                 
+                                    
+                                    
+                                    HStack {
+                                        if let firstLocation = recommendationsPlan22.last?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 10) // Align to the left
+                                            Spacer() // Pushes text to the left
+                                            // Cochin-Bold
+                                            Text("Plan 2")
+                                            .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.trailing, 5) // Al
+                                            
+                                          }
+            //
+            //
                                     }
+                                    Spacer()
+                                    VStack {
+                                       if let firstImage = recommendationsPlan22.last?.Image {
+                                            AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: firstImage) ?? "")) { phase in
+                                                switch phase {
+                                                    case .empty:
+                                                    ProgressView()
+                                                    case .success(let image):
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fill) // Maintain the aspect ratio by filling the frame
+                                                            .frame(maxWidth: 185, maxHeight: 110) // Set the fixed size of the image
+                                                    case .failure:
+                                                        Image("1024 1")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit) // Maintain the aspect ratio by filling the frame
+                                                        .frame(maxWidth: 185, maxHeight: 110)
+                                                @unknown default:
+                                                    fatalError()
+                                                }
+                                            }
+                                            .cornerRadius(20)
+                                        }
+            //
+                                    }
+                                    .frame(minWidth: 185, minHeight: 120)
                                     .background(Color.white) // Add a white background for the image container
                                     .cornerRadius(10) // Round corners of the image container
-                                    
+                          
+                                    Spacer()
                                     HStack {
-                                        Spacer() // Pushes text to the right
-                                        Text("3") // Replace with your card number
-                                            .font(.headline)
-                                            .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                                            .padding(.trailing, 20)
+                                      
+                                       if let firstplace = recommendationsPlan22.last?.place {// Pushes text to the right
+                                            Text(firstplace) // Replace with your card number
+                                            .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                
+                                                .padding(.bottom,5)
+                                       }
                                     }
                                 }
-                                .padding(10) // Add padding for the whole content
                                 
+                                
+                           
                             }
-                            .frame(height: 160) // Adjust the height as needed
-                            .padding(.vertical, 10)
+                            .frame(minHeight: 175) // Adjust the height as needed
+                                                       .padding(.vertical, 10)
+                                                       
+                                                       .background(Color.white) // Add a white background to the entire card
+                                                       .cornerRadius(20) // Round corners of the card
+                                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Add a shadow effect
+                                                       .padding(.horizontal, 40)
                             
-                            .background(Color.white) // Add a white background to the entire card
-                            .cornerRadius(20) // Round corners of the card
-                            .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 4) // Add a shadow effect
                         }
-                        .padding(.horizontal, 40)
+                        .padding(.bottom, 5)
+                    
+                        NavigationLink( destination: DetailsScreen(TripType: Triptype[selectedTripType], budget: Double(tripBudget) ??  0.0, selectedDaysList: reverseCityDaysPosition(getSelectedDaysForCities()), PlanNumber: 2, HotelStars: selectedStars, userID:userID ,planId:generateRandomPlanID() )) {
+                            ZStack(alignment: .center) {
+                                
+                                
+                                Image("Modern and Minimal Company Profile Presentation (2)") // Replace "your_background_image" with your image name
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fill)
+                                       .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                       .edgesIgnoringSafeArea(.all)
+                                       .opacity(0.8)
+                                       .frame(maxWidth: 175)
+            //                                   RoundedRectangle(cornerRadius: 20)
+            //                                       .fill(Color.white) // Background color of the card
+            //                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Shadow effect
+
+                                let shape = RoundedRectangle(cornerRadius: 20)
+                                shape.fill().foregroundColor(Color.gray.opacity(0.01))
+                                
+                                  
+                                VStack {
+                                  
+                                    
+                                 
+                                    
+                                    
+                                    HStack {
+                                        if let firstLocation = recommendationsPlan32.first?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 10) // Align to the left
+                                            Spacer() // Pushes text to the left
+                                            // Cochin-Bold
+                                            Text("Plan 3")
+                                            .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.trailing, 5) // Al
+                                            
+                                          }
+            //
+            //
+                                    }
+                                    Spacer()
+                                    VStack {
+                                       if let firstImage = recommendationsPlan32.first?.Image {
+                                            AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: firstImage) ?? "")) { phase in
+                                                switch phase {
+                                                    case .empty:
+                                                    ProgressView()
+                                                    case .success(let image):
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fill) // Maintain the aspect ratio by filling the frame
+                                                            .frame(maxWidth: 185, maxHeight: 110) // Set the fixed size of the image
+                                                    case .failure:
+                                                        Image("1024 1")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit) // Maintain the aspect ratio by filling the frame
+                                                        .frame(maxWidth: 185, maxHeight: 110)
+                                                @unknown default:
+                                                    fatalError()
+                                                }
+                                            }
+                                            .cornerRadius(20)
+                                        }
+            //
+                                    }
+                                    .frame(minWidth: 185, minHeight: 120)
+                                    .background(Color.white) // Add a white background for the image container
+                                    .cornerRadius(10) // Round corners of the image container
+                          
+                                    Spacer()
+                                    HStack {
+                                      
+                                       if let firstplace = recommendationsPlan32.first?.place {// Pushes text to the right
+                                            Text(firstplace) // Replace with your card number
+                                            .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                
+                                                .padding(.bottom,5)
+                                       }
+                                    }
+                                }
+                                
+                                
+                           
+                            }
+                            .frame(maxHeight: 175) // Adjust the height as needed
+                                                       .padding(.vertical, 10)
+                                                       
+                                                       .background(Color.white) // Add a white background to the entire card
+                                                       .cornerRadius(20) // Round corners of the card
+                                                       .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 3) // Add a shadow effect
+                                                       .padding(.horizontal, 40)
+                        }
+                        .padding(.bottom, 5)
                     }
+                    
                     .padding(.bottom, 5)
                        }
                     
@@ -511,130 +896,106 @@
                     
                 Rectangle()
                     .fill(Color.gray.opacity(0.01))
-                    .frame(height: 300)
+                    .frame(height: 200)
                       
-                    
                     Button(action: {
-                        if selectedTripType != 0{
-                            
-                            validateBudget()
-                          
-                            
-                        } else{
-                            showAlert = true
-                            errorMessage = "Please select Trip type"
-                        }
-                        
+                      
                     }) {
                         Text("Generate Plan")
                             .foregroundColor(.white)
                             .padding()
-                            .background(Color.blue)
+                            .padding(.horizontal,85)
+                            .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                             .cornerRadius(8)
                     }
-                    
-                    .padding(.bottom, 10)
-                    
+                    .frame(maxWidth: .infinity) // Expand the button to full width
+                  
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text("Note"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
                     }
                     
                 }
                 
-//                if showResetButton != 0 {
-//                    
-//                    Button(action: {
-//                        // Reset choices action
-//                        showResetButton = 0
-//                        resetChoices()
-//                    }) {
-//                        Text("Reset Choices")
-//                            .foregroundColor(.white)
-//                            .padding()
-//                            .background(Color.red)
-//                            .cornerRadius(8)
-//                    }
-//                    .padding(.bottom, 10)
-//                }
-                
-                
+
                 Spacer()
 
 
-    //                           NavigationLink(destination: FavoriteScreen(), isActive: $isShowingFavouriteScreen) {
-    //                               EmptyView()
-    //                           }
-    //                           .hidden()
-    //
-    //                           Button(action: {
-    //                               isShowingFavouriteScreen = true
-    //                           }) {
-    //                               Image(systemName: "heart.fill")
-    //                                   .foregroundColor(.red)
-    //                                   .padding()
-    //                                   .background(Color.white)
-    //                                   .clipShape(Circle())
-    //                                   .shadow(radius: 4)
-    //                           }
-    //                           .padding()
-                
+
                 }
            
                 
-                .background(Color.gray.opacity(0.1).ignoresSafeArea())
+                .background(Color.white.ignoresSafeArea())
               //  .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
             
         }
         
-        func resetChoices() {
-               // Reset all choices and states here
-               // Reset selectedTripType, counts, citiesInfo, selectedHotelRoom, etc.
-             showCities = true
-               selectedTripType = 0
-               counts = Array(repeating: 0, count: 6)
-               citiesInfo = [
-                   CityInfo(cityName: "Cairo", numberOfDays: 0),
-                   // Rest of the cities...
-               ]
-               showPlann = 0
-               selectedHotelRoom = 0
-               showGeneratButton = 0
-               generatedPlan = nil
-               generatePlan = false // Reset the flag to hide generated plan content
-            
-           }
-        
-        
-        func nextButtonAction() {
-                showCities = false
-                selectedHotelRoom = 1
 
-                let selectedDaysList = getSelectedDaysForCities()
-                print(selectedDaysList) // This list is in the format you requested
-            }
-
-        
         
         func getCitiesForTripType() -> [String] {
-            switch selectedTripType {
-            case 1:
-                return Religious
-            case 2:
-                return Sports
-            case 3:
-                return Desert
-            case 4:
-                return Medical
-            case 5:
-                return Festivals
-            case 6:
-                return Education
-            default:
-                return []
-            }
+             return cityInformation[selectedTripType] ?? []
+         }
+         
+         func updateCitiesInfo() {
+             let cities = getCitiesForTripType()
+             citiesInfo = cities.map { CityInfo(cityName: $0, numberOfDays: 0) }
+         }
+         
+         func updateCounts() {
+             counts = Array(repeating: 0, count: citiesInfo.count)
+         }
+         
+         func tripTypeString(_ index: Int) -> String {
+             return ["Religious", "Sports", "Desert"][index] // Add other trip types as needed
+         }
+
+//          
+//          func resetChoices() {
+//              selectedTripType = 0
+//              updateCitiesInfo()
+//              updateCounts()
+//              // Reset other states and choices...
+//          }
+        
+        func generateRandomPlanID() -> String {
+            let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            let randomString = String((0..<10).map { _ in letters.randomElement()! })
+            
+            
+            return "Plan-\(randomString)"
+            
+           
         }
+
         
+     
         
+  
+
+        func getSelectedDaysForCities() -> [[String: Any]] {
+            var selectedDaysList: [[String: Any]] = []
+            
+            for (index, cityInfo) in citiesInfo.enumerated() {
+                if selectedDaysForCities[index] > 0 {
+                    // Construct the dictionary with the desired order
+                    let cityDaysDict: [String: Any]
+                    
+                    // Check the city name and days order
+                    
+                        cityDaysDict = [
+                            "city": cityInfo.cityName,
+                            "days": selectedDaysForCities[index]
+                        ]
+                    
+                      
+                    
+                    // Append the constructed dictionary to the list
+                    selectedDaysList.append(cityDaysDict)
+                }
+            }
+            
+            return selectedDaysList
+        }
+
         func incrementCount(_ index: Int) {
                counts[index] += 1
             selectedDaysForCities[index] += 1
@@ -650,15 +1011,173 @@
                }
            }
         
-        func getSelectedDaysForCities() -> [[String: Any]] {
-              var selectedDaysList: [[String: Any]] = []
-              for (index, cityInfo) in citiesInfo.enumerated() {
-                  if selectedDaysForCities[index] > 0 {
-                      selectedDaysList.append(["city": cityInfo.cityName, "days": selectedDaysForCities[index]])
-                  }
-              }
-              return selectedDaysList
+        func ensureCityBeforeDays(_ list: [[String: Any]]) -> [[String: Any]] {
+            var correctedList = list
+
+            for (index, dict) in list.enumerated() {
+                if let city = dict["city"], let days = dict["days"] {
+                    // Check if both 'city' and 'days' values are of expected types
+                    if city is String && days is Int {
+                        // Ensure 'city' is before 'days' in the dictionary
+                        if let cityIndex = dict.index(forKey: "city"), let daysIndex = dict.index(forKey: "days") {
+                            if daysIndex < cityIndex {
+                                // Swap the positions of city and days if 'city' is after 'days'
+                                var modifiedDict = dict
+                                modifiedDict["city"] = days
+                                modifiedDict["days"] = city
+                                correctedList[index] = modifiedDict
+                            }
+                        }
+                    } else {
+                        // Handle cases where 'city' or 'days' values are not of the expected type
+                        var modifiedDict = dict
+                        // Set default values or convert to the correct type
+                        if let cityString = city as? String {
+                            modifiedDict["city"] = cityString
+                        } else {
+                            modifiedDict["city"] = ""
+                        }
+                        if let daysInt = days as? Int {
+                            modifiedDict["days"] = daysInt
+                        } else {
+                            modifiedDict["days"] = 0
+                        }
+                        correctedList[index] = modifiedDict
+                    }
+                }
+            }
+            print("\(correctedList)++++++++++++++")
+
+            return correctedList
+        }
+
+
+       // print("\(correctedList)++++++++++++++")
+
+
+        // Usage example
+     
+        
+//        func swapCityAndDaysPositions(_ list: [[String: Any]]) -> [[String: Any]] {
+//            var correctedList = list
+//
+//            for (index, dict) in list.enumerated() {
+//                // Check if both 'city' and 'days' keys are present
+//                if let city = dict["city"], let days = dict["days"] {
+//                    // Check if 'city' and 'days' are in different positions, swap them if necessary
+//                    if let cityIndex = dict.index(forKey: "city"), let daysIndex = dict.index(forKey: "days"), cityIndex != daysIndex {
+//                        var modifiedDict = dict
+//                        // Swap positions of 'city' and 'days' keys while keeping their values unchanged
+//                        modifiedDict["city"] = days
+//                        modifiedDict["days"] = city
+//                        correctedList[index] = modifiedDict
+//                    }
+//                }
+//            }
+//            print("\(correctedList)00000000")
+//            return correctedList
+//        }
+        
+        
+        
+//        func swapDaysAndCityOrder(_ list: [[String: Any]]) -> [[String: Any]] {
+//            var correctedList = list
+//
+//            for (index, dict) in list.enumerated() {
+//                if let _ = dict["city"], let _ = dict["days"], let cityIndex = dict.index(forKey: "city"), let daysIndex = dict.index(forKey: "days"), daysIndex != cityIndex {
+//                    // Swap the positions of 'city' and 'days' keys
+//                    var modifiedDict = [String: Any]()
+//                    dict.forEach { key, value in
+//                        if key == "city" {
+//                            modifiedDict["days"] = value
+//                        } else if key == "days" {
+//                            modifiedDict["city"] = value
+//                        } else {
+//                            modifiedDict[key] = value
+//                        }
+//                    }
+//                    correctedList[index] = modifiedDict
+//                }
+//            }
+//            print("\(correctedList)00000000")
+//            return correctedList
+//        }
+        
+        func reverseCityDaysPosition(_ list: [[String: Any]]) -> [[String: Any]] {
+            var correctedList = list
+
+            for (index, dict) in list.enumerated() {
+                // Check if both 'city' and 'days' keys are present
+                if let city = dict["city"] as? Int, let days = dict["days"] as? String {
+                    // Create a new dictionary with the reversed positions of 'city' and 'days' keys
+                    var modifiedDict = [String: Any]()
+                    modifiedDict["days"] = city
+                    modifiedDict["city"] = days
+                    correctedList[index] = modifiedDict
+                }
+            }
+            print("\(correctedList)00000000")
+            return correctedList
+        }
+         
+
+        
+        
+        func getSelectedTrip() -> String {
+            var selectedTrip: String = Triptype[selectedTripType]
+            
+            print(selectedTrip + "-------")
+              return selectedTrip
+          
           }
+
+        
+        func nextButtonAction() {
+                showCities = false
+                selectedHotelRoom = 1
+//            print(getSelectedDaysForCities()) //
+              
+            }
+
+        
+        
+      
+        
+        
+        func convertGoogleDriveLinkToDirectImageURL(googleDriveLink: String) -> String? {
+            // Extract the file ID from the Google Drive link
+            guard let fileID = extractFileID(from: googleDriveLink) else {
+                return nil
+                
+                
+            }
+
+            // Construct the direct link to the image file (assuming it's a JPEG image)
+            let directImageURL = "https://drive.google.com/uc?id=\(fileID)"
+
+            return directImageURL
+        }
+
+        func extractFileID(from googleDriveLink: String) -> String? {
+            // Example Google Drive link format: https://drive.google.com/file/d/1cnuiVDyu5-ZqoVB2ReOXfVuJF1X6Cp05/view?usp=drive_link
+            // Extract the file ID between "/d/" and "/view"
+            if let startIndex = googleDriveLink.range(of: "/d/")?.upperBound,
+               let endIndex = googleDriveLink.range(of: "/view")?.lowerBound {
+                let fileID = String(googleDriveLink[startIndex..<endIndex])
+                return fileID
+            }
+
+            return nil
+        }
+        
+        
+        
+        
+        
+
+        
+        
+        
         
             func getMinimumPrice() -> String {
             guard selectedTripType > 0 && selectedTripType < tripPrices.count else { return "" }
@@ -689,13 +1208,17 @@
                 showPlann = 1
                 showResetButton = 1
                 showGeneratButton = 0
+                selectedHotelRoom = 0
+                isBudgetFieldEnabled = false
+                isPickerEnabled = false
+                showBudgetField = false
     //            generatedPlan = tripPlanner.generatePlan(
     //                budget: enteredBudget,
     //                duration: Int(duration) ?? 0,
     //                tripType: tripTypes[selectedTripType]
     //            )
                 withAnimation {
-                                           selectedTripType = 0
+                                       //    selectedTripType = 0
                                        }
                 generatePlan = true
             }
@@ -745,10 +1268,18 @@
 
 
 
+struct Recommendation2: Codable, Hashable {
+    let hotel: String
+    let Image: String
+    let location: String
+    let place: String
+    let Restaurant: String
+    let TotalCost: String
+}
 
 
     struct FifthScreen_Previews: PreviewProvider {
         static var previews: some View {
-            PlanningScreen()
+            PlanningScreen( userID: "")
         }
     }

@@ -25,11 +25,11 @@ struct SplashScreenView: View {
                     Image(.photoRoom20231015170058) // Replace with your image name
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 240, height: 240)
+                        .frame(width: 240, height: 120)
                  
                     HStack(spacing: 0) {
                         Text("A")
-                            .font(Font.custom("Baskerville-Bold", size: 40))
+                            .font(Font.custom("Zapfino", size: 30))
                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                             .offset(y: aOffsetY)
                             .onAppear {
@@ -42,7 +42,8 @@ struct SplashScreenView: View {
                         
                         Text("T")
                             .font(Font.custom("Baskerville-Bold", size: 40))
-                            .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                            .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
+                            .padding(.bottom,8)
                             .offset(y: tOffsetY)
                             .opacity(self.aOffsetY == 0 ? 1 : 0) // Show T after A appears
                             .onAppear {
@@ -54,6 +55,7 @@ struct SplashScreenView: View {
                         Text("Guide")
                             .font(Font.custom("Baskerville-Bold", size: 40))
                             .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                            .padding(.bottom,8)
                             .opacity(self.tOffsetY == 0 ? 1 : 0) // Show Guide after T appears
                             .onAppear {
                                 withAnimation(.easeIn(duration: 1.5).delay(2.6)) {

@@ -1,99 +1,161 @@
-//
-//  FavoriteScreen.swift
-//  ATGuide
-//
-//  Created by Michaelyoussef on 10/12/2023.
-//
-
 import SwiftUI
+import Firebase
 
 struct FavoriteScreen: View {
-        let days = ["Plan 1", "Plan 2", "Plan 3"] // Replace this with your list of days or data
-
-        var body: some View {
-            VStack{
-               
-                ScrollView {
-                    
-                    
-                    
-                    VStack(spacing: 20) {
-                        ForEach(days, id: \.self) { day in
-                            NavigationLink( destination: FavoriteScreenDetails()) {
-                                CardView(day: day)
-                            }
-                        }
-                    }
-                    .padding()
-                }
-            }
-        }
+    let userID: String
+    var body: some View {
+        PlansListView(userId: userID) // Pass the user ID here
     }
+}
 
-    struct CardView: View {
-        let day: String // Pass the day information here
-        
-        var body: some View {
+struct PlansListView: View {
+    @ObservedObject var planViewModel: PlanViewModel
+    @State private var selectedPlan: Plan? = nil
+    
+    init(userId: String) {
+        self.planViewModel = PlanViewModel(userId: userId)
+    }
+    
+    var body: some View {
+        VStack {
             
-            ZStack(alignment: .center) {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.gray.opacity(0.01))
+            HStack {
+               
                 
-                VStack {
-                    HStack {
-                        Text(day)
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.top, 10)
-                            .padding(.leading, 10)
-                     
-                        
-                    }
-                    
-                    VStack {
-                        Image("1024 1") // Replace with your image name or URL
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                    }
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    
-                    HStack {
-                      
-                        VStack(alignment:.leading) {
-                            Text("Date: 15/5/2023") // Replace with your card number
-                                .font(.callout)
-                            
-                            Text("Trip Type: ......") // Replace with your card number
-                                .font(.callout)
-                            
+              EmptyView()
+              
+            }
+            .frame(height: 5)
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(planViewModel.plans) { plan in
+                        NavigationLink(destination: DetailsScreen(TripType: plan.tripType,
+                                                                  budget: Double(plan.budget),
+                                                                  selectedDaysList: convertStringToArray(plan.selectedDaysList) ?? [],
+                                                                  PlanNumber: plan.planNumber,
+                                                                  HotelStars: plan.hotelStars,
+                                                                  userID: "", planId: "mmmnjbhhv")) {
+                            ZStack(alignment: .leading) {
+                                
+                                
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.gray.opacity(0.01))
+                                    .padding(.horizontal, 30)
+                                    .background(Color.white) // Add a white background to the entire card
+                                    .cornerRadius(20) // Round corners of the card
+                                    .shadow(color: Color.gray.opacity(0.7), radius: 5, x: 0, y: 2) // Add a shadow effect
+                                
+                                ZStack{
+                                    Image("Modern and Minimal Company Profile Presentation") // Replace "your_background_image" with your image name
+                                           .resizable()
+                                           .aspectRatio(contentMode: .fill)
+                                           .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                           .edgesIgnoringSafeArea(.all)
+                                           .opacity(0.8)
+                                           .cornerRadius(20)
+                                HStack{
+                                    
+                                
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        HStack() {
+                                            Text("Plan ID:")
+                                                .font(Font.custom("Baskerville-Bold", size: 17))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .fontWeight(.bold)
+                                            Text("\(plan.planId)")
+                                                .font(Font.custom("Arial-BoldMT", size: 14))
+                                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                .fontWeight(.bold)
+                                            //
+                                            // Cochin-BoldItalic
+                                        }
+                                        
+                                        HStack {
+                                            Text("Total budget:")
+                                                .font(Font.custom("Baskerville-Bold", size: 17))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .fontWeight(.bold)
+                                            Text("\(plan.budget)")
+                                                .font(Font.custom("Arial-BoldMT", size: 14))                                               .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                .fontWeight(.bold)
+                                        }
+                                        
+                                        HStack {
+                                            Text("Trip Type:")
+                                                .font(Font.custom("Baskerville-Bold", size: 17))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .fontWeight(.bold)
+                                            Text(extractTextBeforeUnderscore(plan.tripType))
+                                                .font(Font.custom("Arial-BoldMT", size: 14))                                              .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                            
+                                        }
+                                        
+                                        HStack {
+                                            Text("Hotel Stars:")
+                                                .font(Font.custom("Baskerville-Bold", size: 17))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .fontWeight(.bold)
+                                            
+                                            Text("\(plan.hotelStars)")
+                                                .font(Font.custom("Arial-BoldMT", size: 14))                                               .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                .fontWeight(.bold)
+                                            Image(systemName: "star.fill").foregroundColor(.yellow)
+                                                .font(.system(size: 17))
+                                        }
+                                    }
+                                    .padding(.leading,20)
+                                    
+                                    Spacer()
+                                    VStack{
+                                        Image(systemName: "arrow.right.circle.fill")
+                                            .font(.system(size: 24))
+                                            .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114)) // Customize the color as needed
+                                            .opacity(0.85)
+                                    }
+                                    .frame(width: 4)
+                                    .padding(.trailing,20)
+                                }
+                                    
+                            }
+                            }
+                            .padding(.bottom, 5)
                         }
-                        .frame(height: 30)
-                        .padding(.top, 5)
-                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
-                        Spacer()
-//                        Text("90 $")
-//                            .font(.headline)
-//                            .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-//                            .padding(.top, 10)
-//                            .padding(.trailing, 10)
+                                                                  .padding(.horizontal,45)
                     }
                 }
-                .padding(10)
+                .padding(.top, 10)
+                .padding(.bottom, 10)
             }
-            .frame(height: 170)
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(color: Color.black.opacity(0.4), radius: 5, x: 0, y: 0)
-            .padding(.horizontal, 40)
-            .padding(.vertical, 10)
+            .navigationBarTitle("Fav Plans")
+            .font(Font.custom("Charter-BlackItalic", size: 32))
         }
     }
+}
+
+func extractTextBeforeUnderscore(_ text: String) -> String {
+    if let underscoreIndex = text.firstIndex(of: "_") {
+        return String(text.prefix(upTo: underscoreIndex))
+    } else {
+        return text // Return original text if there's no underscore
+    }
+}
+
+
+    func convertStringToArray(_ jsonString: String) -> [[String: Any]]? {
+        if let jsonData = jsonString.data(using: .utf8) {
+            do {
+                let decodedData = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]]
+                return decodedData
+            } catch {
+                print("Error decoding JSON: \(error)")
+            }
+        }
+        return nil
+    }
+
 
 
 #Preview {
-    FavoriteScreen()
+    FavoriteScreen(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
 }
+

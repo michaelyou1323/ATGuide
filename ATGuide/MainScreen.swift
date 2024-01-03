@@ -11,10 +11,11 @@ struct MainScreen: View {
     let username: String 
     let language: String 
     let country: String
-    
-    @State private var tabIndex = 0 // Track the selected tab index
+    let phone: String
+    let userID: String // Include userID here
+    @State private var tabIndex = 0 // Track the selected tab index 
     @State private var presentSideMenu = false
-    @State private var title = "Planning Section" // Track the title
+    @State private var title = "Planning Section" // Track the title 
     
     var body: some View {
         ZStack {
@@ -24,16 +25,18 @@ struct MainScreen: View {
             VStack(spacing: 0) {
                 
                 
-                TabView(selection: $tabIndex){
+                TabView(selection: $tabIndex)
+                {
                     
                     
                     Group{
                         
-                        PlanningScreen()
+                        PlanningScreen(userID: userID)
                             .tabItem {
                                 Image(systemName: "calendar")
                               //  Image(systemName: "map")
                                 Text("Plan")
+                                    
                             }.tag(0)
                         //   .toolbar(.visible, for: .tabBar)
                         //   .toolbarBackground(Color.yellow, for: .tabBar)
@@ -47,12 +50,12 @@ struct MainScreen: View {
                         
                         ScannScreen()
                             .padding(.bottom,20)
-                            .tabItem {
+                            .tabItem { 
                                 Image(systemName: "scroll")
                                 Text("Hieroglyphics")
                             }.tag(2)
                         
-                        FavoriteScreen()
+                        FavoriteScreen(userID: userID)
                             .padding(.bottom,20)
                             .tabItem {
                                 Image(systemName: "heart.fill")
@@ -77,6 +80,7 @@ struct MainScreen: View {
                                        switch newValue {
                                            case 0:
                                                title = "Planning Section"
+                                        
                                            case 1:
                                                title = "QR Code Scanner"
                                            case 2:
@@ -86,6 +90,7 @@ struct MainScreen: View {
                                            default:
                                                title = "Unknown"
                                        }
+                    
                                    }
             }
             
@@ -93,11 +98,11 @@ struct MainScreen: View {
                 .navigationBarItems(leading:  HStack {
                     
                     Text(title)
-                        .font(.title)
+                        
                         .fontWeight(.bold)
                         .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                    
-                    
+                        .font(Font.custom("GillSans-SemiBoldItalic", size: 32))
+                        .bold()
                     
                     
                 }
@@ -116,6 +121,7 @@ struct MainScreen: View {
                         }) {
                             Image(systemName: "line.horizontal.3")
                                 .imageScale(.large)
+                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
                         }
                         
                        
@@ -137,11 +143,11 @@ struct MainScreen: View {
         
         .navigationBarHidden(true)
         if presentSideMenu {
-            SideMenu(email: email, username: username,language:language,country: country, presentSideMenu: $presentSideMenu)
+            SideMenu(email: email, username: username,language:language,country: country, phone: phone, userID: userID, presentSideMenu: $presentSideMenu)
         }
     }
         .padding(0)
-    .background(Color.black.opacity(0.05))
+   
 
         }
         
@@ -230,7 +236,8 @@ struct SideMenu: View {
     let username: String
     let language: String
     let country: String
-
+    let phone: String
+    let userID: String // Include userID here
  
       @State private var selectedImage: UIImage? = UserDefaults.standard.getImage(forKey: "profileImage")
     
@@ -265,7 +272,7 @@ struct SideMenu: View {
                                .background(
                                    // Instead of using NavigationLink here directly,
                                    // use it at the appropriate place in your view hierarchy
-                                   NavigationLink(destination: Profile(email: email, username: username,language:language,country: country), isActive: $isProfileScreenActive) {
+                                NavigationLink(destination: Profile(email: email, username: username,language:language,country: country, phone: phone), isActive: $isProfileScreenActive) {
                                        
                                        EmptyView()
                                    }
@@ -295,7 +302,7 @@ struct SideMenu: View {
                     // Language with padding, background, border, and corner radius
                     HStack {
                                     Image(systemName: "globe")
-                            .padding(.leading,10)
+                            .padding(.leading,10) 
                                     Text("language")
                                         .padding(.leading, 5)
                                         .font(.headline)
@@ -349,7 +356,28 @@ struct SideMenu: View {
                                         .background(Color.white)
                                         .padding(.top, 0)
                         Spacer()
-                            Text("phone")
+                            Text(phone)
+                                .padding(.trailing, 5)
+                                .font(.headline)
+                                .foregroundColor(Color.gray).opacity(0.6)
+                                .padding(.top, 0)
+                                }
+                                .padding(.top, 5)
+                                .background(Color.white)
+                                .cornerRadius(5)
+                       
+                    Divider().background(.black)
+                    HStack {
+                        Image(systemName: "id")
+                            .padding(.leading,10)
+                                    Text("id")
+                                        .padding(.leading, 5)
+                                        .font(.headline)
+                                        .background(Color.white)
+                                        .padding(.top, 0)
+                        
+                        Spacer()
+                            Text(userID)
                                 .padding(.trailing, 5)
                                 .font(.headline)
                                 .foregroundColor(Color.gray).opacity(0.6)
@@ -382,5 +410,5 @@ struct SideMenu: View {
 
 
 #Preview {
-    MainScreen( email: "", username: "",language: "", country: "")
+    MainScreen( email: "", username: "",language: "", country: "", phone: "", userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
 }

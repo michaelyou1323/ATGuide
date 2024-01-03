@@ -94,6 +94,7 @@ struct Profile: View {
     let username: String
     let language: String
     let country: String
+    let phone: String
     @State private var editedUsername = ""
        @State private var editedEmail = ""
        @State private var editedLanguage = "language"
@@ -246,7 +247,7 @@ struct Profile: View {
                                     .background(Color.white)
                                     .padding(.top, 0)
                     Spacer()
-                        Text("phone")
+                        Text(phone)
                             .padding(.trailing, 5)
                             .font(.headline)
                             .foregroundColor(Color.gray).opacity(0.6)
@@ -287,5 +288,5 @@ extension UserDefaults {
 }
 
 #Preview {
-    Profile(email: "michaelyou200@gmail.com", username: "Michaelyou", language: "English", country: "Egypt")
+    Profile(email: "michaelyou200@gmail.com", username: "Michaelyou", language: "English", country: "Egypt", phone: "o12220140685")
 }

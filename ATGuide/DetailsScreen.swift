@@ -13,7 +13,9 @@ struct DetailsScreen: View {
     let budget: Double
     var selectedDaysList: [[String: Any]]
     var PlanNumber: Int
-   
+    var HotelStars: Int
+    let userID: String
+    let planId: String
     
 //    var tripPlan: TripPlan
       @State private var isFavorite = false
@@ -21,21 +23,40 @@ struct DetailsScreen: View {
     @State private var recommendationsPlan1: [Recommendation] = []
     @State private var recommendationsPlan2: [Recommendation] = []
     @State private var recommendationsPlan3: [Recommendation] = []
-   
+    @StateObject var viewModel = firebaseViewModel()
+    
     var body: some View {
         VStack() {
             HStack {
                 Spacer()
                 Text("Plan Details")
-                    .font(.title)
+                    .font(Font.custom("Charter-BlackItalic", size: 32))
                     .fontWeight(.bold)
                     .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
                     .padding(.leading, 60)
-                
+             
+               //
                 
                 Spacer()
                 Button(action: {
                     isFavorite.toggle()
+                    if isFavorite {
+                        // Add to favorites
+                        if let selectedDaysListString = convertSelectedDaysListToString(selectedDaysList) {
+                            viewModel.pushObject(
+                                TripType: TripType,
+                                HotelStars: HotelStars,
+                                PlanNumber: PlanNumber,
+                                budget: budget,
+                                selectedDaysList: selectedDaysListString,
+                                userID: userID,
+                                planId: planId
+                            )
+                        }
+                    } else {
+                        // Remove from favorites
+                        viewModel.deletObject(TripType: TripType, userID: userID, planId: planId)
+                    }
                 }) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                         .foregroundColor(isFavorite ? .red : .gray)
@@ -46,6 +67,8 @@ struct DetailsScreen: View {
 //            .onAppear(){
 //                fetchData()
 //            }
+            
+    
             .frame(height:25)
          
             
@@ -78,6 +101,18 @@ struct DetailsScreen: View {
         }
         
     }
+    
+    func convertSelectedDaysListToString(_ list: [[String: Any]]) -> String? {
+            do {
+                let data = try JSONSerialization.data(withJSONObject: list, options: [])
+                return String(data: data, encoding: .utf8)
+            } catch {
+                print("Error converting selectedDaysList to string: \(error.localizedDescription)")
+                return nil
+            }
+        }
+    
+    
     func selectedRecommendationPlan() -> [Recommendation] {
         if PlanNumber == 0 {
             return recommendationsPlan1
@@ -88,13 +123,17 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://f769-197-54-160-20.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://468c-156-209-212-138.ngrok-free.app/recommendations") else {
             return
         }
 
+        
+    
+        
         let body: [String: Any] = [
             "place_type": TripType,
             "budget": budget,
+             "rating":HotelStars,
             "city_day":selectedDaysList
         ]
 
@@ -151,7 +190,7 @@ struct DetailsScreen: View {
                         }
                     }
                 } catch {
-                    print("JSON serialization error: \(error.localizedDescription)")
+                  //  print("JSON serialization error: \(error.localizedDescription)")
                 }
             }
         }.resume()
@@ -227,6 +266,13 @@ struct RecommendationView: View {
             let shape = RoundedRectangle(cornerRadius: 20)
             shape.fill().foregroundColor(Color.gray.opacity(0.01))
             
+            Image("Modern and Minimal Company Profile Presentation (7)") // Replace "your_background_image" with your image name
+                   .resizable()
+                   .aspectRatio(contentMode: .fill)
+                   .frame(maxWidth: .infinity, maxHeight: .infinity)
+                   .edgesIgnoringSafeArea(.all)
+                   .opacity(0.8)
+                   .frame(maxWidth: 175)
             
             VStack{
                 HStack{
@@ -235,24 +281,26 @@ struct RecommendationView: View {
                     
                     
                     VStack{
-                        Text("Day" )
-                            .font(.headline)
+                        Text("Day " )
+                            .font(Font.custom("Charter-BlackItalic", size: 20))
                             .foregroundColor(.black)
                             .padding(.top, 10)
                             .padding(.leading, 10) // Align to the left
                         
                         Spacer()
                         Text(recommendation.location)
-                            .font(.headline)
-                            .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                            .font(Font.custom("Verdana-Bold", size: 16))
+                            .foregroundColor(Color(red: 0.722, green: 0.278, blue: 0.118))
                             .padding(.top, 10)
                             .padding(.leading, 10) // Align to the left
                         Spacer()
+                        
+                      
                     }
                     .frame(minWidth: 100)
                     Spacer()
 //                    HStack{
-                        AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: "recommendation.Image") ?? ""))
+                    AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: recommendation.Image) ?? ""))
                           {
                         phase in
                                  switch phase {
@@ -263,11 +311,13 @@ struct RecommendationView: View {
                                          .resizable()
                                          .aspectRatio(contentMode: .fit)
                                  case.failure:
-                                     Image("1024 1")
+                                     Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
                                          .resizable()
                                          .aspectRatio(contentMode: .fit)
+//                                 @unknown default:
+//                                     EmptyView()
                                  @unknown default:
-                                     EmptyView()
+                                     fatalError()
                                  }
                       
                              }
@@ -292,17 +342,21 @@ struct RecommendationView: View {
                         
                         
                         VStack(alignment: .leading) {
+                            Text(recommendation.place)
+                                .font(Font.custom("Charter-BlackItalic", size: 19))
+                                .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                .padding(.bottom,6)
                             
                             Text("Hotel: \(recommendation.hotel)") // Replace with your card number Replace with your card number
-                                .font(.system(size: 13))
+                                .font(Font.custom("Charter-BlackItalic", size: 13))
                                
                              
-                            Text("Restorant: \(recommendation.Restaurant) ")// Replace with your card number
-                                .font(.system(size: 13))
+                            Text("Restaurant:\(recommendation.Restaurant)")// Replace with your card number
+                                .font(Font.custom("Charter-BlackItalic", size: 13))
                                 .multilineTextAlignment(.center)
-                              
+                                .padding(.bottom,2)
                             
-                        }.frame(minWidth: 280, minHeight:80)
+                        }.frame(minWidth: 270, minHeight:80)
                             .padding(.top, 1)
                           
                             .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
@@ -316,12 +370,12 @@ struct RecommendationView: View {
                             
                             
                             Text(" \(recommendation.TotalCost) $")
-                                .font(.headline)
+                                .font(Font.custom("Cochin-Bold", size: 20))
                                 .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
                                // Align to the left
                         }
-                        .frame(width: 50, height:30)
-                       
+                        .frame(maxWidth: 120, maxHeight:30)
+                        .padding(.trailing,5)
                     }
                     .padding(.horizontal,5)
                 }
@@ -337,7 +391,6 @@ struct RecommendationView: View {
         .shadow(color: Color.black.opacity(0.4), radius: 5, x: 0, y: 0) // Add a shadow effect
         .padding(.horizontal, 20)
         .padding(.vertical, 5)
-       
     }
 }
 
@@ -357,7 +410,7 @@ struct DetailsScreen_Previews: PreviewProvider {
             "days":1
             ]
 
-        ] , PlanNumber: 0)
+        ] , PlanNumber: 0, HotelStars: 4, userID: "87987",planId: "mm")
     }
 }
  
