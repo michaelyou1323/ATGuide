@@ -16,7 +16,10 @@ class ObjectDemo: Encodable{
     var HotelStars: Int = 0
     var userID: String = ""
     var planId: String = ""
-
+    var Image: String = ""
+    var selectNumberOfPersons: Int = 0
+    var favStatus: Bool = true
+    
 }
 
 extension Encodable{

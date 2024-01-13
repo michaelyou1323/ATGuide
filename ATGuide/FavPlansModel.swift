@@ -35,6 +35,10 @@ class PlanViewModel: ObservableObject {
                     let budget = planDict["budget"] as? Int ?? 0
                     let selectedDaysList = planDict["selectedDaysList"] as? String ?? ""
                     let planId = planDict["planId"] as? String ?? ""
+                    let Image = planDict["Image"] as? String ?? ""
+                    let selectNumberOfPersons = planDict["selectNumberOfPersons"] as? Int ?? 0
+                    let favStatus = planDict["favStatus"] as? Bool ?? false
+                    
                     // Create a Plan object and add it to the fetchedPlans array
                     let plan = Plan(id: id,
                                     hotelStars: hotelStars,
@@ -42,7 +46,10 @@ class PlanViewModel: ObservableObject {
                                     tripType: tripType,
                                     budget: budget,
                                     selectedDaysList: selectedDaysList,
-                                    planId: planId
+                                    planId: planId,
+                                    Image: Image,
+                                    selectNumberOfPersons: selectNumberOfPersons,
+                                    favStatus: favStatus
                     )
                     
         
@@ -65,6 +72,11 @@ struct Plan: Identifiable {
     let budget: Int
     let selectedDaysList: String
     let planId: String
+    let Image: String
+    let selectNumberOfPersons: Int
+    let favStatus: Bool
+
+    
     // Add other properties as needed
 }
 

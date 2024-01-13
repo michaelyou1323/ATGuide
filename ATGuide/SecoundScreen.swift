@@ -75,72 +75,91 @@ struct SecoundScreen: View {
     @State private var highlightFrame: CGRect?
 
     var body: some View {
+        
         NavigationView {
-            VStack {
-                if let scannedCode = scannedCode {
-                    if let url = URL(string: scannedCode), UIApplication.shared.canOpenURL(url) {
-                        NavigationLink(destination: WebView(url: url)) {
-                            Text("Open URL")
+            ZStack{
+               Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.6)
+                    .padding(.trailing,10)
+                    .padding(.bottom,50)
+                VStack {
+                    if let scannedCode = scannedCode {
+                        if let url = URL(string: scannedCode), UIApplication.shared.canOpenURL(url) {
+                            NavigationLink(destination: WebView(url: url)) {
+                                Text("Open URL")
+                                    .padding()
+                                    .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                            }
+                        } else {
+                            Text("Scanned code: \(scannedCode)")
                                 .padding()
-                                .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
+                            
+                            
                         }
                     } else {
-                        Text("Scanned code: \(scannedCode)")
-                            .padding()
                         
-                      
-                    }
-                } else {
-
-                    VStack{
-                        
-                        Button {
-                            self.isScannerSheetPresented.toggle()
-                        } label: {
-                            HStack{
-                                Image(systemName:"qrcode.viewfinder")// Use a QR code icon
-                                        Text("Scan QR Code")
-                                
+                        VStack{
+                            VStack{
+                                Image("_mWgHc-0KuBCiCnIQT0-a-transformed")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 300, height: 300)
                             }
-                        }
-                        .padding()
-                        .background(Color(red: 0.192, green: 0.259, blue: 0.333)) // Set the background color
-                        .foregroundColor(.white) // Set the text color to white
-                        .cornerRadius(8) // Optional: Add corner radius for a rounded button appearance
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.white, lineWidth: 2)
-                        )
-                        .sheet(isPresented: $isScannerSheetPresented) {
-                            QRCodeScannerView { code, metadataObject in
-                                self.scannedCode = code
-                                self.isScannerSheetPresented = false
-                                if let visualCodeObject = metadataObject as? AVMetadataMachineReadableCodeObject {
-                                    let visualCodeBounds = visualCodeObject.bounds
-                                    self.highlightFrame = visualCodeBounds
+                            .padding(.bottom,5)
+                            Button {
+                                self.isScannerSheetPresented.toggle()
+                            } label: {
+                                HStack{
+                                    Image(systemName:"qrcode.viewfinder")// Use a QR code icon
+                                    Text("Scan QR Code")
+                                    
                                 }
                             }
-                        }
-                        .overlay(
-                            highlightFrame.map { frame in
-                                Rectangle()
-                                    .stroke(Color.green, lineWidth: 2)
-                                    .frame(width: frame.width, height: frame.height)
-                                    .offset(x: frame.minX, y: frame.minY)
+                            .padding()
+                            .background(Color(red: 0.192, green: 0.259, blue: 0.333)) // Set the background color
+                            .foregroundColor(.white) // Set the text color to white
+                            .cornerRadius(8) // Optional: Add corner radius for a rounded button appearance
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .sheet(isPresented: $isScannerSheetPresented) {
+                                QRCodeScannerView { code, metadataObject in
+                                    self.scannedCode = code
+                                    self.isScannerSheetPresented = false
+                                    if let visualCodeObject = metadataObject as? AVMetadataMachineReadableCodeObject {
+                                        let visualCodeBounds = visualCodeObject.bounds
+                                        self.highlightFrame = visualCodeBounds
+                                    }
+                                }
                             }
-                        )
-                        
-                        
-//                        Image("phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed")
-//                            .frame(width:50,height: 50)// Use a QR code icon
+                            .overlay(
+                                highlightFrame.map { frame in
+                                    Rectangle()
+                                        .stroke(Color.green, lineWidth: 2)
+                                        .frame(width: frame.width, height: frame.height)
+                                        .offset(x: frame.minX, y: frame.minY)
+                                }
+                            )
                             
+                            
+                            //                        Image("phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed")
+                            //                            .frame(width:50,height: 50)// Use a QR code icon
+                            
+                        }
+                        //  .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.6))
+                        
                     }
                     
                 }
+                
+                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+               // .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.6))
+                
             }
-          
-            .foregroundColor(Color(UIColor(hex: 0x313F54)))
+           // .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.6))
+
         }
+        
     }
 }
 

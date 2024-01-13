@@ -16,6 +16,7 @@ class ProgramObjectDemo: Encodable,Decodable,Identifiable{
     var budget:String = ""
     var selectedDayList:String = ""
     var userID:String = ""
+    var Image: String = ""
 }
 
 

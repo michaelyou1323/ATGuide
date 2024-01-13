@@ -18,7 +18,7 @@ class firebaseViewModel: ObservableObject{
         ref.setValue(value)
     }
     
-    func pushObject(TripType: String, HotelStars: Int, PlanNumber: Int, budget: Double, selectedDaysList: String, userID:String, planId:String ) {
+    func pushObject(TripType: String, HotelStars: Int, PlanNumber: Int, budget: Double, selectedDaysList: String, userID:String, planId:String, Image:String ,selectNumberOfPersons:Int, favStatus:Bool) {
         let generateObject = ObjectDemo()
         generateObject.TripType = TripType
         generateObject.HotelStars = HotelStars
@@ -27,8 +27,10 @@ class firebaseViewModel: ObservableObject{
         generateObject.userID = userID
         generateObject.selectedDaysList = selectedDaysList
         generateObject.planId = planId
+        generateObject.Image = Image
+        generateObject.selectNumberOfPersons = selectNumberOfPersons
         
-
+        generateObject.favStatus = favStatus
         
         let hotelStarsString = String(HotelStars)
         let PlanNumberString = String(PlanNumber)

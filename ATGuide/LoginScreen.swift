@@ -124,7 +124,7 @@ struct LoginScreen: View {
 
     var body: some View {
         ZStack {
-            NavigationView {
+            NavigationStack {
                  VStack {
                      GeometryReader { geometry in
                          Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
@@ -161,12 +161,13 @@ struct LoginScreen: View {
                                  .frame(height: 45)
                                  .padding(.horizontal ,15)
                                  .padding(.vertical ,1)
-                                 .background(Color(.white))
-                                 .foregroundColor(.white)
+                                 .background(Color.clear)
+                                
                              
                              TextField("E-mail", text: $username)
-                                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                                 .textFieldStyle(PlainTextFieldStyle()) // Remove the rounded border style
                                  .padding(.horizontal, 25)
+                                 .background(Color.clear) // Set background to clear
                          }
                          
                          ZStack{
@@ -175,12 +176,16 @@ struct LoginScreen: View {
                                  .frame(height: 45)
                                  .padding(.horizontal ,15)
                                  .padding(.vertical ,10)
-                                 .background(Color(.white))
-                                 .foregroundColor(.white)
+                                 .background(Color.clear)
+                                
                              
+                          
+                            
                              SecureField("Password", text: $password)
-                                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                                 .textFieldStyle(PlainTextFieldStyle()) // Remove the rounded border style
                                  .padding(.horizontal, 25)
+                                 .background(Color.clear) // Set background to clear
+                                
                          }
                          
                      }
@@ -247,11 +252,11 @@ struct LoginScreen: View {
                                             PasswordResetView()
                                         }
                 }
-                
+                 .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.5))
             }
             
         }
-        .background(Color.black.opacity(0.05))
+       
     }
     
     private func saveUserDataLocally(user: User) {

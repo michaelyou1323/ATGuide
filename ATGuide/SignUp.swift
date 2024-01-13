@@ -115,12 +115,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6 )
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("Name ", text: $firstname)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
+                                .background(.clear)
                             
                         }
                         
@@ -132,12 +133,12 @@ struct SignUp: View {
                                                     .frame(height: 45)
                                                     .padding(.horizontal, 15)
                                                     .padding(.vertical, 6)
-                                                    .backgroundStyle(Color(.white))
-                                                    .foregroundColor(.white)
+                                                    .backgroundStyle(Color.clear)                                                    .foregroundColor(.white)
 
                                                 TextField("E-mail", text: $email)
-                                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                                    .padding(.horizontal, 25)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .padding(.horizontal, 25)
+                                .background(.clear)
 //                                                    .onChange(of: email) { newEmail in
 //                                                        validateEmail(newEmail)
 //                                                    }
@@ -149,13 +150,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6 )
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("phone", text: $phonenumber)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
-                            
+                                .background(.clear)
                         }
                         ZStack{
                             
@@ -164,13 +165,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6 )
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("Country", text: $country)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
-                            
+                                .background(.clear)
                         }
                         ZStack{
                             
@@ -179,12 +180,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6 )
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("language", text: $language)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
+                                .background(.clear)
                             
                         }
                         ZStack{
@@ -194,12 +196,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6)
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("password", text: $password)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
+                                .background(.clear)
                             
                         }
                         ZStack{
@@ -209,12 +212,13 @@ struct SignUp: View {
                                 .frame(height: 45)
                                 .padding(.horizontal ,15 )
                                 .padding(.vertical ,6)
-                                .backgroundStyle(Color(.white))
+                                .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
                             TextField("confirm password", text: $confirmPassword)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
+                                .background(.clear)
                             
                         }
                         
@@ -280,7 +284,8 @@ struct SignUp: View {
             
             
         } .padding()
-            .background(Color.white)
+            .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.5))
+
             
             .onAppear {
                 // Additional setup on appearance

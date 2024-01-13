@@ -20,7 +20,7 @@ struct MainScreen: View {
     var body: some View {
         ZStack {
             
-        NavigationView {
+        NavigationStack {
             
             VStack(spacing: 0) {
                 
@@ -46,22 +46,29 @@ struct MainScreen: View {
                                 Image(systemName: "qrcode.viewfinder")
                                 Text("QR")
                             }.tag(1)
+                         
                         
-                        
-                        ScannScreen()
+                        ContentView7()
                             .padding(.bottom,20)
-                            .tabItem { 
-                                Image(systemName: "scroll")
-                                Text("Hieroglyphics")
+                            .tabItem {
+                                Image(systemName: "magnifyingglass")
+                                Text("Search")
                             }.tag(2)
                         
                         FavoriteScreen(userID: userID)
                             .padding(.bottom,20)
                             .tabItem {
-                                Image(systemName: "heart.fill")
-                                Text("Fav")
+                                Image(systemName: "cart.fill")
+                                Text("Cart")
                             }.tag(3)
                         
+                        Profile(email: email, username: username,language:language,country: country, phone: phone)
+                            .tabItem {
+                                Image(systemName: "person.circle")
+                              //  Image(systemName: "map")
+                                Text("Profile")
+                
+                            }.tag(4)
                     }
                   
                     
@@ -84,12 +91,14 @@ struct MainScreen: View {
                                            case 1:
                                                title = "QR Code Scanner"
                                            case 2:
-                                               title = "Hieroglyphics"
+                                               title = "Search"
                                            case 3:
-                                               title = "Fav"
-                                           default:
-                                               title = "Unknown"
-                                       }
+                                               title = "Your Cart"
+                                           case 4:
+                                               title = "Profile"
+                                       default:
+                                           title = ""
+                                       } 
                     
                                    }
             }
@@ -106,31 +115,31 @@ struct MainScreen: View {
                     
                     
                 }
-                .frame(height:35)
+                .frame(height:35) 
                 .padding(.bottom,5)
                                     
                                     
                                     
-                                    , trailing:
-                                        HStack {
-                        Button(action: {
-                            // Toggle side menu visibility
-                            withAnimation(.easeInOut) {
-                                presentSideMenu.toggle()
-                            }
-                        }) {
-                            Image(systemName: "line.horizontal.3")
-                                .imageScale(.large)
-                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                        }
-                        
-                       
-                    
-//                        Text() // Display the changing title
-//                            .font(.headline)
-//                            .multilineTextAlignment(.center) // Align the text in the center
-                   
-                    }
+//                                    , trailing:
+//                                        HStack {
+//                        Button(action: {
+//                            // Toggle side menu visibility
+//                            withAnimation(.easeInOut) {
+//                                presentSideMenu.toggle()
+//                            }
+//                        }) {
+//                            Image(systemName: "line.horizontal.3")
+//                                .imageScale(.large)
+//                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+//                        }
+//                         
+//                       
+//                    
+////                        Text() // Display the changing title
+////                            .font(.headline)
+////                            .multilineTextAlignment(.center) // Align the text in the center
+//                   
+//                    }
               
               
             )
@@ -140,7 +149,7 @@ struct MainScreen: View {
 //            }
             
         }
-        
+ 
         .navigationBarHidden(true)
         if presentSideMenu {
             SideMenu(email: email, username: username,language:language,country: country, phone: phone, userID: userID, presentSideMenu: $presentSideMenu)
@@ -245,7 +254,7 @@ struct SideMenu: View {
     @Binding var presentSideMenu: Bool
     @State private var isProfileScreenActive = false
     var body: some View {
-        NavigationView{
+        NavigationStack{
             ZStack(alignment: .trailing ) {
                 // Background overlay
                 Color.gray.opacity(0.8)
@@ -362,7 +371,7 @@ struct SideMenu: View {
                                 .foregroundColor(Color.gray).opacity(0.6)
                                 .padding(.top, 0)
                                 }
-                                .padding(.top, 5)
+                                .padding(.top, 5) 
                                 .background(Color.white)
                                 .cornerRadius(5)
                        
@@ -377,7 +386,7 @@ struct SideMenu: View {
                                         .padding(.top, 0)
                         
                         Spacer()
-                            Text(userID)
+                             Text(userID)
                                 .padding(.trailing, 5)
                                 .font(.headline)
                                 .foregroundColor(Color.gray).opacity(0.6)
@@ -410,5 +419,6 @@ struct SideMenu: View {
 
 
 #Preview {
-    MainScreen( email: "", username: "",language: "", country: "", phone: "", userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
+    MainScreen( email: "ertert", username: "erttr",language: "ert", country: "46456", phone: "456456", userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
 }
+ 

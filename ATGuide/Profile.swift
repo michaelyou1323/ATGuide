@@ -92,9 +92,9 @@ struct ImagePicker: UIViewControllerRepresentable {
 struct Profile: View {
     let email: String
     let username: String
-    let language: String
+    var language: String
     let country: String
-    let phone: String
+    var phone: String
     @State private var editedUsername = ""
        @State private var editedEmail = ""
        @State private var editedLanguage = "language"
@@ -162,9 +162,10 @@ struct Profile: View {
                                    
                         
                     }
-                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                  
                     .frame(maxWidth: .infinity, minHeight: 250, alignment: .center)
-                    .background(Color(UIColor(hex: 0x0bb9c0)))
+                    .background(Color(red: 0.827, green: 0.827, blue: 0.827))
+                
                   
                     .clipShape(
                         CustomCorner(
@@ -172,7 +173,7 @@ struct Profile: View {
                             bottomLeft: 20, bottomRight: 20 // Apply the corner radius only to the bottom corners
                         )
                         )
-                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                  
                     .edgesIgnoringSafeArea(.all)
                     .padding(.bottom,0)
             
@@ -181,11 +182,12 @@ struct Profile: View {
                     
                         Image(systemName: "globe")
                             .padding(.leading,10)
-                        
+                            .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                    
                         Text("language")
                             .padding(.leading, 5)
                             .font(.headline)
+                            .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333) )
                             .background(Color.white)
                             .padding(.top, 0)
                     
@@ -197,15 +199,15 @@ struct Profile: View {
                     TextField("", text: $editedLanguage)
                         .padding(.trailing, 5)
                         .font(.headline)
-                        .foregroundColor(Color.gray).opacity(0.6)
+                        .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
                         .padding(.top, 0)
-                       
+                    
                 }else{
                     Spacer()
                     Text(language)
                         .padding(.trailing, 5)
                         .font(.headline)
-                        .foregroundColor(Color.gray).opacity(0.6)
+                        .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
                         .padding(.top, 0)
                 }
                 }
@@ -217,17 +219,19 @@ struct Profile: View {
                 HStack {
                     Image(systemName: "flag")
                         .padding(.leading,10)
+                        .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                                 Text("Country")
                                     .padding(.leading, 5)
                                     .font(.headline)
                                     .background(Color.white)
+                                    .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333) )
                                     .padding(.top, 0)
                     
                     Spacer()
                         Text(country)
                             .padding(.trailing, 5)
                             .font(.headline)
-                            .foregroundColor(Color.gray).opacity(0.6)
+                            .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
                             .padding(.top, 0)
                             }
                             .padding(.top, 5)
@@ -240,17 +244,20 @@ struct Profile: View {
                 
                 HStack {
                                 Image(systemName: "phone")
+                        .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
                         .padding(.leading,10)
+                    
                                 Text("Phone")
                                     .padding(.leading, 5)
                                     .font(.headline)
                                     .background(Color.white)
+                                    .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333) )
                                     .padding(.top, 0)
                     Spacer()
                         Text(phone)
                             .padding(.trailing, 5)
                             .font(.headline)
-                            .foregroundColor(Color.gray).opacity(0.6)
+                            .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
                             .padding(.top, 0)
                             }
                             .padding(.top, 5)
