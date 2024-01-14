@@ -204,7 +204,7 @@ struct PlanningScreen: View {
     }
     
     func fetchData() {
-        guard let url = URL(string: "https://a11f-156-210-179-212.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://e877-197-54-249-24.ngrok-free.app/recommendations") else {
             return
         }
         firstPlanId = generateRandomPlanID()
@@ -575,7 +575,7 @@ struct PlanningScreen: View {
                                 
                                 
                                 
-                                Text("Minimum: (\(totalCoast))$")
+                                Text("Minimum: (\(totalCoast*(selectNumberOfPersons ?? 0)))$")
                                     .font(Font.custom("Cochin-BoldItalic", size: 16))
                                     .padding(.top,0)
                                 
@@ -1624,8 +1624,8 @@ struct PlanningScreen: View {
             _ = getTripPrice(for: selectedTripType)
             let enteredBudget = Double(tripBudget) ?? 0
             let totalCoast = Double(totalNumberOfDays * 200) + (Double(getMinimumPrice()) ?? 0)
-            
-            if  totalCoast > enteredBudget {
+            let numberOfPerson = Double(selectNumberOfPersons ?? 0)
+            if  totalCoast*numberOfPerson > enteredBudget {
                 errorMessage = "Entered budget is less than the minimum trip price!"
                 showAlert = true
                 

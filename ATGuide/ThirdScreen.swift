@@ -7,13 +7,11 @@ struct ContentView7: View {
     @State private var cardName = ""
     @State private var expiryDate = ""
     @State private var cvv = ""
-    
-  
-    //@State private var isCVVValid = true
     @State private var roomCount = 0
     @State private var bedsCount = "Single"
     @State private var singleBedSelected = false
-    
+    @State private var isShowingResult = false
+    @State private var isShowingPopup = false
   
     var body: some View {
         VStack {
@@ -54,42 +52,42 @@ struct ContentView7: View {
                     }
                     
                 }
-               
+                
                 .frame(height: 150)
                 .clipped()
                 .cornerRadius(12)
-               // recommendation.
+                // recommendation.
                 Text("\("hotelDetail.name")")
                     .font(Font.custom("Charter-Black", size: 25))
-                          .fontWeight(.bold)
-                          .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                          
+                    .fontWeight(.bold)
+                    .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                
                 
                 //recommendation.
                 Text("\("hotelDetail.location")")
-                          .font(.subheadline)
-                          .foregroundColor(.gray)
-                      
-                      HStack {
-                          Text("Total Cost: ")
-                              .font(.subheadline)
-                          
-                          // recommendation.
-                          Text("30 $")
-                              .font(.subheadline)
-                              .fontWeight(.bold)
-                              .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
-                      }
-                      
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
                 
-                      Divider()
-                      
+                HStack {
+                    Text("Total Cost: ")
+                        .font(.subheadline)
+                    
+                    // recommendation.
+                    Text("30 $")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                }
+                
+                
+                Divider()
+                
                 HStack {
                     Text("Room")
                     Spacer()
                     
                     Button(action: {
-                      "  incrementRoomCount()"
+                        "incrementRoomCount()"
                     }) {
                         Image(systemName: "plus.circle")
                             .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
@@ -100,7 +98,7 @@ struct ContentView7: View {
                         .padding(.horizontal, 10)
                     
                     Button(action: {
-                       // decrementRoomCount()
+                        // decrementRoomCount()
                     }) {
                         Image(systemName: "minus.circle")
                             .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
@@ -115,116 +113,172 @@ struct ContentView7: View {
                     Spacer()
                     
                     Button(action: {
-//                        if !singleBedSelected {
-//                            selectSingleBed()
-//                        }
+                        //                        if !singleBedSelected {
+                        //                            selectSingleBed()
+                        //                        }
                     }) {
                         Text("Single")
                             .padding(.horizontal, 10)
-                           // .foregroundColor("singleBedSelected" ? .gray : Color(red: 0.192, green: 0.259, blue: 0.333))
+                        // .foregroundColor("singleBedSelected" ? .gray : Color(red: 0.192, green: 0.259, blue: 0.333))
                     }
                     .buttonStyle(BorderedButtonStyle())
-                   // .disabled(singleBedSelected)
+                    // .disabled(singleBedSelected)
                     
                     Button(action: {
-//                        if singleBedSelected {
-//                            selectDoubleBed()
-//                        }
+                        //                        if singleBedSelected {
+                        //                            selectDoubleBed()
+                        //                        }
                     }) {
                         Text("Double")
                             .padding(.horizontal, 10)
-                           // .foregroundColor(singleBedSelected ? Color(red: 0.192, green: 0.259, blue: 0.333) : .gray)
+                        // .foregroundColor(singleBedSelected ? Color(red: 0.192, green: 0.259, blue: 0.333) : .gray)
                     }
                     .buttonStyle(BorderedButtonStyle())
-                   // .disabled(!singleBedSelected)
+                    // .disabled(!singleBedSelected)
                 }
                 .listRowBackground(Color.clear)
                 .contentShape(RoundedRectangle(cornerRadius: 20))
                 
-                      VStack(alignment: .leading, spacing: 8) {
-                          Text("Payment Information")
-                              .font(.headline)
-                              .fontWeight(.bold)
-                              .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
-                          
-                          TextField("Card Number", text: $cardNumber)
-                              .textFieldStyle(RoundedBorderTextFieldStyle())
-//                              .onChange(of: cardNumber) { newValue in
-//                                  // Remove non-numeric characters and format the card number
-//                                  let cleanNumber = newValue.filter { $0.isNumber }
-//                                  cardNumber = formatCardNumber(cleanNumber)
-//                              }
-                          
-                          HStack {
-                              TextField("Expiry Date", text: $expiryDate)
-                                  .textFieldStyle(RoundedBorderTextFieldStyle())
-//                                  .onChange(of: expiryDate) { newValue in
-//                                      let filteredValue = newValue.filter { $0.isNumber }
-//                                      let formattedValue = formatExpiryDate(filteredValue)
-//                                      expiryDate = formattedValue
-//                                  }
-//                                  .onReceive(expiryDate.publisher.collect()) { string in
-//                                      if string.count > 5 {
-//                                          expiryDate = String(string.prefix(5))
-//                                      }
-//                                  }
-
-                              Spacer()
-                              
-                              TextField("CVV", text: $cvv)
-                                  .textFieldStyle(RoundedBorderTextFieldStyle())
-                                  .onChange(of: cvv) { newValue in
-                                      let filteredValue = newValue.filter { $0.isNumber }
-                                      cvv = String(filteredValue.prefix(3)) // Assuming CVV is 3 digits long
-                                      
-                                      // Validate the CVV length
-                                    //  isCVVValid = filteredValue.count == 3
-                                  }
-                                 
-                                  
-                          }
-                          
-                          TextField("Card Holder Name", text: $cardName)
-                              .textFieldStyle(RoundedBorderTextFieldStyle())
-                      }
-                      .padding(.vertical)
-                      .padding(.bottom,0)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Payment Information")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(red: 0.722, green: 0.275, blue: 0.114))
+                    
+                    TextField("Card Number", text: $cardNumber)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    //                              .onChange(of: cardNumber) { newValue in
+                    //                                  // Remove non-numeric characters and format the card number
+                    //                                  let cleanNumber = newValue.filter { $0.isNumber }
+                    //                                  cardNumber = formatCardNumber(cleanNumber)
+                    //                              }
+                    
+                    HStack {
+                        TextField("Expiry Date", text: $expiryDate)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        //                                  .onChange(of: expiryDate) { newValue in
+                        //                                      let filteredValue = newValue.filter { $0.isNumber }
+                        //                                      let formattedValue = formatExpiryDate(filteredValue)
+                        //                                      expiryDate = formattedValue
+                        //                                  }
+                        //                                  .onReceive(expiryDate.publisher.collect()) { string in
+                        //                                      if string.count > 5 {
+                        //                                          expiryDate = String(string.prefix(5))
+                        //                                      }
+                        //                                  }
+                        
+                        Spacer()
+                        
+                        TextField("CVV", text: $cvv)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onChange(of: cvv) {
+                                let filteredValue = cvv.filter { $0.isNumber }
+                                cvv = String(filteredValue.prefix(3)) // Assuming CVV is 3 digits long
+                                
+                                // Validate the CVV length
+                                //  isCVVValid = filteredValue.count == 3
+                                   }
+//                            .onChange(of: cvv) { newValue in
+//                               
+//                            }
+                        
+                            
+                    }
+                    
+                    TextField("Card Holder Name", text: $cardName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+                .padding(.vertical)
+                .padding(.bottom,0)
                 
                 HStack() {
-                                   Spacer()
-                                   Button(action: {
-                                       fetchData()
-                                   }) {
-                                       Text("Book Now")
-                                           .frame(maxWidth: .infinity)
-                                           .padding()
-                                           .foregroundColor(.white)
-                                           .background(Color(red: 0.192, green: 0.259, blue: 0.333) )
-                                           .cornerRadius(10)
-                                   }
-                                   .padding(.leading, 170)
-                               }
-                           }
-                           .padding()
-                           .background(Color.white)
-                           .cornerRadius(12)
-                           .shadow(color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2)
-                           .sheet(isPresented: Binding<Bool>(get: {
-                               if let isValid = isValid {
-                                   return isValid
-                               }
-                               return false
-                           }, set: { _ in })) {
-                               if isValid == true {
-                                   PaymentSuccessCard()
-                               } else {
-                                   PaymentFailedCard()
-                               }
-                           }
+                    Spacer()
+                    Button(action: {
+                        fetchData()
+                        isShowingPopup = true
+                    }) {
+                        Text("Book Now")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color(red: 0.192, green: 0.259, blue: 0.333))
+                            .cornerRadius(10)
+                    }
+                    .padding(.leading, 170)
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(12)
+                .shadow(color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2)
+                
+                
+            }
+            .overlay(
+                           CustomPopup(isShowingPopup: $isShowingPopup, isValid: isValid ?? false)
+                               .opacity(isShowingPopup ? 1 : 0)
+                       )
+//          ( 0.8 : 1)
+//            .shadow(isShowingPopup ? color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2))
         }
-      //  .onAppear(perform: fetchData)
+        .padding()
+    
+    }
+ 
+    struct CustomPopup: View {
+        @Binding var isShowingPopup: Bool
+        let isValid: Bool
+
+        var body: some View {
+//
+                                VStack{
+                                    Spacer()
+                                    if !isValid {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .resizable()
+                                            .frame(width: 60, height: 60)
+                                            .foregroundColor(Color.white)
+                                            .padding()
+                                       
+                                    } else{
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.system(size: 60))
+                                            .foregroundColor(.white)
+                                    }
+                                    Text(!isValid ? "Payment Failed. Please try again." : "Payment Successful!")
+                                        .font(.title)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                   
+                                    Spacer()
+                                    HStack{
+                                     
+                                        Button("Close") {
+                                            // Close the popup
+                                            isShowingPopup = false
+                                        }
+                                        .padding()
+                                        .foregroundColor(!isValid ? Color.white : Color.white)
+                                        .background(!isValid ? Color.red : Color.green)
+                                        .cornerRadius(10)
+                                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+                                        .padding(.horizontal,120)
+                                        .padding(.vertical,10)
+                                    }
+                                       // .frame(width: .infinity)
+                                    .background(!isValid ? .white : Color(red: 0, green: 0.502, blue: 0))
+                                }
+//                                .padding(.horizontal, 0)
+                                       
+                                       .background(  Color(!isValid ?  Color(red: 0.753, green: 0, blue: 0) : Color(red: 0, green: 0.502, blue: 0) ))
+                                               .cornerRadius(15)
+                                               .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+                                               .frame(height: 420)
+                                              
+//
+        }
     }
 
+    
     struct PaymentSuccessCard: View {
            var body: some View {
                Text("Payment Successful!")
@@ -298,6 +352,7 @@ struct ContentView7: View {
     }
     
 }
+
 
 struct APIResponse: Codable {
     let isValid: Bool

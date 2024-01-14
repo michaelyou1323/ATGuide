@@ -222,9 +222,7 @@ struct SignUp: View {
                             
                         }
                         
-                        NavigationLink(destination: MainScreen(email: email, username: firstname, language:language, country:country, phone: phonenumber, userID: userID), isActive: $isNavigate) {
-                                            EmptyView()
-                                        }
+           
                      
                         
                     }
@@ -270,7 +268,9 @@ struct SignUp: View {
                     .disabled(isLoading) // Disable button while loading
                     .padding(.bottom, 60)
                     .padding(.horizontal, 15)
-                                         
+                    .navigationDestination(isPresented: $isNavigate) {
+                        MainScreen(email: email, username: firstname, language:language, country:country, phone: phonenumber, userID: userID)
+                    }
                     //                .' '#' '$' '[' or ']
                     
                     

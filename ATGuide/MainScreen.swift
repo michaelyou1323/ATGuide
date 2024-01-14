@@ -82,9 +82,9 @@ struct MainScreen: View {
                     
                 }
                
-                .onChange(of: tabIndex) { newValue in
+                .onChange(of: tabIndex) {
                                        // Update the title based on the selected tab
-                                       switch newValue {
+                                       switch tabIndex {
                                            case 0:
                                                title = "Planning Section"
                                         
@@ -141,7 +141,7 @@ struct MainScreen: View {
 //                   
 //                    }
               
-              
+                                //    Card("4444333388882222", "12/24", "William Black", "789")
             )
 //                .navigationBarHidden(false)
 //            if presentSideMenu {
@@ -281,11 +281,15 @@ struct SideMenu: View {
                                .background(
                                    // Instead of using NavigationLink here directly,
                                    // use it at the appropriate place in your view hierarchy
-                                NavigationLink(destination: Profile(email: email, username: username,language:language,country: country, phone: phone), isActive: $isProfileScreenActive) {
-                                       
-                                       EmptyView()
-                                   }
+//                                NavigationLink(destination: Profile(email: email, username: username,language:language,country: country, phone: phone), isActive: $isProfileScreenActive) {
+//                                       
+//                                       EmptyView()
+//                                   }
                                )
+                               .navigationDestination(
+                                    isPresented: $isProfileScreenActive) {
+                                        Profile(email: email, username: username,language:language,country: country, phone: phone)
+                                    }
                         Text(username)
                             .font(.headline)
                         

@@ -151,9 +151,9 @@ struct DetailsScreen: View {
                 print(TripType,budget, selectedDaysList)
             }
             
-            NavigationLink(destination: HotelReservation(hotelsDetails: hotelsDetails), isActive: $signUp ) {
-                EmptyView()
-            }
+//            NavigationLink(destination: HotelReservation(hotelsDetails: hotelsDetails), isActive: $signUp ) {
+//                EmptyView()
+//            }
             
             Button(action: {
                 signUp = true
@@ -171,6 +171,11 @@ struct DetailsScreen: View {
                 
             }
             .padding(.top,7)
+            .navigationDestination(
+                 isPresented:$signUp) {
+                     HotelReservation(hotelsDetails: hotelsDetails)
+                    
+                 }
             //            .padding(.leading, 170)
         }
         
@@ -244,7 +249,7 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://a11f-156-210-179-212.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://e877-197-54-249-24.ngrok-free.app/recommendations") else {
             return
         }
      
@@ -737,7 +742,7 @@ struct RedactedPlaceholderView: View {
                            .onAppear {
                                // startTimer()
                            }
-                           .onChange(of: 3) { _ in
+                           .onChange(of: 3) { 
                              //  startTimer()
                            }
                     

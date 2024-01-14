@@ -190,14 +190,9 @@ struct LoginScreen: View {
                          
                      }
                     
-                   
+                  
                     
-                     NavigationLink(destination: MainScreen(email: userData?.email ?? "", username: userData?.name ?? "", language: userData?.language ?? "" ,country: userData?.country ?? "", phone: userData?.phonenumber ?? "", userID: userData?.id ?? ""), isActive: $isShowingNewView) {
-                                        EmptyView()
-                                    }
-                    NavigationLink(destination: SignUp(), isActive: $signUp ) {
-                                        EmptyView()
-                                    }
+
                     Button(action: {
                                       Auth.auth().signIn(withEmail: username, password: password) { result, error in
                                           if let error = error {
@@ -217,6 +212,15 @@ struct LoginScreen: View {
                                        }
                                        .padding(.top, 30)
                                        .padding(.horizontal, 14)
+                                       .navigationDestination(
+                                            isPresented: $signUp) {
+                                                SignUp()
+                                            }
+                                       .navigationDestination(
+                                            isPresented: $isShowingNewView) {
+                                               MainScreen(email: userData?.email ?? "", username: userData?.name ?? "", language: userData?.language ?? "" ,country: userData?.country ?? "", phone: userData?.phonenumber ?? "", userID: userData?.id ?? "")
+                                            }
+                     
                                        .alert(isPresented: $showAlert) {
                                            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                                        }

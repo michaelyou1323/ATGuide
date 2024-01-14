@@ -61,6 +61,7 @@
 		948591B82B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif in Resources */ = {isa = PBXBuildFile; fileRef = 948591B72B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif */; };
 		9489621B2B50555A00C91F1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9489621A2B50555A00C91F1E /* Assets.xcassets */; };
 		9497CF532B1CE7440056B59E /* 1024 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9497CF522B1CE7440056B59E /* 1024 1.png */; };
+		94984A752B5396F000768B02 /* YourPlans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94984A742B5396F000768B02 /* YourPlans.swift */; };
 		94A01B5C2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif in Resources */ = {isa = PBXBuildFile; fileRef = 94A01B5B2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif */; };
 		94A01B5E2B492EAE0052225D /* HotelReservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A01B5D2B492EAE0052225D /* HotelReservation.swift */; };
 		94A01B622B4985450052225D /* IMG_20240104_181119 (2).png in Resources */ = {isa = PBXBuildFile; fileRef = 94A01B612B4985450052225D /* IMG_20240104_181119 (2).png */; };
@@ -143,6 +144,7 @@
 		948591B72B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "image_processing20220708-21892-cye7ve.gif"; sourceTree = "<group>"; };
 		9489621A2B50555A00C91F1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9497CF522B1CE7440056B59E /* 1024 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1024 1.png"; path = "Assets.xcassets/AppIcon.appiconset/1024 1.png"; sourceTree = "<group>"; };
+		94984A742B5396F000768B02 /* YourPlans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourPlans.swift; sourceTree = "<group>"; };
 		94A01B5B2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "image-processing20220708-21892-unscreen.gif"; sourceTree = "<group>"; };
 		94A01B5D2B492EAE0052225D /* HotelReservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelReservation.swift; sourceTree = "<group>"; };
 		94A01B612B4985450052225D /* IMG_20240104_181119 (2).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IMG_20240104_181119 (2).png"; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		9408E84E2AD134F7006FF31A = {
 			isa = PBXGroup;
 			children = (
+				94984A742B5396F000768B02 /* YourPlans.swift */,
 				94A01B5D2B492EAE0052225D /* HotelReservation.swift */,
 				9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */,
 				94D5332A2AE4498D0087D117 /* AT Guide Database.bak */,
@@ -525,6 +528,7 @@
 				943119832AEA339800822A33 /* PlanningScreen.swift in Sources */,
 				947788092B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift in Sources */,
 				94BF61282B397DF500591239 /* AppObjectDemo.swift in Sources */,
+				94984A752B5396F000768B02 /* YourPlans.swift in Sources */,
 				9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */,
 				9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */,
 				9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */,
