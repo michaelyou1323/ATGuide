@@ -159,6 +159,7 @@ struct DetailsScreen: View {
                 signUp = true
                 let details = tripHotelsDetails()
                 hotelsDetails = details // Store hotel details in the state
+                print(hotelsDetails)
             }) {
                 Text("Confirm")
                     .frame(maxWidth: .infinity)
@@ -173,7 +174,18 @@ struct DetailsScreen: View {
             .padding(.top,7)
             .navigationDestination(
                  isPresented:$signUp) {
-                     HotelReservation(hotelsDetails: hotelsDetails)
+                     HotelReservation(hotelsDetails: hotelsDetails,
+                                      numberOfUser: selectNumberOfPersons,
+                                      TripType:TripType,
+                                      budget:budget,
+                                      selectedDaysList: selectedDaysList,
+                                      PlanNumber:PlanNumber,
+                                      HotelStars:HotelStars,
+                                      userID:userID,
+                                      planId:planId,
+                                      Image2:Image2,
+                                      selectNumberOfPersons:selectNumberOfPersons
+                     )
                     
                  }
             //            .padding(.leading, 170)
@@ -198,11 +210,13 @@ struct DetailsScreen: View {
 
          for recommendation in recommendations {
              let hotelName = recommendation.hotel
-
+//           
              if uniqueHotels[hotelName] == nil {
                  let hotelDetail = HotelDetails(name: recommendation.hotel,
                                                 image: recommendation.Hotel_Image,
-                                                location: recommendation.location)
+                                                location: recommendation.location,
+                                                hotelCost: Double(recommendation.Hotel_Price)
+                 )
                  uniqueHotels[hotelName] = hotelDetail
              }
          }
@@ -249,7 +263,7 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://e877-197-54-249-24.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/recommendations") else {
             return
         }
      
@@ -326,7 +340,17 @@ struct DetailsScreen: View {
         }.resume()
     }
     
-    
+//    "Hotel": "Marsa Alam Beach Resort",
+//    "Hotel_Image": "marsa_alam_beach_resort_image.jpg",
+//    "Hotel_Price": 280,
+//    "Image": "https://drive.google.com/file/d/1newURLgoesHere/view?usp=drive_link",
+//    "Location": "Marsa Alam",
+//    "Place": "Marsa Alam Convention Reef",
+//    "Rating": 4,
+//    "Restaurant": "Marsa Alam Fish Shack - Marsa Alam",
+//    "Restaurant_Image": "marsa_alam_fish_shack_image.jpg",
+//    "Total Cost": 1190
+
     func createRecommendation(from data: [String: Any]) -> Recommendation? {
         
         guard let hotel = data["Hotel"] as? String,
@@ -336,14 +360,16 @@ struct DetailsScreen: View {
               let restaurant = data["Restaurant"] as? String,
               let hotel_Image = data["Hotel_Image"] as? String,
               let restaurant_Image = data["Restaurant_Image"] as? String,
-              let totalCost = data["Total Cost"] as? Int else {
+              let totalCost = data["Total Cost"] as? Int,
+              let Hotel_Price = data["Hotel_Price"] as? Int
+        else {
             
             return nil
         }
         
 
        
-        return Recommendation(hotel: hotel, Image: image, location: location, place: place, Restaurant: restaurant, TotalCost: "\(totalCost)", Hotel_Image: hotel_Image, Restaurant_Image: restaurant_Image)
+        return Recommendation(hotel: hotel, Image: image, location: location, place: place, Restaurant: restaurant, TotalCost: totalCost, Hotel_Image: hotel_Image, Restaurant_Image: restaurant_Image,Hotel_Price: Hotel_Price)
     }
     
    
@@ -386,9 +412,10 @@ struct Recommendation: Codable, Hashable {
     let location: String
     let place: String
     let Restaurant: String
-    let TotalCost: String
+    let TotalCost: Int
     let Hotel_Image: String
     let Restaurant_Image: String
+    let Hotel_Price: Int
 }
 
 struct RecommendationView: View {
@@ -994,25 +1021,27 @@ struct FloatingDetailsView: View {
     }
 }
 
-struct DetailsScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailsScreen(TripType: "conference_places", budget: 89898, selectedDaysList:[
-            [
-            "city":"Marsa Alam", 
-            "days":2
-            ],
-            [
-            "city":"Alexandria",
-            "days":2
-            ],
-             [
-            "city":"Luxor",
-            "days":2
-            ]
-
-        ] , PlanNumber: 0, HotelStars: 4, userID: "87987",planId: "mm", Image2: "", selectNumberOfPersons: 2 ,favStatus: Binding.constant(false) )
-    }
-}
+//struct DetailsScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DetailsScreen(TripType: "conference_places", budget: 89898, selectedDaysList:[
+//            [
+//            
+//            "days":2,
+//            "city":"Marsa Alam"
+//            ],
+//            [
+//                "days":2,
+//            "city":"Alexandria"
+//            
+//            ],
+//             [
+//            "city":"Luxor",
+//            "days":2
+//            ]
+//
+//        ] , PlanNumber: 0, HotelStars: 4, userID: "87987",planId: "mm", Image2: "", selectNumberOfPersons: 2 ,favStatus: Binding.constant(false) )
+//    }
+//}
  
  
  

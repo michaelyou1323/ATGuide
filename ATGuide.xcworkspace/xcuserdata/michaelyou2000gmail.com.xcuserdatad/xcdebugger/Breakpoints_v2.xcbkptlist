@@ -14,8 +14,8 @@
             filePath = "ATGuide/PlanningScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1681"
-            endingLineNumber = "1681"
+            startingLineNumber = "1680"
+            endingLineNumber = "1680"
             landmarkName = "PlanningScreen"
             landmarkType = "14">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "ATGuide/FavoriteScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
             landmarkName = "extractTextBeforeUnderscore(_:)"
             landmarkType = "9">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "ATGuide/PlanningScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "483"
-            endingLineNumber = "483"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "body"
             landmarkType = "24">
             <Locations>
@@ -135,22 +135,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6FE4EBEE-A795-472F-9A48-C583B2951CB3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ATGuide/PlanningScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1499"
-            endingLineNumber = "1499"
-            landmarkName = "getSelectedDaysForCities()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "1B8D1A7D-9442-4023-904C-457E706E5A69"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -158,8 +142,8 @@
             filePath = "ATGuide/PlanningScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "848"
-            endingLineNumber = "848"
+            startingLineNumber = "846"
+            endingLineNumber = "846"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -174,10 +158,106 @@
             filePath = "ATGuide/PlanningScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "484"
-            endingLineNumber = "484"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
             landmarkName = "body"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D0474920-DDD2-40A7-9E5C-068D0C20F8C9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ATGuide/PlanningScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1495"
+            endingLineNumber = "1495"
+            landmarkName = "getSelectedDaysForCities()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D0474920-DDD2-40A7-9E5C-068D0C20F8C9 - 8f0f9004519ae3ad"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Desktop/ATGuide/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1495"
+                  endingLineNumber = "1495"
+                  offsetFromSymbolStart = "112">
+               </Location>
+               <Location
+                  uuid = "D0474920-DDD2-40A7-9E5C-068D0C20F8C9 - 8f0f9004519ae3ad"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Desktop/ATGuide/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1495"
+                  endingLineNumber = "1495"
+                  offsetFromSymbolStart = "104">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9A336631-C6C0-4B6B-B998-7D465F8856DD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ATGuide/PlanningScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1499"
+            endingLineNumber = "1499"
+            landmarkName = "getSelectedDaysForCities()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9A336631-C6C0-4B6B-B998-7D465F8856DD - 8f0f9004519ae029"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Desktop/ATGuide/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1499"
+                  endingLineNumber = "1499"
+                  offsetFromSymbolStart = "712">
+               </Location>
+               <Location
+                  uuid = "9A336631-C6C0-4B6B-B998-7D465F8856DD - 8f0f9004519ae116"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Desktop/ATGuide/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1506"
+                  endingLineNumber = "1506"
+                  offsetFromSymbolStart = "720">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

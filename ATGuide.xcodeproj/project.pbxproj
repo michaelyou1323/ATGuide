@@ -10,7 +10,7 @@
 		198A5F3F53FF76700C290E5F /* Pods_ATGuide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD745D25CBF50744BC653EDD /* Pods_ATGuide.framework */; };
 		9404A87D2AD6D2810039434D /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A87C2AD6D2810039434D /* MainScreen.swift */; };
 		9404A87F2AD6D3C10039434D /* ScannScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A87E2AD6D3C10039434D /* ScannScreen.swift */; };
-		9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A8802AD6D3DF0039434D /* SecoundScreen.swift */; };
+		9404A8812AD6D3DF0039434D /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A8802AD6D3DF0039434D /* QRCodeScanner.swift */; };
 		9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404A8822AD6D3F70039434D /* ThirdScreen.swift */; };
 		940671BB2ADC37F600C92032 /* 20231015_161832_0000.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */; };
 		9408E85B2AD134F7006FF31A /* ATGuideApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9408E85A2AD134F7006FF31A /* ATGuideApp.swift */; };
@@ -52,6 +52,7 @@
 		943119BB2AEA698000822A33 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 943119BA2AEA698000822A33 /* GoogleService-Info.plist */; };
 		9444A2852B252A7300E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */; };
 		9444A2872B25C91A00E12827 /* FavoriteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444A2862B25C91900E12827 /* FavoriteScreen.swift */; };
+		945E81C42B53E997009BC4EB /* Copy of Animation - 1705226473630.gif in Resources */ = {isa = PBXBuildFile; fileRef = 945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */; };
 		9464CEFF2B1EA7A20020299A /* DetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */; };
 		9468E8792B3DB71F00DCD8A9 /* FavPlansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */; };
 		9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */; };
@@ -119,8 +120,8 @@
 		883110B808C7A8C688A1F22A /* Pods-ATGuide.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATGuide.debug.xcconfig"; path = "Target Support Files/Pods-ATGuide/Pods-ATGuide.debug.xcconfig"; sourceTree = "<group>"; };
 		9404A87C2AD6D2810039434D /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		9404A87E2AD6D3C10039434D /* ScannScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannScreen.swift; sourceTree = "<group>"; };
-		9404A8802AD6D3DF0039434D /* SecoundScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecoundScreen.swift; sourceTree = "<group>"; };
-		9404A8822AD6D3F70039434D /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; };
+		9404A8802AD6D3DF0039434D /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
+		9404A8822AD6D3F70039434D /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; usesTabs = 0; };
 		9404A8842AD6FB750039434D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 20231015_161832_0000.jpg; sourceTree = "<group>"; };
 		9408E8572AD134F7006FF31A /* ATGuide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATGuide.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +137,7 @@
 		943119BA2AEA698000822A33 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg"; sourceTree = "<group>"; };
 		9444A2862B25C91900E12827 /* FavoriteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreen.swift; sourceTree = "<group>"; };
+		945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Copy of Animation - 1705226473630.gif"; sourceTree = "<group>"; };
 		9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsScreen.swift; sourceTree = "<group>"; };
 		9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavPlansModel.swift; sourceTree = "<group>"; };
 		9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanModel.swift; sourceTree = "<group>"; };
@@ -279,7 +281,7 @@
 				943119822AEA333C00822A33 /* PlanningScreen.swift */,
 				9404A8822AD6D3F70039434D /* ThirdScreen.swift */,
 				9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */,
-				9404A8802AD6D3DF0039434D /* SecoundScreen.swift */,
+				9404A8802AD6D3DF0039434D /* QRCodeScanner.swift */,
 				9404A87C2AD6D2810039434D /* MainScreen.swift */,
 				9404A87E2AD6D3C10039434D /* ScannScreen.swift */,
 				9408E8682AD14295006FF31A /* SignUp.swift */,
@@ -289,6 +291,7 @@
 				9408E85A2AD134F7006FF31A /* ATGuideApp.swift */,
 				9408E85C2AD134F7006FF31A /* LoginScreen.swift */,
 				9489621A2B50555A00C91F1E /* Assets.xcassets */,
+				945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */,
 				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
 				9413770B2B4439AC00CAC9E9 /* Modern and Minimal Company Profile Presentation (2).png */,
 				94A01B652B4AB6550052225D /* IMG_20240107_123513.png */,
@@ -301,11 +304,11 @@
 				9408E8602AD134F9006FF31A /* Preview Content */,
 				AC18DB682ADC5311005BED40 /* SplashScreenView.swift */,
 				9444A2862B25C91900E12827 /* FavoriteScreen.swift */,
+				94BF61272B397DF500591239 /* AppObjectDemo.swift */,
 				947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */,
 				941E0B972B30E4150062A56A /* Profile.swift */,
 				94BF61232B397AEE00591239 /* firebaseViewModel.swift */,
 				94BF61252B397BD800591239 /* ObjectDemo.swift */,
-				94BF61272B397DF500591239 /* AppObjectDemo.swift */,
 				9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */,
 			);
 			path = ATGuide;
@@ -476,6 +479,7 @@
 				94D1145D2B2695080094F1A3 /* fotor-ai-2023121125256.jpg in Resources */,
 				94A01B622B4985450052225D /* IMG_20240104_181119 (2).png in Resources */,
 				9444A2852B252A7300E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg in Resources */,
+				945E81C42B53E997009BC4EB /* Copy of Animation - 1705226473630.gif in Resources */,
 				9413770C2B4439AC00CAC9E9 /* Modern and Minimal Company Profile Presentation (2).png in Resources */,
 				9413770A2B442EDA00CAC9E9 /* Modern and Minimal Company Profile Presentation.png in Resources */,
 				9489621B2B50555A00C91F1E /* Assets.xcassets in Resources */,
@@ -531,7 +535,7 @@
 				94984A752B5396F000768B02 /* YourPlans.swift in Sources */,
 				9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */,
 				9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */,
-				9404A8812AD6D3DF0039434D /* SecoundScreen.swift in Sources */,
+				9404A8812AD6D3DF0039434D /* QRCodeScanner.swift in Sources */,
 				9408E85D2AD134F7006FF31A /* LoginScreen.swift in Sources */,
 				94D5332C2AE44BEE0087D117 /* FourthScreen.swift in Sources */,
 				9477880B2B26204A00C6AEA1 /* demo.swift in Sources */,

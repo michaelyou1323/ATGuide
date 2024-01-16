@@ -12,10 +12,24 @@ struct HotelDetails: Identifiable {
     let name: String
     let image: String
     let location: String
+    let hotelCost: Double
+
 }
 
 struct HotelReservationCardWithPayment: View {
+    
     var hotelDetail: HotelDetails
+    let numberOfUser: Int
+    
+    let TripType: String
+    let budget: Double
+    var selectedDaysList: [[String: Any]]
+    var PlanNumber: Int
+    var HotelStars: Int
+    let userID: String
+    let planId: String
+    let Image2: String
+    let selectNumberOfPersons: Int
 //    var recommendation: Recommendation // Assuming Recommendation is your model
     @State private var cardNumber = ""
     @State private var cardName = ""
@@ -24,9 +38,11 @@ struct HotelReservationCardWithPayment: View {
     
   
     //@State private var isCVVValid = true
-    @State private var roomCount = 0
+    @State private var roomCount = 0.0
+    @State private var totalCost = 0.0
+    @State private var bedCount = 1.0
     @State private var bedsCount = "Single"
-    @State private var singleBedSelected = false
+    @State private var singleBedSelected = true
     
     @State private var isValid: Bool?
     @State private var errorMessage: String?
@@ -34,7 +50,7 @@ struct HotelReservationCardWithPayment: View {
     
     @State private var isShowingResult = false
     @State private var isShowingPopup = false
-    @State private var isPaymentDone = true
+    @State private var isPaymentDone = false
     var body: some View {
         
         ZStack{
@@ -92,16 +108,7 @@ struct HotelReservationCardWithPayment: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
-                HStack {
-                    Text("Total Cost: ")
-                        .font(.subheadline)
-                    
-                    // recommendation.
-                    Text("30 $")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
-                }
+              
                 
                 
                 Divider()
@@ -118,8 +125,10 @@ struct HotelReservationCardWithPayment: View {
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     
-                    Text("\(roomCount)")
-                        .padding(.horizontal, 10)
+                    Text(NumberFormatter.localizedString(from: NSNumber(value: roomCount), number: .decimal))
+                                   .font(.subheadline)
+                                   .fontWeight(.bold)
+                                   .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
                     
                     Button(action: {
                         decrementRoomCount()
@@ -133,7 +142,6 @@ struct HotelReservationCardWithPayment: View {
                 .contentShape(RoundedRectangle(cornerRadius: 20))
                 
                 HStack {
-                    Text("Beds")
                     Spacer()
                     
                     Button(action: {
@@ -159,7 +167,10 @@ struct HotelReservationCardWithPayment: View {
                     }
                     .buttonStyle(BorderedButtonStyle())
                     .disabled(!singleBedSelected)
+                    
+                    Spacer()
                 }
+                
                 .listRowBackground(Color.clear)
                 .contentShape(RoundedRectangle(cornerRadius: 20))
                 
@@ -212,6 +223,16 @@ struct HotelReservationCardWithPayment: View {
                 .padding(.vertical)
                 .padding(.bottom,0)
                 
+                HStack {
+                    Text("Total Cost: ")
+                        .font(.subheadline)
+                    
+                    // recommendation.
+                    Text(String(format: "$%.2f", totalCost))
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                }
                 HStack() {
                     Spacer()
                     Button(action: {
@@ -233,11 +254,13 @@ struct HotelReservationCardWithPayment: View {
                 .shadow(color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2)
                 
             }
+           
             .padding()
             .background(Color.white)
             .cornerRadius(12)
             .shadow(color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2)
             .opacity(isPaymentDone ? 0.4 : 1)
+            .disabled(isPaymentDone ? true : false)
 //            .overlay(
 //                
 //                CustomPopup(isShowingPopup: $isShowingPopup, isValid: isValid ?? false)
@@ -257,51 +280,53 @@ struct HotelReservationCardWithPayment: View {
                      }
             if isPaymentDone {
                 
-                
-                
-                VStack{
-                    Spacer()
-                   
-//                    Text("😊")
-//                        .font(.system(size: 45))
-                 
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.green)
-                           // .foregroundColor(.white)
+             
                     
-                    Text( "Great news! Your reservation is confirmed. We look forward to welcoming you!")
-                        .font(.system(size: 18))
-                        .foregroundColor(.green)
-                        .padding()
-                        .multilineTextAlignment(.center)
-                   
-                    Spacer()
-                    HStack{
-                     
-//                        Button("Done") {
-//                            // Close the popup
-//                            isPaymentDone = true
-//                        }
-//                        .padding()
-//                        .foregroundColor( Color.white)
-//                        .background( Color.green)
-//                        .cornerRadius(10)
-//                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-//                        .padding(.horizontal,120)
-//                        .padding(.vertical,10)
+                    VStack{
+                        Spacer()
+                        
+                        //                    Text("😊")
+                        //                        .font(.system(size: 45))
+                        
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.green)
+                        // .foregroundColor(.white)
+                        
+                        Text( "Great news! Your reservation is confirmed. We look forward to welcoming you!")
+                            .font(.system(size: 18))
+                            .foregroundColor(.green)
+                            .padding()
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        HStack{
+                            
+                            //                        Button("Done") {
+                            //                            // Close the popup
+                            //                            isPaymentDone = true
+                            //                        }
+                            //                        .padding()
+                            //                        .foregroundColor( Color.white)
+                            //                        .background( Color.green)
+                            //                        .cornerRadius(10)
+                            //                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+                            //                        .padding(.horizontal,120)
+                            //                        .padding(.vertical,10)
+                        }
+                        // .frame(width: .infinity)
+                        .background(.green)
                     }
-                       // .frame(width: .infinity)
-                    .background(.green)
+                    //                                .padding(.horizontal, 0)
+                    
+                    .background(.white)
+                    .cornerRadius(15)
+                    .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+                    .frame(height: 220)
+                    .padding(.horizontal,30)
                 }
-    //                                .padding(.horizontal, 0)
-                       
-                .background(.white)
-                               .cornerRadius(15)
-                               .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-                               .frame(height: 220)
-                               .padding(.horizontal,30)
-            }
+                
+            
             
             
         }
@@ -338,12 +363,14 @@ struct HotelReservationCardWithPayment: View {
     
     func incrementRoomCount() {
         roomCount += 1
+        totalCost = roomCount*bedCount*hotelDetail.hotelCost
     }
 
     // Function to decrement the room count
     func decrementRoomCount() {
         if roomCount > 0 {
             roomCount -= 1
+            totalCost = roomCount*bedCount*hotelDetail.hotelCost
         }
     }
     
@@ -354,11 +381,15 @@ struct HotelReservationCardWithPayment: View {
     // Function to select Single bed
     func selectSingleBed() {
         singleBedSelected = true
+        bedCount = 1
+        totalCost = roomCount*bedCount*hotelDetail.hotelCost
     }
 
     // Function to select Double bed
     func selectDoubleBed() {
         singleBedSelected = false
+        bedCount = 1.8
+        totalCost = roomCount*bedCount*hotelDetail.hotelCost
     }
     
     
@@ -410,7 +441,7 @@ struct HotelReservationCardWithPayment: View {
        } 
     
     func fetchData() {
-        guard let url = URL(string: "https://e877-197-54-249-24.ngrok-free.app/pay") else {
+        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/pay") else {
             setError("Invalid URL")
             return
         }
@@ -579,17 +610,62 @@ struct HotelReservation: View {
     @State private var showDetailsSheet = false
     @State private var isPaymentDone = false
     let hotelsDetails: [HotelDetails]
+    let numberOfUser: Int
+
+    let TripType: String
+    let budget: Double
+    var selectedDaysList: [[String: Any]]
+    var PlanNumber: Int
+    var HotelStars: Int
+    let userID: String
+    let planId: String
+    let Image2: String
+    let selectNumberOfPersons: Int
     @State private var allHotelsReseerved = false
     
     var body: some View {
         NavigationStack{
+            HStack {
+                //Spacer()
+                Text("Hotel Reservation")
+                    .font(Font.custom("Charter-Black", size: 32))
+                    .fontWeight(.bold)
+                    .foregroundColor(Color(red: 0, green: 0.243, blue: 0.502))
+                    .padding(.leading, 10)
+                    .padding(.bottom,5)
+                
+                //
+                
+                
+                Spacer()
+                
+                
+                
+                
+         
+            }
+     
+            .frame(height:25)
+          
             VStack{
+              
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(hotelsDetails) { hotelDetail in
                             
                             
-                            HotelReservationCardWithPayment(hotelDetail: hotelDetail)
+                            HotelReservationCardWithPayment(hotelDetail: hotelDetail,
+                                                            numberOfUser: 3,
+                                                                            TripType:TripType,
+                                                                            budget:budget,
+                                                                            selectedDaysList: selectedDaysList,
+                                                                            PlanNumber:PlanNumber,
+                                                                            HotelStars:HotelStars,
+                                                                            userID:userID,
+                                                                            planId:planId,
+                                                                            Image2:Image2,
+                                                                            selectNumberOfPersons:selectNumberOfPersons
+                            )
                                 .padding(.horizontal)
                             //                        .onLongPressGesture {
                             //                            showDetailsSheet.toggle()
@@ -602,7 +678,7 @@ struct HotelReservation: View {
                     }
                     .padding(.vertical)
                 }
-                
+                .padding(.top,10)
 //                NavigationLink(destination: YourPlans().navigationBarBackButtonHidden(true), isActive: $allHotelsReseerved ) {
 //                    EmptyView()
 //                }
@@ -624,7 +700,7 @@ struct HotelReservation: View {
                 }
                 .navigationDestination(
                      isPresented:$allHotelsReseerved) {
-                         YourPlans().navigationBarBackButtonHidden(true)
+                         YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1").navigationBarBackButtonHidden(true)
                         
                      }
                 .padding(.top,7)
@@ -639,5 +715,28 @@ struct HotelReservation: View {
 
 
 #Preview {
-    HotelReservation(hotelsDetails: [])
+    HotelReservation(hotelsDetails: [ATGuide.HotelDetails( name: "Alexandria Coastal Lodge", image: "alexandria_coastal_lodge_image.jpg", location: "Alexandria", hotelCost: 200), ATGuide.HotelDetails( name: "Marsa Alam Beach Resort", image: "marsa_alam_beach_resort_image.jpg", location: "Marsa Alam",hotelCost: 350)], numberOfUser: 3,
+                     TripType:"TripType",
+                     budget:5666,
+                     selectedDaysList: [
+                        [
+                        "city":"Marsa Alam",
+                        "days":2
+                        ],
+                        [
+                        "city":"Alexandria",
+                        "days":2
+                        ],
+                         [
+                        "city":"Luxor",
+                        "days":2
+                        ]
+
+                    ] ,
+                     PlanNumber:0,
+                     HotelStars:4,
+                     userID:"userID",
+                     planId:"planId",
+                     Image2:"Image2",
+                     selectNumberOfPersons:4)
 }

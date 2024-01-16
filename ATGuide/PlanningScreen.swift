@@ -204,7 +204,7 @@ struct PlanningScreen: View {
     }
     
     func fetchData() {
-        guard let url = URL(string: "https://e877-197-54-249-24.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/recommendations") else {
             return
         }
         firstPlanId = generateRandomPlanID()
@@ -298,7 +298,10 @@ struct PlanningScreen: View {
               let restaurant = data["Restaurant"] as? String,
               let hotel_Image = data["Hotel_Image"] as? String,
               let restaurant_Image = data["Restaurant_Image"] as? String,
-              let totalCost = data["Total Cost"] as? Int else {
+              let totalCost = data["Total Cost"] as? Int,
+              let Hotel_Price = data["Hotel_Price"] as? Int
+              
+        else {
              
             
             return nil
@@ -306,7 +309,7 @@ struct PlanningScreen: View {
         
         
         
-        return Recommendation(hotel: hotel, Image: image, location: location, place: place, Restaurant: restaurant, TotalCost: "\(totalCost)", Hotel_Image: hotel_Image, Restaurant_Image: restaurant_Image)
+        return Recommendation(hotel: hotel, Image: image, location: location, place: place, Restaurant: restaurant, TotalCost: totalCost, Hotel_Image: hotel_Image, Restaurant_Image: restaurant_Image, Hotel_Price: Hotel_Price)
     }
     
     
@@ -432,9 +435,7 @@ struct PlanningScreen: View {
              else if selectPersons == false{
                 VStack( ){
                     //
-                    
-                    
-                    
+                   
                     
                     HStack{
                         
@@ -456,7 +457,8 @@ struct PlanningScreen: View {
                                 }
                                 .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333)) // Adjust color as needed
                             }
-                            .padding(.leading,25)
+                            .padding(.trailing,-25)
+                            .padding(.leading,30)
                             
                         }
                         else {
@@ -466,45 +468,45 @@ struct PlanningScreen: View {
                         }
                         
                         ZStack {
-                            let shape = RoundedRectangle(cornerRadius: 20)
-                            
-                            if isPickerEnabled {
-                                shape.fill().foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-                            }
-                            else {
-                                
-                                shape.fill().foregroundColor(Color.gray)
-                            }
+//                            let shape = RoundedRectangle(cornerRadius: 20)
+//                            
+//                            if isPickerEnabled {
+//                                shape.fill().foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+//                            }
+//                            else {
+//                                
+//                                shape.fill().foregroundColor(Color.gray)
+//                            }
                             
                             //                    shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
                             //
                             
                             
-                            Picker(selection: $selectedTripType, label: Text("Select trip type").font(Font.custom("Zapfino", size: 20))) {
+                            Picker(selection: $selectedTripType, label: Text("Select trip type").font(Font.custom("", size: 20))) {
                                 ForEach(tripTypes.indices, id: \.self) { index in
                                     Text(self.tripTypes[index])
-                                        .font(Font.custom("Zapfino", size: 20))
+                                        .font(Font.custom(" ", size: 20))
                                 }
                             }
                             
                             
-                            .accentColor(.white)
+                            .accentColor(.black)
                             .onChange(of: selectedTripType, initial: false){ initial, _ in
                                 updateCitiesInfo()
                                 updateCounts()
                             }
                             
-                            .pickerStyle(MenuPickerStyle())
+                            .pickerStyle(InlinePickerStyle())
                             
                             .disabled(!isPickerEnabled)
                             
                             
                             
                         }
-                        .frame(height: 35)
-                        .padding(.top,10)
-                        .padding(.bottom, 10)
-                        .padding(.horizontal,10)
+                        .frame(width: 200, height: 85)
+//                        .padding(.top,10)
+//                        .padding(.bottom, 10)
+//                        .padding(.horizontal,10)
                         
                         
                         if showPlann == 1 {
@@ -525,8 +527,12 @@ struct PlanningScreen: View {
                         }
                         else {
                             
-                            Text("")
-                                .padding(.leading,85)
+                            AnimatedImage(name: "Copy of Animation - 1705226473630.gif")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width:50,height:50)
+                                .padding(.leading, -50)
+                                .padding(.trailing,80)
                         }
                     }
                     .padding(.trailing,10)
@@ -631,17 +637,7 @@ struct PlanningScreen: View {
                                 //  SnellRoundhand-Bold
                                 //
                             }
-                            //
-                            //
-                            //                    .onDisappear(){
-                            //
-                            //                        if selectedTripType != 0 {
-                            //                            backButtonPositino = 1
-                            //                        }
-                            //                        else{
-                            //                            backButtonPositino = 0
-                            //                        }
-                            //                    }
+                    
                             
                             .frame(height: 45)
                             .padding(.top,10)
@@ -743,6 +739,8 @@ struct PlanningScreen: View {
                             AnimatedImage(name: "image-processing20220708-21892-unscreen.gif")
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
+                            
+                        
                             
                             
                                 .clipped()
@@ -1498,13 +1496,14 @@ struct PlanningScreen: View {
             
             for (index, cityInfo) in citiesInfo.enumerated() {
                 if selectedDaysForCities[index] > 0 {
-                    var cityDaysDict: [String: Any] = [:]
+//                    var cityDaysDict: [String: Any] = [:]
+//                    
+//                    // Set the keys in a specific order to ensure consistency
+//                    cityDaysDict["city"] = cityInfo.cityName
+//                    cityDaysDict["days"] = selectedDaysForCities[index]
+                  
                     
-                    // Set the keys in a specific order to ensure consistency
-                    cityDaysDict["city"] = cityInfo.cityName
-                    cityDaysDict["days"] = selectedDaysForCities[index]
-                    
-                    selectedDaysList.append(cityDaysDict)
+                    selectedDaysList.append(["city":cityInfo.cityName, "days":cityInfo.numberOfDays])
                 }
             }
             print(selectedDaysList)

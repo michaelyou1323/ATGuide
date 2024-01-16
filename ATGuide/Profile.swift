@@ -102,7 +102,7 @@ struct Profile: View {
        @State private var editedPhone = ""
     @State private var isImagePickerPresented = false
     @State private var isEditing = false
-       
+    @State private var navigateToYourPlans = false
       @State private var selectedImage: UIImage? = UserDefaults.standard.getImage(forKey: "profileImage")
 
 
@@ -265,6 +265,36 @@ struct Profile: View {
                             .cornerRadius(5)
                    
                 Divider().background(.black)
+                    .padding(.bottom,30)
+                
+               
+                HStack(alignment: .center){
+                    Spacer()
+                           
+                    
+                    Button("Your Plans"){
+                        navigateToYourPlans = true
+                    }
+                    .padding()
+                    .background(Color(red: 0.722, green: 0.275, blue: 0.114))
+                    .cornerRadius(8)
+                    .foregroundStyle(.white)
+                  Spacer()
+                            }
+                .navigationDestination(
+                     isPresented:$navigateToYourPlans) {
+                         YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
+                        
+                     }
+               
+   
+                .padding(.top, 5)
+               
+                .background(Color.white)
+                .cornerRadius(5)
+       
+            
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Color.white.ignoresSafeArea(.all))

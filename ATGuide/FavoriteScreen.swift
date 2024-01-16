@@ -202,6 +202,11 @@ struct PlansListView: View {
             .font(Font.custom("Charter-BlackItalic", size: 32))
         }
         .background(Image("IMG_20240104_181119 (2)").resizable().scaledToFill().clipped().edgesIgnoringSafeArea([.all]).opacity(0.5))
+        .onAppear(){
+            if (favStatus == false){
+                favStatus.toggle()
+            }
+        }
     }
 }
 

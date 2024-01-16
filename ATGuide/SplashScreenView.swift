@@ -30,21 +30,7 @@ struct SplashScreenView: View {
                             .scaledToFill()
                             .frame(width: 240, height: 120)
                         
-                       // ZStack{
-                            
-//                            Image("PhotoRoom-20240106_092819")
-//                                .resizable()
-//                                .clipped()
-//                                .frame(width: 330,height: 280)
-//                                .padding(.trailing,-18)
-//                                .padding(.bottom,35)
-//                                .opacity(self.tOffsetY == 0 ? 1 : 0) // Show Guide after T appears
-//                                .onAppear {
-//                                    withAnimation(.easeIn(duration: 1.5).delay(2.6)) {
-//                                        self.guideOpacity = 1.0
-//                                    }
-//                                }
-//                                .opacity(guideOpacity)
+               
 //                            
                             HStack(spacing: 0) {
     //                            Text("A")

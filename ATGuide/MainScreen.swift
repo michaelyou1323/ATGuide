@@ -140,7 +140,7 @@ struct MainScreen: View {
 ////                            .multilineTextAlignment(.center) // Align the text in the center
 //                   
 //                    }
-              
+               
                                 //    Card("4444333388882222", "12/24", "William Black", "789")
             )
 //                .navigationBarHidden(false)
