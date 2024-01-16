@@ -278,53 +278,53 @@ struct HotelReservationCardWithPayment: View {
                      if isShowingPopup {
                          CustomPopup(isShowingPopup: $isShowingPopup, isPaymentDone: $isPaymentDone, isValid: isValid ?? false)
                      }
-            if isPaymentDone {
-                
-             
-                    
-                    VStack{
-                        Spacer()
-                        
-                        //                    Text("😊")
-                        //                        .font(.system(size: 45))
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.green)
-                        // .foregroundColor(.white)
-                        
-                        Text( "Great news! Your reservation is confirmed. We look forward to welcoming you!")
-                            .font(.system(size: 18))
-                            .foregroundColor(.green)
-                            .padding()
-                            .multilineTextAlignment(.center)
-                        
-                        Spacer()
-                        HStack{
-                            
-                            //                        Button("Done") {
-                            //                            // Close the popup
-                            //                            isPaymentDone = true
-                            //                        }
-                            //                        .padding()
-                            //                        .foregroundColor( Color.white)
-                            //                        .background( Color.green)
-                            //                        .cornerRadius(10)
-                            //                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-                            //                        .padding(.horizontal,120)
-                            //                        .padding(.vertical,10)
-                        }
-                        // .frame(width: .infinity)
-                        .background(.green)
-                    }
-                    //                                .padding(.horizontal, 0)
-                    
-                    .background(.white)
-                    .cornerRadius(15)
-                    .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-                    .frame(height: 220)
-                    .padding(.horizontal,30)
-                }
+//            if isPaymentDone {
+//                
+//             
+//                    
+//                    VStack{
+//                        Spacer()
+//                        
+//                        //                    Text("😊")
+//                        //                        .font(.system(size: 45))
+//                        
+//                        Image(systemName: "checkmark.circle.fill")
+//                            .font(.system(size: 60))
+//                            .foregroundColor(.green)
+//                        // .foregroundColor(.white)
+//                        
+//                        Text( "Great news! Your reservation is confirmed. We look forward to welcoming you!")
+//                            .font(.system(size: 18))
+//                            .foregroundColor(.green)
+//                            .padding()
+//                            .multilineTextAlignment(.center)
+//                        
+//                        Spacer()
+//                        HStack{
+//                            
+//                            //                        Button("Done") {
+//                            //                            // Close the popup
+//                            //                            isPaymentDone = true
+//                            //                        }
+//                            //                        .padding()
+//                            //                        .foregroundColor( Color.white)
+//                            //                        .background( Color.green)
+//                            //                        .cornerRadius(10)
+//                            //                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+//                            //                        .padding(.horizontal,120)
+//                            //                        .padding(.vertical,10)
+//                        }
+//                        // .frame(width: .infinity)
+//                        .background(.green)
+//                    }
+//                    //                                .padding(.horizontal, 0)
+//                    
+//                    .background(.white)
+//                    .cornerRadius(15)
+//                    .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+//                    .frame(height: 220)
+//                    .padding(.horizontal,30)
+//                }
                 
             
             
@@ -509,43 +509,51 @@ struct CustomPopup: View {
 //
         if isValid {
             
+           
             VStack{
                 Spacer()
-               
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.white)
                 
-                Text(  "Payment Successful!")
-                    .font(.title)
-                    .foregroundColor(.white)
+                //                    Text("😊")
+                //                        .font(.system(size: 45))
+                
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.green)
+                // .foregroundColor(.white)
+                
+                Text( "Great news! Your reservation is confirmed. We look forward to welcoming you!")
+                    .font(.system(size: 18))
+                    .foregroundColor(.green)
                     .padding()
-               
+                    .multilineTextAlignment(.center)
+                
                 Spacer()
                 HStack{
-                 
-                    Button("Done") {
-                        // Close the popup
-                        isPaymentDone = true
-                        isShowingPopup = false
-                    }
-                    .padding()
-                    .foregroundColor( Color.white)
-                    .background( Color.green)
-                    .cornerRadius(10)
-                    .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-                    .padding(.horizontal,120)
-                    .padding(.vertical,10)
+                    
+                    //                        Button("Done") {
+                    //                            // Close the popup
+                    //                            isPaymentDone = true
+                    //                        }
+                    //                        .padding()
+                    //                        .foregroundColor( Color.white)
+                    //                        .background( Color.green)
+                    //                        .cornerRadius(10)
+                    //                        .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+                    //                        .padding(.horizontal,120)
+                    //                        .padding(.vertical,10)
                 }
-                   // .frame(width: .infinity)
-                .background( Color(red: 0, green: 0.502, blue: 0))
+                // .frame(width: .infinity)
+                .background(.green)
             }
-//                                .padding(.horizontal, 0)
-                   
-                   .background( Color(red: 0, green: 0.502, blue: 0))
-                           .cornerRadius(15)
-                           .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
-                           .frame(height: 420)
+            //                                .padding(.horizontal, 0)
+            .onAppear(perform: {
+                isPaymentDone = true
+            })
+            .background(.white)
+            .cornerRadius(15)
+            .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
+            .frame(height: 220)
+            .padding(.horizontal,30)
         }
         else{
             
@@ -559,13 +567,13 @@ struct CustomPopup: View {
                     Image(systemName: "xmark.circle.fill")
                         .resizable()
                         .frame(width: 60, height: 60)
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Color.red)
                         .padding()
                     
               
                 Text( "Payment Failed. Please try again." )
                     .font(.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(.red)
                     .padding()
                 
                 Spacer()
@@ -577,7 +585,7 @@ struct CustomPopup: View {
                     }
                     .padding()
                     .foregroundColor(Color.white)
-                    .background( Color.red)
+                    .background(.red)
                     .cornerRadius(10)
                     .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
                     .padding(.horizontal,120)
@@ -588,7 +596,7 @@ struct CustomPopup: View {
             }
             //                                .padding(.horizontal, 0)
             
-            .background(Color(red: 0.753, green: 0, blue: 0))
+            .background(.white)
             .cornerRadius(15)
             .shadow(color: Color.gray.opacity(0.8), radius: 4, x: 0, y: 2)
             .frame(height: 420)

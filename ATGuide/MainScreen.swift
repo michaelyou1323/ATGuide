@@ -48,18 +48,18 @@ struct MainScreen: View {
                             }.tag(1)
                          
                         
-                        ContentView7()
+                        YourPlans(userID: userID)
                             .padding(.bottom,20)
                             .tabItem {
-                                Image(systemName: "magnifyingglass")
-                                Text("Search")
+                                Image(systemName: "bed.double.fill")
+                                Text("Reservations")
                             }.tag(2)
-                        
+                         
                         FavoriteScreen(userID: userID)
                             .padding(.bottom,20)
                             .tabItem {
-                                Image(systemName: "cart.fill")
-                                Text("Cart")
+                                Image(systemName: "heart.fill")
+                                Text("Fav")
                             }.tag(3)
                         
                         Profile(email: email, username: username,language:language,country: country, phone: phone)
@@ -91,9 +91,9 @@ struct MainScreen: View {
                                            case 1:
                                                title = "QR Code Scanner"
                                            case 2:
-                                               title = "Search"
+                                               title = "Reservations"
                                            case 3:
-                                               title = "Your Cart"
+                                               title = "Favourite"
                                            case 4:
                                                title = "Profile"
                                        default:
@@ -110,7 +110,7 @@ struct MainScreen: View {
                         
                         .fontWeight(.bold)
                         .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                        .font(Font.custom("GillSans-SemiBoldItalic", size: 32))
+                        .font(Font.custom("GillSans-SemiBold", size: 32))
                         .bold()
                     
                     
@@ -143,11 +143,7 @@ struct MainScreen: View {
                
                                 //    Card("4444333388882222", "12/24", "William Black", "789")
             )
-//                .navigationBarHidden(false)
-//            if presentSideMenu {
-//                SideMenu(email: email, username: username, language: language, country: country, presentSideMenu: $presentSideMenu)
-//            }
-            
+
         }
  
         .navigationBarHidden(true)

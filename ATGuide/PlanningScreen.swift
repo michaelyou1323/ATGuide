@@ -324,11 +324,13 @@ struct PlanningScreen: View {
               
             if selectPersons == true {
                 VStack {
-                    Text("Let's start")
+                    Spacer()
+                   
+                    Text("Choose Number Of Persons")
                     //                              .font(.title)
                     
                         .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
-                        .font(Font.custom("COPPERPLATE-BOLD", size: 44))
+                        .font(Font.custom("Cochin-BoldItalic", size: 28))
                         .padding(.horizontal,19)
                         .padding(.vertical,5)
                         .overlay(
@@ -337,7 +339,8 @@ struct PlanningScreen: View {
                         )
                         .cornerRadius(15)
                         .padding(.top,20)
-                    Spacer()
+                        .padding(.bottom,30)
+                  
                     
                     VStack{
                     HStack {
@@ -393,7 +396,7 @@ struct PlanningScreen: View {
                         }
                         
                     }
-                    .padding()
+                    .padding(20)
                         
                         
                     
@@ -413,13 +416,15 @@ struct PlanningScreen: View {
                                   showAlertForPersonNumber = true
                               }
                           }) {
-                              Text("Start")
-                                  .font(Font.custom("", size: 25))
-                                  .padding(.horizontal,70)
-                                  .padding(.vertical,5)
+                              Text("Continue")
+                           
                                   .foregroundColor(.white)
+                                  .padding(.horizontal,110)
+                                  .padding(.vertical, 8)
                                   .background(Color(red: 0.192, green: 0.259, blue: 0.333))
-                                  .cornerRadius(10)
+                                  .cornerRadius(8)
+                                  .font(Font.custom("Baskerville-Bold", size: 16)).frame()
+                                  .padding(.bottom,10)
                           }
                           .alert(isPresented: $showAlertForPersonNumber) {
                               Alert(title: Text("No Number selected"), message: Text("Please choose Persons number"), dismissButton: .default(Text("OK")))
@@ -503,7 +508,7 @@ struct PlanningScreen: View {
                             
                             
                         }
-                        .frame(width: 200, height: 85)
+                        .frame(width: 200, height: 105)
 //                        .padding(.top,10)
 //                        .padding(.bottom, 10)
 //                        .padding(.horizontal,10)
@@ -600,7 +605,7 @@ struct PlanningScreen: View {
                                     Text("Next")
                                         .foregroundColor(.white)
                                         .padding(.horizontal,110)
-                                        .padding(.vertical, 5)
+                                        .padding(.vertical, 8)
                                         .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                                         .cornerRadius(8)
                                         .font(Font.custom("Baskerville-Bold", size: 16))

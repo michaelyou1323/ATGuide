@@ -62,8 +62,8 @@
             filePath = "ATGuide/MainScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "SideMenu"
             landmarkType = "14">
          </BreakpointContent>
