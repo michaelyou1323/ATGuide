@@ -209,6 +209,21 @@
                   endingLineNumber = "1495"
                   offsetFromSymbolStart = "104">
                </Location>
+               <Location
+                  uuid = "D0474920-DDD2-40A7-9E5C-068D0C20F8C9 - 1115b7ea115a63f2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Downloads/ATGuide-main/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1500"
+                  endingLineNumber = "1500"
+                  offsetFromSymbolStart = "104">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -255,6 +270,21 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "1506"
                   endingLineNumber = "1506"
+                  offsetFromSymbolStart = "720">
+               </Location>
+               <Location
+                  uuid = "9A336631-C6C0-4B6B-B998-7D465F8856DD - 1115b7ea115a6167"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ATGuide.PlanningScreen.getSelectedDaysForCities() -&gt; Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;"
+                  moduleName = "ATGuide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelyou2000gmail.com/Downloads/ATGuide-main/ATGuide/PlanningScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1511"
+                  endingLineNumber = "1511"
                   offsetFromSymbolStart = "720">
                </Location>
             </Locations>

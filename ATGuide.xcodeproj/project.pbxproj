@@ -251,6 +251,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9400D5A82B56D12800BDDEC4 /* images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		9408E84E2AD134F7006FF31A = {
 			isa = PBXGroup;
 			children = (
@@ -287,19 +294,20 @@
 				9408E8682AD14295006FF31A /* SignUp.swift */,
 				9404A8842AD6FB750039434D /* Info.plist */,
 				943119BA2AEA698000822A33 /* GoogleService-Info.plist */,
-				9497CF522B1CE7440056B59E /* 1024 1.png */,
 				9408E85A2AD134F7006FF31A /* ATGuideApp.swift */,
 				9408E85C2AD134F7006FF31A /* LoginScreen.swift */,
 				9489621A2B50555A00C91F1E /* Assets.xcassets */,
-				945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */,
-				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
+				9497CF522B1CE7440056B59E /* 1024 1.png */,
+				9400D5A82B56D12800BDDEC4 /* images */,
 				9413770B2B4439AC00CAC9E9 /* Modern and Minimal Company Profile Presentation (2).png */,
 				94A01B652B4AB6550052225D /* IMG_20240107_123513.png */,
+				945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */,
+				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
 				94A01B612B4985450052225D /* IMG_20240104_181119 (2).png */,
+				94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */,
 				94A01B5B2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif */,
 				941377092B442EDA00CAC9E9 /* Modern and Minimal Company Profile Presentation.png */,
 				948591B72B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif */,
-				94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */,
 				9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */,
 				9408E8602AD134F9006FF31A /* Preview Content */,
 				AC18DB682ADC5311005BED40 /* SplashScreenView.swift */,

@@ -125,7 +125,7 @@ struct SignUp: View {
                             
                         }
                         
-                        
+                         
                         
                         ZStack {
                                                 RoundedRectangle(cornerRadius: 10)
@@ -139,6 +139,7 @@ struct SignUp: View {
                                 .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
                                 .background(.clear)
+                                .keyboardType(.emailAddress)
 //                                                    .onChange(of: email) { newEmail in
 //                                                        validateEmail(newEmail)
 //                                                    }
@@ -157,6 +158,7 @@ struct SignUp: View {
                                 .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
                                 .background(.clear)
+                                .keyboardType(.numberPad)
                         }
                         ZStack{
                             

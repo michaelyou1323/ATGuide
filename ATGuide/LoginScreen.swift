@@ -165,7 +165,8 @@ struct LoginScreen: View {
                                 
                              
                              TextField("E-mail", text: $username)
-                                 .textFieldStyle(PlainTextFieldStyle()) // Remove the rounded border style
+                                 .textFieldStyle(PlainTextFieldStyle()) // Remove the rounded border
+                                 .keyboardType(.emailAddress)
                                  .padding(.horizontal, 25)
                                  .background(Color.clear) // Set background to clear
                          }
@@ -183,6 +184,7 @@ struct LoginScreen: View {
                             
                              SecureField("Password", text: $password)
                                  .textFieldStyle(PlainTextFieldStyle()) // Remove the rounded border style
+                                 
                                  .padding(.horizontal, 25)
                                  .background(Color.clear) // Set background to clear
                                 
@@ -328,7 +330,7 @@ struct PasswordResetView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal, 25)
                 .padding(.bottom, 20)
-
+                .keyboardType(.emailAddress)
             Button(action: {
                 Auth.auth().sendPasswordReset(withEmail: email) { error in
                     if let error = error {
