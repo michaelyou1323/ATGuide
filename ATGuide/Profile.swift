@@ -119,22 +119,26 @@ struct Profile: View {
                         
                      
                         Image(uiImage: selectedImage ?? UIImage(systemName: "person.crop.circle")!)
-                            .resizable()
-                            .frame(width: 80, height: 80)
-                            .clipShape(Circle())
-                            .padding(.top,40)
-                            .onTapGesture {
-                                isImagePickerPresented = true
-                            }
+                                       .resizable()
+                                       .frame(width: 80, height: 80)
+                                       .clipShape(Circle())
+                                       .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                                       .shadow(radius: 5)
+                                       .padding(.top, 40)
+                                       .onTapGesture {
+                                           isImagePickerPresented = true
+                                       }
                         Text(username)
-                            .font(.headline)
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.black)
+
                         
                         Text(email)
-                            .padding(.leading, 5)
-                            .font(.system(size: 15))
-                            .foregroundColor(.white)
-                            .padding(.bottom, 20)
-                    
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                        
+                        
                         HStack(alignment:.bottom) {
                                            Spacer()
                                            if isEditing {
@@ -279,6 +283,8 @@ struct Profile: View {
                     .background(Color(red: 0.722, green: 0.275, blue: 0.114))
                     .cornerRadius(8)
                     .foregroundStyle(.white)
+                    .font(.headline)
+
                   Spacer()
                             }
                 .navigationDestination(
