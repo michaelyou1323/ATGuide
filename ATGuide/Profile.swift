@@ -302,7 +302,7 @@ struct Profile: View {
                 .navigationDestination(
                      isPresented:$navigateToYourPlans) {
                        //  ReservationRowView(reservation: "t17QMgg7C0QoRNr401O9Z93zTMl1")
-                         ReservationListView(userId: "t17QMgg7C0QoRNr401O9Z93zTMl1")
+                         WebView2(urlString: "https://www.penn.museum/cgi/hieroglyphsreal.php")
                      }
                
    
