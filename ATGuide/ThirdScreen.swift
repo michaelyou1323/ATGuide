@@ -41,7 +41,7 @@ struct DetailsView: View {
     }
     
     func fetchData() {
-           guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/get_details") else {
+           guard let url = URL(string: "https://ee69-105-36-31-83.ngrok-free.app/get_details") else {
                return
            }
            

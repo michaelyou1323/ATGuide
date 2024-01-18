@@ -292,7 +292,7 @@ struct Profile: View {
                     .onTapGesture(perform: {
                         navigateToYourPlans = true
                     })
-            
+                    .navigationBarBackButtonHidden(true)
                 
                     
                     
@@ -303,7 +303,11 @@ struct Profile: View {
                      isPresented:$navigateToYourPlans) {
                        //  ReservationRowView(reservation: "t17QMgg7C0QoRNr401O9Z93zTMl1")
                          WebView2(urlString: "https://www.penn.museum/cgi/hieroglyphsreal.php")
+                     
+                                        .navigationBarTitle("Your Name in Hieroglyphics", displayMode: .inline)
+                                        .navigationBarBackButtonHidden(true)
                      }
+               
                
    
                 .padding(.top, 5)
@@ -314,6 +318,7 @@ struct Profile: View {
             
                 
             }
+         
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Color.white.ignoresSafeArea(.all))
 //            .offset(x: self.presentSideMenu ? 0 : -UIScreen.main.bounds.width/0)

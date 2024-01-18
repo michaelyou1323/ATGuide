@@ -32,10 +32,11 @@ struct WebView2: UIViewRepresentable {
 
 struct ContentView8: View {
     var body: some View {
-        NavigationView {
+        NavigationStack {
             WebView2(urlString: "https://www.penn.museum/cgi/hieroglyphsreal.php")
                 .navigationBarTitle("Your Name in Heroglyphics", displayMode: .inline)
         }
+        .navigationBarBackButtonHidden(true) 
     }
 }
 

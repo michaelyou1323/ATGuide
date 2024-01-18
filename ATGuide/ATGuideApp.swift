@@ -12,6 +12,7 @@ import Firebase
 @main
 struct ATGuideApp: App {
     @AppStorage("selectedTabIndex") var selectedTabIndex: Int = 0
+    @AppStorage("didLaunchBefore") private var didLaunchBefore: Bool = false
     init(){
         FirebaseApp.configure()
     }

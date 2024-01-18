@@ -290,7 +290,7 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://ee69-105-36-31-83.ngrok-free.app/recommendations") else {
             return
         }
      

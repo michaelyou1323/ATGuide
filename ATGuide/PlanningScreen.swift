@@ -206,7 +206,7 @@ struct PlanningScreen: View {
     }
     
     func fetchData() {
-        guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://ee69-105-36-31-83.ngrok-free.app/recommendations") else {
             return
         }
         firstPlanId = generateRandomPlanID()
@@ -646,7 +646,7 @@ struct PlanningScreen: View {
                                 shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
                                 Text("Choose your preferred city:")
                                 
-                                    .font(Font.custom("", size: 28))
+                                    .font(Font.custom("", size: 22))
                                     .padding(.bottom,2)
                                 
                                 //  SnellRoundhand-Bold
