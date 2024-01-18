@@ -11,6 +11,7 @@ import Firebase
 
 @main
 struct ATGuideApp: App {
+    @AppStorage("selectedTabIndex") var selectedTabIndex: Int = 0
     init(){
         FirebaseApp.configure()
     }

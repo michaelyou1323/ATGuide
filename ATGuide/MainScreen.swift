@@ -27,8 +27,6 @@ struct MainScreen: View {
                 
                 TabView(selection: $tabIndex)
                 {
-                    
-                    
                     Group{
                         
                         PlanningScreen(userID: userID)
@@ -48,7 +46,7 @@ struct MainScreen: View {
                             }.tag(1)
                          
                         
-                        YourPlans(userID: userID)
+                        ReservationListView(userId: userID)
                             .padding(.bottom,20)
                             .tabItem {
                                 Image(systemName: "bed.double.fill")
@@ -147,6 +145,12 @@ struct MainScreen: View {
         }
  
         .navigationBarHidden(true)
+        .onAppear(){
+          
+//            if  UserDefaults.standard.bool(forKey: "openReservations"){
+//                tabIndex = 2
+//            }
+        }
         if presentSideMenu {
             SideMenu(email: email, username: username,language:language,country: country, phone: phone, userID: userID, presentSideMenu: $presentSideMenu)
         }

@@ -184,6 +184,8 @@ struct PlanningScreen: View {
     @State private var tOffsetY: CGFloat = -1000
     @State private var guideOpacity = 0.0
     @State private var rotationAngle: Double = 0.0
+    @State private var pickerStatus = true
+    
     
     func fetchDataBasedOnChoices() {
         if !chosenTripType.isEmpty && convertedBudget > 0 && totalNumberOfDays > 0 {
@@ -204,7 +206,7 @@ struct PlanningScreen: View {
     }
     
     func fetchData() {
-        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/recommendations") else {
             return
         }
         firstPlanId = generateRandomPlanID()
@@ -330,7 +332,7 @@ struct PlanningScreen: View {
                     //                              .font(.title)
                     
                         .foregroundColor(Color(red: 0.192, green: 0.259, blue: 0.333))
-                        .font(Font.custom("Cochin-BoldItalic", size: 28))
+                        .font(Font.custom("", size: 28))
                         .padding(.horizontal,19)
                         .padding(.vertical,5)
                         .overlay(
@@ -401,7 +403,7 @@ struct PlanningScreen: View {
                         
                     
                 }
-                          Spacer()
+                         
                           
                           Button(action: {
                               // selectPersons = false
@@ -410,6 +412,7 @@ struct PlanningScreen: View {
                                   print("Start button tapped with option \(selectedOption)")
                                   // Add your logic for starting with selected option here
                                   selectPersons = false
+                              
                               } else {
                                   print("Please select an option")
                                   // Handle case where no option is selected
@@ -424,7 +427,7 @@ struct PlanningScreen: View {
                                   .background(Color(red: 0.192, green: 0.259, blue: 0.333))
                                   .cornerRadius(8)
                                   .font(Font.custom("Baskerville-Bold", size: 16)).frame()
-                                  .padding(.bottom,10)
+                                  .padding(.bottom,210)
                           }
                           .alert(isPresented: $showAlertForPersonNumber) {
                               Alert(title: Text("No Number selected"), message: Text("Please choose Persons number"), dismissButton: .default(Text("OK")))
@@ -464,7 +467,7 @@ struct PlanningScreen: View {
                             }
                             .padding(.trailing,-25)
                             .padding(.leading,30)
-                            
+                            Spacer()
                         }
                         else {
                             
@@ -472,72 +475,79 @@ struct PlanningScreen: View {
                                 .padding(.leading,85)
                         }
                         
-                        ZStack {
-//                            let shape = RoundedRectangle(cornerRadius: 20)
-//                            
-//                            if isPickerEnabled {
-//                                shape.fill().foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
-//                            }
-//                            else {
-//                                
-//                                shape.fill().foregroundColor(Color.gray)
-//                            }
-                            
-                            //                    shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
-                            //
-                            
-                            
-                            Picker(selection: $selectedTripType, label: Text("Select trip type").font(Font.custom("", size: 20))) {
-                                ForEach(tripTypes.indices, id: \.self) { index in
-                                    Text(self.tripTypes[index])
-                                        .font(Font.custom(" ", size: 20))
+                        
+                        if pickerStatus == true  {
+                            ZStack {
+                                //                            let shape = RoundedRectangle(cornerRadius: 20)
+                                //
+                                //                            if isPickerEnabled {
+                                //                                shape.fill().foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                //                            }
+                                //                            else {
+                                //
+                                //                                shape.fill().foregroundColor(Color.gray)
+                                //                            }
+                                
+                                //                    shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
+                                //
+                                
+                                
+                                Picker(selection: $selectedTripType, label: Text("Select trip type").font(Font.custom("", size: 20))) {
+                                    ForEach(tripTypes.indices, id: \.self) { index in
+                                        Text(self.tripTypes[index])
+                                            .font(Font.custom(" ", size: 20))
+                                    }
                                 }
+                                
+                                
+                                .accentColor(.black)
+                                .onChange(of: selectedTripType, initial: false){ initial, _ in
+                                    updateCitiesInfo()
+                                    updateCounts()
+                                }
+                                
+                                .pickerStyle(InlinePickerStyle())
+                                
+                                .disabled(!isPickerEnabled)
+                                
+                                
+                                
                             }
-                            
-                            
-                            .accentColor(.black)
-                            .onChange(of: selectedTripType, initial: false){ initial, _ in
-                                updateCitiesInfo()
-                                updateCounts()
+                            .frame(width: 200, height: 105)
+                            //                        .padding(.top,10)
+                            //                        .padding(.bottom, 10)
+                            //                        .padding(.horizontal,10)
+                        }
+                        
+                        
+                        else{
+                            ZStack {
+                              Text("                  ")
+                         
                             }
-                            
-                            .pickerStyle(InlinePickerStyle())
-                            
-                            .disabled(!isPickerEnabled)
-                            
-                            
+                            .frame(width: 200, height: 90)
                             
                         }
-                        .frame(width: 200, height: 105)
-//                        .padding(.top,10)
-//                        .padding(.bottom, 10)
-//                        .padding(.horizontal,10)
-                        
                         
                         if showPlann == 1 {
                             Button(action: {
                                           // Rotate the arrow icon anticlockwise
                                          generatAnotherPlan()
                                       }) {
-                                          Image(systemName: "arrow.clockwise.circle.fill")
-                                              .rotationEffect(.degrees(-250))
-                                              .font(.system(size: 25))
-                                              .padding(6)
-                                              .background(Color(red: 0.192, green: 0.259, blue: 0.333))
-                                              .foregroundColor(.white)
-                                              .clipShape(RoundedRectangle(cornerRadius: 15))
+                                         Text("Return To Plan")
                                       }
                                       .padding(.horizontal,20)
                             
                         }
                         else {
-                            
-                            AnimatedImage(name: "Copy of Animation - 1705226473630.gif")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width:50,height:50)
-                                .padding(.leading, -50)
-                                .padding(.trailing,80)
+                            if pickerStatus == true {
+                                AnimatedImage(name: "Copy of Animation - 1705226473630.gif")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width:50,height:50)
+                                    .padding(.leading, -50)
+                                    .padding(.trailing,80)
+                            }
                         }
                     }
                     .padding(.trailing,10)
@@ -598,7 +608,7 @@ struct PlanningScreen: View {
                                 Button(action: {
                                     
                                     nextButtonActionShowStars()
-                                    
+                                   
                                     
                                 })
                                 {
@@ -636,7 +646,7 @@ struct PlanningScreen: View {
                                 shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 1)
                                 Text("Choose your preferred city:")
                                 
-                                    .font(Font.custom("Cochin-BoldItalic", size: 28))
+                                    .font(Font.custom("", size: 28))
                                     .padding(.bottom,2)
                                 
                                 //  SnellRoundhand-Bold
@@ -707,6 +717,7 @@ struct PlanningScreen: View {
                                 
                                 Button(action: {
                                     nextButtonAction()
+                                 
                                 })
                                 {
                                     Text("Next")
@@ -853,9 +864,9 @@ struct PlanningScreen: View {
                             
                         }
                         
-                        .frame(height: 45)
-                        .padding(.top,5)
-                        .padding(.bottom, 20)
+                        .frame(height: 40)
+                      
+                        .padding(.bottom, 10)
                         .padding(.horizontal, 40)
                         .onAppear{
                             withAnimation {
@@ -874,7 +885,6 @@ struct PlanningScreen: View {
                             NavigationLink( destination: DetailsScreen(TripType: getSelectedTrip() ,  budget:calculatedBudget , selectedDaysList: getSelectedDaysForCities(), PlanNumber: 0, HotelStars: selectedStars, userID:userID ,planId:firstPlanId, Image2: recommendationsPlan12.first?.Image ?? "", selectNumberOfPersons: selectNumberOfPersons ?? 0, favStatus: $favStatusForPlan1)
                                 .transition(.move(edge: .leading))
                             ){
-                               
                                 ZStack(alignment: .center) {
                                     Image("Modern and Minimal Company Profile Presentation (2)")
                                         .resizable()
@@ -885,28 +895,25 @@ struct PlanningScreen: View {
                                         .frame(maxWidth: 175)
 
                                     RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white)
+                                        .fill(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [Color.white, Color(red: 0.043, green: 0.725, blue: 0.753)]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
                                         .shadow(color: Color.gray.opacity(0.3), radius: 10, x: 0, y: 5) // Improved shadow effect
 
                                     VStack {
                                         HStack {
-                                            if let firstLocation = recommendationsPlan12.first?.location {
-                                                Text(firstLocation)
-                                                    .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.leading, 10)
-
-                                                Spacer()
-
-                                                Text("Plan 1")
-                                                    .font(Font.custom("Cochin-Bold", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.trailing, 5)
-                                            }
+                                          
+                                            Text("Plan 1")
+                                                .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 30)
+                                            Spacer()
                                         }
 
                                         Spacer()
@@ -929,19 +936,32 @@ struct PlanningScreen: View {
                                                 startTimer2()
                                             }
                                         }
-                                        .frame(minWidth: 185, minHeight: 120)
+                                        .frame(minWidth: 185, minHeight: 60)
                                         .background(Color.white)
-                                        .cornerRadius(10)
+                                        .cornerRadius(20)
                                         .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 0)
 
                                         Spacer()
+                                        
+                                        if let firstLocation = recommendationsPlan12.last?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-Black", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                            
+                                              //  .padding(.leading, 10)
 
+                                        
+                                           
+                                        }
                                         HStack {
-                                            if let firstPlace = recommendationsPlan12.first?.place {
+                                            if let firstPlace = recommendationsPlan12.last?.place {
                                                 Text(firstPlace)
-                                                    .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                    .font(Font.custom("Charter-Black", size: 20))
+                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
                                                     .padding(.bottom, 5)
+                                                    .lineLimit(1)
                                             }
                                         }
                                     }
@@ -954,6 +974,7 @@ struct PlanningScreen: View {
                                 .cornerRadius(12)
                                 .shadow(color: Color.gray.opacity(0.4), radius: 4, x: 0, y: 2)
                                 .padding(.horizontal, 40)
+
                                 
                             }
                             .padding(.bottom, 5)
@@ -970,28 +991,25 @@ struct PlanningScreen: View {
                                         .frame(maxWidth: 175)
 
                                     RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white)
+                                        .fill(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [Color.white, Color(red: 0.043, green: 0.725, blue: 0.753)]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
                                         .shadow(color: Color.gray.opacity(0.3), radius: 10, x: 0, y: 5) // Improved shadow effect
 
                                     VStack {
                                         HStack {
-                                            if let firstLocation = recommendationsPlan22.last?.location {
-                                                Text(firstLocation)
-                                                    .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.leading, 10)
-
-                                                Spacer()
-
-                                                Text("Plan 2")
-                                                    .font(Font.custom("Cochin-Bold", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.trailing, 5)
-                                            }
+                                          
+                                            Text("Plan 2")
+                                                .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 30)
+                                            Spacer()
                                         }
 
                                         Spacer()
@@ -1014,18 +1032,29 @@ struct PlanningScreen: View {
                                                 startTimer2()
                                             }
                                         }
-                                        .frame(minWidth: 185, minHeight: 120)
+                                        .frame(minWidth: 185, minHeight: 60)
                                         .background(Color.white)
-                                        .cornerRadius(10)
+                                        .cornerRadius(20)
                                         .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 0)
 
                                         Spacer()
+                                        
+                                        if let firstLocation = recommendationsPlan22.last?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                              //  .padding(.leading, 10)
 
+                                        
+                                           
+                                        }
                                         HStack {
                                             if let firstPlace = recommendationsPlan22.last?.place {
                                                 Text(firstPlace)
                                                     .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
                                                     .padding(.bottom, 5)
                                             }
                                         }
@@ -1054,28 +1083,25 @@ struct PlanningScreen: View {
                                         .frame(maxWidth: 175)
 
                                     RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white)
+                                        .fill(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [Color.white, Color(red: 0.043, green: 0.725, blue: 0.753)]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
                                         .shadow(color: Color.gray.opacity(0.3), radius: 10, x: 0, y: 5) // Improved shadow effect
 
                                     VStack {
                                         HStack {
-                                            if let firstLocation = recommendationsPlan32.first?.location {
-                                                Text(firstLocation)
-                                                    .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.leading, 10)
-
-                                                Spacer()
-
-                                                Text("Plan 2")
-                                                    .font(Font.custom("Cochin-Bold", size: 20))
-                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
-                                                    .padding(.top, 5)
-                                                    .fontWeight(.bold)
-                                                    .padding(.trailing, 5)
-                                            }
+                                          
+                                            Text("Plan 3")
+                                                .font(Font.custom("Cochin-Bold", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                                .padding(.leading, 30)
+                                            Spacer()
                                         }
 
                                         Spacer()
@@ -1098,18 +1124,29 @@ struct PlanningScreen: View {
                                                 startTimer2()
                                             }
                                         }
-                                        .frame(minWidth: 185, minHeight: 120)
+                                        .frame(minWidth: 185, minHeight: 60)
                                         .background(Color.white)
-                                        .cornerRadius(10)
+                                        .cornerRadius(20)
                                         .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 0)
 
                                         Spacer()
+                                        
+                                        if let firstLocation = recommendationsPlan32.last?.location {
+                                            Text(firstLocation)
+                                                .font(Font.custom("Charter-BlackItalic", size: 20))
+                                                .foregroundColor(Color(UIColor(hex: 0x313F54)))
+                                                .padding(.top, 5)
+                                                .fontWeight(.bold)
+                                              //  .padding(.leading, 10)
 
+                                        
+                                           
+                                        }
                                         HStack {
-                                            if let firstPlace = recommendationsPlan32.first?.place {
+                                            if let firstPlace = recommendationsPlan32.last?.place {
                                                 Text(firstPlace)
                                                     .font(Font.custom("Charter-BlackItalic", size: 20))
-                                                    .foregroundColor(Color(red: 0.043, green: 0.725, blue: 0.753))
+                                                    .foregroundColor(Color(UIColor(hex: 0x313F54)))
                                                     .padding(.bottom, 5)
                                             }
                                         }
@@ -1616,6 +1653,7 @@ struct PlanningScreen: View {
                showSecoundNext = 1
                 showBudgetField = true
                 isBudgetFieldEnabled = true
+                pickerStatus = false
             }
 //            print(getSelectedDaysForCities()) //
               
@@ -1745,7 +1783,7 @@ struct PlanningScreen: View {
         selectPersons = true
             showSecoundNext = 0
             showBudgetField = false
-            
+        pickerStatus = true
             showCities = true
             initializeData()
             let cities = getCitiesForTripType()
@@ -1790,6 +1828,7 @@ struct PlanningScreen: View {
              counts = [] // Counts for each city
                 backButtonPositino = 0
                 isPickerEnabled = true
+                pickerStatus = true
             } else if backButtonPositino == 2 {
                 
                 backButtonPositino = 1

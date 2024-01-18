@@ -74,10 +74,13 @@ struct ToastModifier: ViewModifier {
 }
 
 
+
+
 struct SignUp: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showToast = false
     @State private var toastText = ""
+    @State private var passTextToast = ""
     @State private var isLoading = false
     @State private var isNavigate = false
     
@@ -92,7 +95,20 @@ struct SignUp: View {
     @State var confirmPassword = ""
     @State private var userID: String = ""
     
+    
+    private var foods = ["Cheese","Milk","Cauliflower","Cabbage","Carrots","Wine","Bacon","Olives","Yoghurt","Apples","Bananas","Oranges","Pasta","Rice","Soy Sauce",
+                            "Chicken","Chives","Potato","Sparkling Water","Coffee"]
+       @State private var searchText = ""
  //   @StateObject var viewModel = WriteViewModel()
+    
+    
+    var searchResults: [String] {
+           if searchText.isEmpty {
+               return foods
+           } else {
+               return foods.filter { $0.contains(searchText) }
+           }
+       }
     
     var body: some View {
         VStack(alignment: .center) {
@@ -103,8 +119,8 @@ struct SignUp: View {
                     .font(.system(size: 27))
                     .foregroundColor(Color(UIColor(hex: 0x313F54)))
                     .bold()
-                    .padding(.bottom,40)
-                    .padding(.top,15)
+                    .padding(.bottom,20)
+                   
                 VStack (alignment: .center){
                     ScrollView {
                         
@@ -175,6 +191,7 @@ struct SignUp: View {
                                 .padding(.horizontal, 25)
                                 .background(.clear)
                         }
+                        
                         ZStack{
                             
                             RoundedRectangle(cornerRadius: 10
@@ -185,27 +202,47 @@ struct SignUp: View {
                                 .backgroundStyle(Color.clear)
                                 .foregroundColor(.white)
                             
-                            TextField("language", text: $language)
+                            TextField("Language", text: $language)
                                 .textFieldStyle(PlainTextFieldStyle())
                                 .padding(.horizontal, 25)
                                 .background(.clear)
-                            
                         }
-                        ZStack{
+//                            NavigationView{
+//                                           
+//                                           List {
+//                                               ForEach(searchResults, id: \.self) { food in
+//                                                   Text(food)
+//                                               }
+//                                               
+//                                               }.searchable(text: $searchText)
+//                                   
+//                                       }
+//                            .frame(height: 150)
+//                            .ignoresSafeArea()
+                        VStack(alignment: .leading){
+                            ZStack{
+                                
+                                RoundedRectangle(cornerRadius: 10
+                                ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
+                                    .frame(height: 45)
+                                    .padding(.horizontal ,15 )
+                                    .padding(.vertical ,6)
+                                    .backgroundStyle(Color.clear)
+                                    .foregroundColor(.white)
+                                
+                                TextField("password", text: $password)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                    .padding(.horizontal, 25)
+                                    .background(.clear)
+                                
+                                
+                            }
                             
-                            RoundedRectangle(cornerRadius: 10
-                            ).stroke(Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255), lineWidth: 1)
-                                .frame(height: 45)
-                                .padding(.horizontal ,15 )
-                                .padding(.vertical ,6)
-                                .backgroundStyle(Color.clear)
-                                .foregroundColor(.white)
-                            
-                            TextField("password", text: $password)
-                                .textFieldStyle(PlainTextFieldStyle())
-                                .padding(.horizontal, 25)
-                                .background(.clear)
-                            
+//                            Text(passTextToast).foregroundColor(.red)
+//                                .onAppear(perform: {
+//                                    validateData()
+//                                })
+//                                .padding(.leading,14)
                         }
                         ZStack{
                             
@@ -268,7 +305,7 @@ struct SignUp: View {
                         }
                     }
                     .disabled(isLoading) // Disable button while loading
-                    .padding(.bottom, 60)
+                    .padding(.bottom, 0)
                     .padding(.horizontal, 15)
                     .navigationDestination(isPresented: $isNavigate) {
                         MainScreen(email: email, username: firstname, language:language, country:country, phone: phonenumber, userID: userID)
@@ -350,6 +387,42 @@ struct SignUp: View {
             return false
         }
 
+        
+        if password.count < 8 {
+               showToast = true
+               toastText = "Password must be at least 8 characters long"
+            passTextToast = "Password must be at least 8 characters long"
+               return false
+           }
+
+           // Check for uppercase and lowercase characters
+           if !password.contains(where: { $0.isUppercase }) || !password.contains(where: { $0.isLowercase }) {
+               showToast = true
+               toastText = "Password must contain both uppercase and lowercase characters"
+               passTextToast = "Password must contain both uppercase and lowercase characters"
+               return false
+           }
+
+           // Check for at least one numeric digit
+           if !password.contains(where: { $0.isNumber }) {
+               showToast = true
+               toastText = "Password must contain at least one numeric digit"
+               passTextToast = "Password must contain at least one numeric digit"
+
+               return false
+           }
+
+           // Check for special characters
+           let specialCharacterRegex = ".*[^A-Za-z0-9].*"
+           if !NSPredicate(format: "SELF MATCHES %@", specialCharacterRegex).evaluate(with: password) {
+               showToast = true
+               toastText = "Password must contain at least one special character"
+               passTextToast = "Password must contain at least one special character"
+
+               return false
+           }
+
+          
         return true
     }
 
@@ -361,7 +434,25 @@ struct SignUp: View {
     
 }
    
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
 
+struct SearchBar: View {
+    @Binding var text: String
+
+    var body: some View {
+        HStack {
+            TextField("Search", text: $text)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal, 10)
+        }
+    }
+}
 
 struct FormScreen_Previews: PreviewProvider {
     static var previews: some View {

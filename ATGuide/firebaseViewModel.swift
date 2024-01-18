@@ -42,6 +42,9 @@ class firebaseViewModel: ObservableObject{
     func deletObject(TripType: String, userID: String, planId: String) {
         ref.child("FavPlans").child(userID).child("Type:" + TripType + "Plan:" + planId).removeValue()
     }
+    
+    
+    
 }
 
 

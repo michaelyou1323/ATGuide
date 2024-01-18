@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseDatabaseInternal
 
 struct HotelDetails: Identifiable {
     let id = UUID()
@@ -57,18 +58,19 @@ struct HotelReservationCardWithPayment: View {
             
             VStack(alignment: .leading, spacing: 12) {
                 //  Image("\(hotelDetail.image)")
-                VStack{
+                HStack(alignment: .center){
+                    Spacer()
                     AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: hotelDetail.image) ?? ""))
                     {
                         phase in
                         switch phase {
                         case.empty:
-                            Image("a-hero-image")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 150)
-                                .clipped()
-                                .cornerRadius(12)
+                            ProgressView {
+                                Image("hotel-3d-icon-illustrations")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 90, height: 100)
+                            }
                         case.success(let image):
                             image
                                 .resizable()
@@ -90,7 +92,7 @@ struct HotelReservationCardWithPayment: View {
                         }
                         
                     }
-                    
+                    Spacer()
                 }
                 
                 .frame(height: 150)
@@ -182,6 +184,7 @@ struct HotelReservationCardWithPayment: View {
                     
                     TextField("Card Number", text: $cardNumber)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
                         .onChange(of: cardNumber) {
                             // Remove non-numeric characters and format the card number
                             let cleanNumber = cardNumber.filter { $0.isNumber }
@@ -191,6 +194,7 @@ struct HotelReservationCardWithPayment: View {
                     HStack {
                         TextField("Expiry Date", text: $expiryDate)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.decimalPad)
                             .onChange(of: expiryDate) {
                                 let filteredValue = expiryDate.filter { $0.isNumber }
                                 let formattedValue = formatExpiryDate(filteredValue)
@@ -206,6 +210,7 @@ struct HotelReservationCardWithPayment: View {
                         
                         TextField("CVV", text: $cvv)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.decimalPad)
                             .onChange(of: cvv) {
                                 let filteredValue = cvv.filter { $0.isNumber }
                                 cvv = String(filteredValue.prefix(3)) // Assuming CVV is 3 digits long
@@ -441,7 +446,7 @@ struct HotelReservationCardWithPayment: View {
        } 
     
     func fetchData() {
-        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/pay") else {
+        guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/pay") else {
             setError("Invalid URL")
             return
         }
@@ -617,9 +622,10 @@ struct CustomPopup: View {
 struct HotelReservation: View {
     @State private var showDetailsSheet = false
     @State private var isPaymentDone = false
+    
     let hotelsDetails: [HotelDetails]
     let numberOfUser: Int
-
+    
     let TripType: String
     let budget: Double
     var selectedDaysList: [[String: Any]]
@@ -650,13 +656,13 @@ struct HotelReservation: View {
                 
                 
                 
-         
+                
             }
-     
+            
             .frame(height:25)
-          
+            
             VStack{
-              
+                
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(hotelsDetails) { hotelDetail in
@@ -664,17 +670,17 @@ struct HotelReservation: View {
                             
                             HotelReservationCardWithPayment(hotelDetail: hotelDetail,
                                                             numberOfUser: 3,
-                                                                            TripType:TripType,
-                                                                            budget:budget,
-                                                                            selectedDaysList: selectedDaysList,
-                                                                            PlanNumber:PlanNumber,
-                                                                            HotelStars:HotelStars,
-                                                                            userID:userID,
-                                                                            planId:planId,
-                                                                            Image2:Image2,
-                                                                            selectNumberOfPersons:selectNumberOfPersons
+                                                            TripType:TripType,
+                                                            budget:budget,
+                                                            selectedDaysList: selectedDaysList,
+                                                            PlanNumber:PlanNumber,
+                                                            HotelStars:HotelStars,
+                                                            userID:userID,
+                                                            planId:planId,
+                                                            Image2:Image2,
+                                                            selectNumberOfPersons:selectNumberOfPersons
                             )
-                                .padding(.horizontal)
+                            .padding(.horizontal)
                             //                        .onLongPressGesture {
                             //                            showDetailsSheet.toggle()
                             //                                        }
@@ -687,14 +693,17 @@ struct HotelReservation: View {
                     .padding(.vertical)
                 }
                 .padding(.top,10)
-//                NavigationLink(destination: YourPlans().navigationBarBackButtonHidden(true), isActive: $allHotelsReseerved ) {
-//                    EmptyView()
-//                }
+                //                NavigationLink(destination: YourPlans().navigationBarBackButtonHidden(true), isActive: $allHotelsReseerved ) {
+                //                    EmptyView()
+                //                }
                 
                 Button(action: {
+                    saveDataToFirebase()
+                    UserDefaults.standard.set(true, forKey: "openReservations")
                     allHotelsReseerved = true
                     //let details = tripHotelsDetails()
                     //  hotelsDetails = details // Store hotel details in the state
+                    
                 }) {
                     Text("Confirm")
                         .frame(maxWidth: .infinity)
@@ -706,20 +715,76 @@ struct HotelReservation: View {
                     //  .cornerRadius(10)
                     
                 }
-                .navigationDestination(
-                     isPresented:$allHotelsReseerved) {
-                         YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1").navigationBarBackButtonHidden(true)
-                        
-                     }
-                .padding(.top,7)
+                .fullScreenCover(isPresented: $allHotelsReseerved) {
+                    if let userData = getUserDataFromUserDefaults() {
+                    
+                        MainScreen(email: userData["email"] as? String ?? " ",
+                                   username: userData["name"] as? String ?? " ",
+                                   language: userData["language"] as? String ?? " ",
+                                   country: userData["country"] as? String ?? " ", phone: userData["phonenumber"] as? String ?? " ", userID:  userData["id"] as? String ?? " ")
+                    } else {
+                        MainScreen(email: " ", username: " ", language: " ", country: " ", phone: " ", userID: " ")
+                    }
+                }
+//                .navigationDestination(
+//                    isPresented:$allHotelsReseerved) {
+//                        // YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1").navigationBarBackButtonHidden(true)
+//                        //                        MainScreen(email: " ", username: " ", language: " ", country: " ", phone: " ", userID: " ")
+//                    }
+                    .padding(.top,7)
             }
             .ignoresSafeArea()
         }
-       // .navigationBarBackButtonHidden(true)
-       
+        // .navigationBarBackButtonHidden(true)
+        
+    }
+    
+    func getUserDataFromUserDefaults() -> [String: Any]? {
+            return UserDefaults.standard.dictionary(forKey: "userData")
+        }
+    
+    private func saveDataToFirebase() {
+        let database = Database.database()
+        let plansRef = database.reference(withPath: "plans/\(userID)")
+        let jsonSelectedDaysList = try? JSONSerialization.data(withJSONObject: selectedDaysList)
+          let selectedDaysListString = String(data: jsonSelectedDaysList ?? Data(), encoding: .utf8) ?? ""
+        
+        let planData: [String: Any] = [
+            "hotelsDetails": hotelsDetails,
+            "numberOfUser": numberOfUser,
+            "TripType": TripType,
+            "budget": budget,
+            "selectedDaysList": selectedDaysListString,
+            "PlanNumber": PlanNumber,
+            "HotelStars": HotelStars,
+            "userID": userID,
+            "planId": planId,
+            "Image2": Image2,
+            "selectNumberOfPersons": selectNumberOfPersons
+        ]
+        
+        plansRef.childByAutoId().setValue(planData) { error, _ in
+            if let error = error {
+                print("Error writing to Firebase: \(error.localizedDescription)")
+            } else {
+                print("Data written successfully to Firebase")
+            }
+        }
     }
 }
 
+
+
+extension HotelDetails {
+    var dictionaryRepresentation: [String: Any] {
+        return [
+            "name": name,
+            "image": image,
+            "location": location,
+            "hotelCost": hotelCost
+        ]
+    }
+}
 
 
 #Preview {

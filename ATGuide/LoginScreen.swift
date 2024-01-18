@@ -143,16 +143,16 @@ struct LoginScreen: View {
 //                         Text("A")
 //                             .font(Font.custom("Baskerville-BoldItalic", size: 30))
 //                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
-//                
+//
 //                         Text("T")
 //                             .font(Font.custom("Baskerville-Bold", size: 30))
 //                             .foregroundColor(Color(UIColor(hex: 0x0bb9c0)))
-//                            
-//                    
+//
+//
 //                         Text("Guide")
 //                             .font(Font.custom("Baskerville-Bold", size: 30))
 //                             .foregroundColor(Color(UIColor(hex: 0x313F54)))
-//                            
+//
 //                     }
                      VStack {
                          ZStack {
@@ -195,7 +195,7 @@ struct LoginScreen: View {
                   
                     
 
-                    Button(action: {
+                    Button(action: {2
                                       Auth.auth().signIn(withEmail: username, password: password) { result, error in
                                           if let error = error {
                                               showAlert(message: error.localizedDescription)

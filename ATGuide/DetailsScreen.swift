@@ -29,7 +29,7 @@ struct DetailsScreen: View {
 //    var tripPlan: TripPlan
 //      @State private var isFavorite = false
     @State private var hasError = false
-    @State private var signUp = false
+    @State private var reservation = false
     @State private var isFavorite = false
     
     @State private var recommendationsPlan1: [Recommendation] = []
@@ -133,7 +133,7 @@ struct DetailsScreen: View {
                         }
                     } else   {
                         ForEach(selectedRecommendationPlan(), id: \.self) { recommendation in
-                            RecommendationView(recommendation: recommendation)
+                            RecommendationView(tripType: TripType, recommendation: recommendation)
                                 .id(UUID()) // Force view update
                             //                                      .onLongPressGesture {
                             //                                          showDetailsSheet.toggle()
@@ -156,10 +156,35 @@ struct DetailsScreen: View {
 //            }
             
             Button(action: {
-                signUp = true
+                reservation = true
                 let details = tripHotelsDetails()
                 hotelsDetails = details // Store hotel details in the state
+//                print(hotelsDetails)
+                
                 print(hotelsDetails)
+                print(selectNumberOfPersons)
+                print(TripType)
+                print(budget)
+                print(selectedDaysList)
+                print(PlanNumber)
+                print(HotelStars)
+                print(userID)
+                print(Image2)
+                print(selectNumberOfPersons)
+                print(planId)
+                
+                
+//            hotelsDetails: hotelsDetails,
+//                             numberOfUser: selectNumberOfPersons,
+//                             TripType:TripType,
+//                             budget:budget,
+//                             selectedDaysList: selectedDaysList,
+//                             PlanNumber:PlanNumber,
+//                             HotelStars:HotelStars,
+//                             userID:userID,
+//                             planId:planId,
+//                             Image2:Image2,
+//                             selectNumberOfPersons:selectNumberOfPersons
             }) {
                 Text("Confirm")
                     .frame(maxWidth: .infinity)
@@ -173,8 +198,8 @@ struct DetailsScreen: View {
             }
             .padding(.top,7)
             .navigationDestination(
-                 isPresented:$signUp) {
-                     HotelReservation(hotelsDetails: hotelsDetails,
+                 isPresented:$reservation) {
+                     HotelReservation( hotelsDetails: hotelsDetails,
                                       numberOfUser: selectNumberOfPersons,
                                       TripType:TripType,
                                       budget:budget,
@@ -197,7 +222,9 @@ struct DetailsScreen: View {
         .onAppear {
             fetchData()
         }
-    
+        .onDisappear(perform: {
+            
+        })
         
     }
   
@@ -263,7 +290,7 @@ struct DetailsScreen: View {
         }
     }
     func fetchData() {
-        guard let url = URL(string: "https://3b27-156-210-173-85.ngrok-free.app/recommendations") else {
+        guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/recommendations") else {
             return
         }
      
@@ -419,6 +446,7 @@ struct Recommendation: Codable, Hashable {
 }
 
 struct RecommendationView: View {
+    let tripType: String
     let recommendation: Recommendation
     @State private var selectedIndex = 0
     @State private var showDetailsSheet = false
@@ -578,14 +606,16 @@ struct RecommendationView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 5)
         
-        .onTapGesture {  }
+        .onTapGesture {showDetailsSheet.toggle();isSheetPresented .toggle() }
+        .sheet(isPresented: $isSheetPresented) {
+            // Your details sheet view
+            FloatingDetailsView(hotelName: recommendation.hotel, restaurantName: recommendation.Restaurant, placeName: recommendation.place, tripType:tripType )
+                .presentationDetents([.medium, .large])
+           
+        }
         .onLongPressGesture{showDetailsSheet.toggle();isSheetPresented .toggle()}
                    
-                   .sheet(isPresented: $isSheetPresented) {
-                       // Your details sheet view
-                       FloatingDetailsView(details: recommendation.place)
-                           .presentationDetents([.medium, .large])
-                   }
+                  
                   
        }
     
@@ -840,7 +870,7 @@ struct RedactedPlaceholderView: View {
                    
                    .sheet(isPresented: $isSheetPresented) {
                        // Your details sheet view
-                       FloatingDetailsView(details:"")
+                       FloatingDetailsView(hotelName: "", restaurantName: "", placeName: "" ,tripType: "" )
                            .presentationDetents([.medium, .large])
                    }
     }
@@ -848,67 +878,108 @@ struct RedactedPlaceholderView: View {
 
 
 struct FloatingDetailsView: View {
-    let details: String
+    let hotelName: String
+    let restaurantName: String
+    let placeName: String
+    let tripType: String
+    
+    @State private var hotelData: HotelData?
+    @State private var placeData: PlaceData?
+    @State private var restaurantData: RestaurantData?
     var body: some View {
         
         ScrollView{
             
             VStack(alignment: .leading, spacing: 1) {
-                HStack{
-                    Image("a-hero-image")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 140)
-                        .clipped()
-                        .cornerRadius(10)
-                }
-                HStack{
+                
+                if let hotelData = hotelData {
                     HStack{
-                        VStack(alignment:.leading){
-                            Text("Hotel Name here")
-                                .font(Font.custom("Charter-Black", size: 22))
-                                .fontWeight(.bold)
-                                .padding(.bottom,5)
-                                .bold()
-                                .lineLimit(1)
+                        AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: hotelData.image) ?? ""))
+                        {
+                            phase in
+                            switch phase {
+                            case.empty:
+                                ProgressView()
+                            case.success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(height: 150)
+                                    .cornerRadius(10)
+                            case.failure:
+                                Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 250, height: 150)
+                                    .cornerRadius(10)
+                                //                                 @unknown default:
+                                //                                     EmptyView()
+                            @unknown default:
+                                fatalError()
+                            }
                             
-                            Text("Ticket Price: $\(String(format: "%.2f", "ticketPrice"))")
-                                .foregroundColor(.green)
-                                .padding(.bottom,5)
-                                .font(Font.custom("Charter-Black", size: 14))
-                            Text("Location: \("Cairo")")
-                                .foregroundColor(.gray)
-                                .font(Font.custom("", size: 14))
-                            HStack{
-                                Text("Rate: \("5")")
-                                    .foregroundColor(.black).opacity(0.8)
+                        }
+                        
+                        .frame( height: 150)
+                        .cornerRadius(10)
+                    }
+                    HStack{
+                        HStack{
+                            VStack(alignment:.leading){
+                                
+                                
+                                
+                                //                    HotelDetailsView(data: hotelData)
+                                Text("\(hotelData.name)")
+                                
+                                    .font(Font.custom("Charter-Black", size: 22))
+                                    .fontWeight(.bold)
+                                    .padding(.bottom,5)
+                                    .bold()
+                                    .lineLimit(1)
+                                
+                                
+                                
+                                Text("Price Range: $ \(hotelData.price_range)")
+                                    .foregroundColor(.green)
+                                    .padding(.bottom,5)
+                                    .font(Font.custom("Charter-Black", size: 14))
+                                Text("Location: \(hotelData.location)")
+                                    .foregroundColor(.gray)
                                     .font(Font.custom("", size: 14))
                                 
-                                Image(systemName: "star.fill")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 20, height: 20)
-                                                .foregroundColor(.yellow)
+                                HStack{
+                                    Text("Rate: \(hotelData.rate)")
+                                        .foregroundColor(.black).opacity(0.8)
+                                        .font(Font.custom("", size: 14))
+                                    
+                                    Image(systemName: "star.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(.yellow)
+                                }
                             }
                         }
                         Spacer()
                         VStack{
-                         
+                            
                             Image("hotel-3d-icon-illustrations")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 90, height: 100)
-                              //  .opacity(0.7)
+                            //  .opacity(0.7)
                         }
                         
                     }
-                  
+                    
+                    
+                    Text("\(hotelData.description)")
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 5)
+                        .font(Font.custom("", size: 12))
                 }
-                Text("Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod")
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 5)
-                    .font(Font.custom("", size: 12))
                     }
             .padding()
                     .background(Color.white)
@@ -918,62 +989,78 @@ struct FloatingDetailsView: View {
                     .padding()
             
             
+            
+            
             VStack(alignment: .leading, spacing: 1) {
+                if let restaurantData = restaurantData{
                 HStack{
-                    Image("restaurant")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 140)
-                        .clipped()
-                        .cornerRadius(10)
+                    AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: restaurantData.image_source) ?? ""))
+                    {
+                        phase in
+                        switch phase {
+                        case.empty:
+                            ProgressView()
+                        case.success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: .infinity, height: 150)
+                                .cornerRadius(10)
+                        case.failure:
+                            Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 250, height: 150)
+                                .cornerRadius(10)
+                            //                                 @unknown default:
+                            //                                     EmptyView()
+                        @unknown default:
+                            fatalError()
+                        }
+                        
+                    }
+                    
+                    .frame(width: .infinity, height: 150)
+                    .cornerRadius(10)
                 }
                 HStack{
                     HStack{
                         VStack(alignment:.leading){
-                            Text("Restaurant Name here")
+                            Text("\(restaurantData.name)")
                                 .font(Font.custom("Charter-Black", size: 22))
                                 .fontWeight(.bold)
                                 .padding(.bottom,5)
                                 .bold()
                                 .lineLimit(1)
                             
-                            Text("Ticket Price: $\(String(format: "%.2f", "ticketPrice"))")
+                            Text("Ticket Price: $\(restaurantData.price_range)")
                                 .foregroundColor(.green)
                                 .padding(.bottom,5)
                                 .font(Font.custom("Charter-Black", size: 14))
-                            Text("Location: \("Cairo")")
+                            Text("Location: \(restaurantData.location)")
                                 .foregroundColor(.gray)
                                 .font(Font.custom("", size: 14))
-//                            HStack{
-//                                Text("Rate: \("5")")
-//                                    .foregroundColor(.black).opacity(0.8)
-//                                    .font(Font.custom("", size: 14))
-//
-//                                Image(systemName: "star.fill")
-//                                                .resizable()
-//                                                .aspectRatio(contentMode: .fit)
-//                                                .frame(width: 20, height: 20)
-//                                                .foregroundColor(.yellow)
-//                            }
+                         
                         }
                         Spacer()
                         VStack{
-                         
+                            
                             Image("vecteezy_3d-rendering-of-a-restaurant-building-illustration_23523075")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 90, height: 100)
-                              //  .opacity(0.7)
+                            //  .opacity(0.7)
                         }
                         
                     }
-                  
+                    
                 }
-                Text("Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod Experience luxury at the Nile Hilton Hotel in Cairo with stunning views of the Nile River and mod")
+                    Text("\(restaurantData.description)")
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 5)
                     .font(Font.custom("", size: 12))
+            }
                     }
             .padding()
                     .background(Color.white)
@@ -985,31 +1072,86 @@ struct FloatingDetailsView: View {
      
             
             
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 1) {
                 
-                        Image("museum2")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 200)
-                            .clipped()
-                            .cornerRadius(10)
-                        Text("name")
-                            .font(.title)
-                            .fontWeight(.bold)
-
-                        Text("Ticket Price: $\(String(format: "%.2f", "ticketPrice"))")
-                            .foregroundColor(.green)
-
-                        Text("Location: \("location")")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-
-                        Text("description")
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.top, 5)
-
+                if let placeData = placeData {
+                    HStack{
+                        AsyncImage(url: URL(string: convertGoogleDriveLinkToDirectImageURL(googleDriveLink: placeData.image_source) ?? ""))
+                        {
+                            phase in
+                            switch phase {
+                            case.empty:
+                                ProgressView()
+                            case.success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(height: 150)
+                                    .cornerRadius(10)
+                            case.failure:
+                                Image("Screenshot 2024-01-02 at 4.16.52 PM (1)")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame( height: 150)
+                                    .cornerRadius(10)
+                                //                                 @unknown default:
+                                //                                     EmptyView()
+                            @unknown default:
+                                fatalError()
+                            }
+                            
+                        }
+                        
+                        .frame( height: 150)
+                        .cornerRadius(10)
+                    }
+                    HStack{
+                        HStack{
+                            VStack(alignment:.leading){
+                                
+                                
+                                
+                                //                    HotelDetailsView(data: hotelData)
+                                Text("\(placeData.name)")
+                                
+                                    .font(Font.custom("Charter-Black", size: 22))
+                                    .fontWeight(.bold)
+                                    .padding(.bottom,5)
+                                    .bold()
+                                    .lineLimit(1)
+                                
+                                
+                                
+                                Text("Price Range: $ \(placeData.ticket_price)")
+                                    .foregroundColor(.green)
+                                    .padding(.bottom,5)
+                                    .font(Font.custom("Charter-Black", size: 14))
+                                Text("Location: \(placeData.location)")
+                                    .foregroundColor(.gray)
+                                    .font(Font.custom("", size: 14))
+                                
+                              
+                            }
+                        }
                         Spacer()
+                        VStack{
+                            
+                            Image("hotel-3d-icon-illustrations")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 90, height: 100)
+                            //  .opacity(0.7)
+                        }
+                        
+                    }
+                    
+                    
+                    Text("\(placeData.description)")
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 5)
+                        .font(Font.custom("", size: 12))
+                }
                     }
             .padding()
                     .background(Color.white)
@@ -1018,30 +1160,112 @@ struct FloatingDetailsView: View {
                     .shadow(radius: 5)
                     .padding()
         }
+        .onAppear(perform: {
+            fetchDataDetails()
+        })
     }
+    
+    
+    
+    func fetchDataDetails() {
+           guard let url = URL(string: "https://ecff-156-210-173-85.ngrok-free.app/get_details") else {
+               return
+           }
+           
+           let body: [String: Any] = [
+               "place_name": placeName,
+               "hotel_name": hotelName,
+               "restaurant_name": restaurantName,
+               "place_type": tripType
+           ]
+           
+           do {
+               let jsonData = try JSONSerialization.data(withJSONObject: body)
+               
+               var request = URLRequest(url: url)
+               request.httpMethod = "POST"
+               request.httpBody = jsonData
+               request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+               
+               URLSession.shared.dataTask(with: request) { data, response, error in
+                   guard let data = data, error == nil else {
+                       return
+                   }
+                   
+                   do {
+                       let decodedData = try JSONDecoder().decode(APIResponse.self, from: data)
+                       
+                       DispatchQueue.main.async {
+                           self.hotelData = decodedData.hotel
+                           self.placeData = decodedData.place
+                           self.restaurantData = decodedData.restaurant
+                       }
+                   } catch {
+                       print(error.localizedDescription)
+                   }
+               }.resume()
+           } catch {
+               print(error.localizedDescription)
+           }
+       }
 }
 
-//struct DetailsScreen_Previews: PreviewProvider {
-//    static var previews: some View {
-//        DetailsScreen(TripType: "conference_places", budget: 89898, selectedDaysList:[
-//            [
-//            
-//            "days":2,
-//            "city":"Marsa Alam"
-//            ],
-//            [
-//                "days":2,
-//            "city":"Alexandria"
-//            
-//            ],
-//             [
-//            "city":"Luxor",
-//            "days":2
-//            ]
-//
-//        ] , PlanNumber: 0, HotelStars: 4, userID: "87987",planId: "mm", Image2: "", selectNumberOfPersons: 2 ,favStatus: Binding.constant(false) )
-//    }
-//}
+
+
+struct APIResponse: Decodable {
+    let hotel: HotelData?
+    let place: PlaceData?
+    let restaurant: RestaurantData?
+}
+
+struct HotelData: Decodable {
+    let description: String
+    let image: String
+    let location: String
+    let name: String
+    let price_range: Int
+    let rate: Int
+}
+
+struct PlaceData: Decodable {
+    let description: String
+    let image_source: String
+    let location: String
+    let name: String
+    let other: String
+    let ticket_price: Int
+}
+
+struct RestaurantData: Decodable {
+    let cuisine: String
+    let description: String
+    let image_source: String
+    let location: String
+    let name: String
+    let price_range: Int
+}
+
+struct DetailsScreen_Previews: PreviewProvider {
+    static var previews: some View {
+        DetailsScreen(TripType: "conference_places", budget: 89898, selectedDaysList:[
+            [
+            
+            "days":2,
+            "city":"Marsa Alam"
+            ],
+            [
+                "days":2,
+            "city":"Alexandria"
+            
+            ],
+             [
+            "city":"Luxor",
+            "days":2
+            ]
+
+        ] , PlanNumber: 0, HotelStars: 4, userID: "87987",planId: "mm", Image2: "", selectNumberOfPersons: 2 ,favStatus: Binding.constant(false) )
+    }
+}
  
  
  

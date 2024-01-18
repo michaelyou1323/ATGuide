@@ -54,6 +54,7 @@
 		9444A2872B25C91A00E12827 /* FavoriteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444A2862B25C91900E12827 /* FavoriteScreen.swift */; };
 		945E81C42B53E997009BC4EB /* Copy of Animation - 1705226473630.gif in Resources */ = {isa = PBXBuildFile; fileRef = 945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */; };
 		9464CEFF2B1EA7A20020299A /* DetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */; };
+		9466CF5F2B5890EF00217561 /* reservationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9466CF5E2B5890EF00217561 /* reservationModel.swift */; };
 		9468E8792B3DB71F00DCD8A9 /* FavPlansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */; };
 		9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */; };
 		947788092B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */; };
@@ -139,6 +140,7 @@
 		9444A2862B25C91900E12827 /* FavoriteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreen.swift; sourceTree = "<group>"; };
 		945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Copy of Animation - 1705226473630.gif"; sourceTree = "<group>"; };
 		9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsScreen.swift; sourceTree = "<group>"; };
+		9466CF5E2B5890EF00217561 /* reservationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reservationModel.swift; sourceTree = "<group>"; };
 		9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavPlansModel.swift; sourceTree = "<group>"; };
 		9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanModel.swift; sourceTree = "<group>"; };
 		947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreenDetails.swift; sourceTree = "<group>"; };
@@ -254,6 +256,16 @@
 		9400D5A82B56D12800BDDEC4 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */,
+				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
+				94A01B612B4985450052225D /* IMG_20240104_181119 (2).png */,
+				9413770B2B4439AC00CAC9E9 /* Modern and Minimal Company Profile Presentation (2).png */,
+				94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */,
+				948591B72B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif */,
+				9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */,
+				941377092B442EDA00CAC9E9 /* Modern and Minimal Company Profile Presentation.png */,
+				94A01B5B2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif */,
+				94A01B652B4AB6550052225D /* IMG_20240107_123513.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -261,6 +273,7 @@
 		9408E84E2AD134F7006FF31A = {
 			isa = PBXGroup;
 			children = (
+				9466CF5E2B5890EF00217561 /* reservationModel.swift */,
 				94984A742B5396F000768B02 /* YourPlans.swift */,
 				94A01B5D2B492EAE0052225D /* HotelReservation.swift */,
 				9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */,
@@ -299,16 +312,6 @@
 				9489621A2B50555A00C91F1E /* Assets.xcassets */,
 				9497CF522B1CE7440056B59E /* 1024 1.png */,
 				9400D5A82B56D12800BDDEC4 /* images */,
-				9413770B2B4439AC00CAC9E9 /* Modern and Minimal Company Profile Presentation (2).png */,
-				94A01B652B4AB6550052225D /* IMG_20240107_123513.png */,
-				945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */,
-				940671BA2ADC37F600C92032 /* 20231015_161832_0000.jpg */,
-				94A01B612B4985450052225D /* IMG_20240104_181119 (2).png */,
-				94D1145C2B2695080094F1A3 /* fotor-ai-2023121125256.jpg */,
-				94A01B5B2B491D5E0052225D /* image-processing20220708-21892-unscreen.gif */,
-				941377092B442EDA00CAC9E9 /* Modern and Minimal Company Profile Presentation.png */,
-				948591B72B3244FD007BC60A /* image_processing20220708-21892-cye7ve.gif */,
-				9444A2842B252A7200E12827 /* phone-scanning-qr-code-via-mobile-app-icon_212005-593-transformed.jpeg */,
 				9408E8602AD134F9006FF31A /* Preview Content */,
 				AC18DB682ADC5311005BED40 /* SplashScreenView.swift */,
 				9444A2862B25C91900E12827 /* FavoriteScreen.swift */,
@@ -552,6 +555,7 @@
 				9408E8692AD14295006FF31A /* SignUp.swift in Sources */,
 				94BF61242B397AEE00591239 /* firebaseViewModel.swift in Sources */,
 				9468E8792B3DB71F00DCD8A9 /* FavPlansModel.swift in Sources */,
+				9466CF5F2B5890EF00217561 /* reservationModel.swift in Sources */,
 				9408E85B2AD134F7006FF31A /* ATGuideApp.swift in Sources */,
 				94BF612A2B39E4CB00591239 /* FavObjectDemo.swift in Sources */,
 				9444A2872B25C91A00E12827 /* FavoriteScreen.swift in Sources */,
