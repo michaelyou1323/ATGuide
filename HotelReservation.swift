@@ -699,7 +699,6 @@ struct HotelReservation: View {
                 
                 Button(action: {
                     saveDataToFirebase()
-                    UserDefaults.standard.set(true, forKey: "openReservations")
                     allHotelsReseerved = true
                     //let details = tripHotelsDetails()
                     //  hotelsDetails = details // Store hotel details in the state
@@ -718,12 +717,12 @@ struct HotelReservation: View {
                 .fullScreenCover(isPresented: $allHotelsReseerved) {
                     if let userData = getUserDataFromUserDefaults() {
                     
-                        MainScreen(email: userData["email"] as? String ?? " ",
-                                   username: userData["name"] as? String ?? " ",
-                                   language: userData["language"] as? String ?? " ",
-                                   country: userData["country"] as? String ?? " ", phone: userData["phonenumber"] as? String ?? " ", userID:  userData["id"] as? String ?? " ")
+                        MainScreen(email: userData["email"] as? String ?? "",
+                                   username: userData["name"] as? String ?? "",
+                                   language: userData["language"] as? String ?? "",
+                                   country: userData["country"] as? String ?? "", phone: userData["phonenumber"] as? String ?? "", userID:  userData["id"] as? String ?? "")
                     } else {
-                        MainScreen(email: " ", username: " ", language: " ", country: " ", phone: " ", userID: " ")
+                        MainScreen(email: "", username: "", language: "", country: "", phone: "", userID: "")
                     }
                 }
 //                .navigationDestination(
@@ -731,7 +730,7 @@ struct HotelReservation: View {
 //                        // YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1").navigationBarBackButtonHidden(true)
 //                        //                        MainScreen(email: " ", username: " ", language: " ", country: " ", phone: " ", userID: " ")
 //                    }
-                    .padding(.top,7)
+//                    .padding(.top,7)
             }
             .ignoresSafeArea()
         }
@@ -746,15 +745,13 @@ struct HotelReservation: View {
     private func saveDataToFirebase() {
         let database = Database.database()
         let plansRef = database.reference(withPath: "plans/\(userID)")
-        let jsonSelectedDaysList = try? JSONSerialization.data(withJSONObject: selectedDaysList)
-          let selectedDaysListString = String(data: jsonSelectedDaysList ?? Data(), encoding: .utf8) ?? ""
         
         let planData: [String: Any] = [
-            "hotelsDetails": hotelsDetails,
+            "hotelsDetails": hotelsDetails.map { $0.dictionaryRepresentation },
             "numberOfUser": numberOfUser,
             "TripType": TripType,
             "budget": budget,
-            "selectedDaysList": selectedDaysListString,
+            "selectedDaysList": selectedDaysList,
             "PlanNumber": PlanNumber,
             "HotelStars": HotelStars,
             "userID": userID,

@@ -275,22 +275,34 @@ struct Profile: View {
                 HStack(alignment: .center){
                     Spacer()
                            
-                    
-                    Button("Your Plans"){
-                        navigateToYourPlans = true
+                    ZStack{
+                        let shape = RoundedRectangle(cornerRadius: 9)
+                        shape.fill().foregroundColor(.clear)
+                        
+                        shape.stroke(Color(red: 0, green: 0.243, blue: 0.502), lineWidth: 2)
+                        Text("Try your name in hieroglyphics!")
+                        
+                            .font(Font.custom("", size: 22))
+                            .padding(.bottom,2)
+                        
+                        //  SnellRoundhand-Bold
+                        //
                     }
-                    .padding()
-                    .background(Color(red: 0.722, green: 0.275, blue: 0.114))
-                    .cornerRadius(8)
-                    .foregroundStyle(.white)
-                    .font(.headline)
+                    .frame(height:40)
+                    .onTapGesture(perform: {
+                        navigateToYourPlans = true
+                    })
+            
+                
+                    
+                    
 
                   Spacer()
                             }
                 .navigationDestination(
                      isPresented:$navigateToYourPlans) {
-                         YourPlans(userID: "t17QMgg7C0QoRNr401O9Z93zTMl1")
-                        
+                       //  ReservationRowView(reservation: "t17QMgg7C0QoRNr401O9Z93zTMl1")
+                         ReservationListView(userId: "t17QMgg7C0QoRNr401O9Z93zTMl1")
                      }
                
    

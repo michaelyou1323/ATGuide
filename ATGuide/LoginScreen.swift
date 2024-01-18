@@ -195,7 +195,7 @@ struct LoginScreen: View {
                   
                     
 
-                    Button(action: {2
+                    Button(action: {
                                       Auth.auth().signIn(withEmail: username, password: password) { result, error in
                                           if let error = error {
                                               showAlert(message: error.localizedDescription)

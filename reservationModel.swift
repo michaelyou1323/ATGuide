@@ -29,8 +29,12 @@ class ReservationModel: ObservableObject {
     }
     
     func fetchUserPlans() {
+        guard !userId.isEmpty && userId.rangeOfCharacter(from: CharacterSet(charactersIn: ".#$[]")) == nil else {
+            // Handle invalid userId
+            return
+        }
+
         let ref = Database.database().reference().child("plans").child(userId)
-        
         ref.observe(.value) { snapshot in
             var fetchedPlans: [Reservation] = []
             for child in snapshot.children {
@@ -39,16 +43,16 @@ class ReservationModel: ObservableObject {
                     
                     // Parse the plan data from the snapshot
                     let id = snapshot.key
-                    let hotelsDetails = planDict["hotelsDetails"] as? String ?? ""
+                    let hotelsDetails = planDict["hotelsDetails"] as? String ?? " "
                     let numberOfUser = planDict["numberOfUser"] as? Int ?? 0
-                    let tripType = planDict["TripType"] as? String ?? ""
+                    let tripType = planDict["TripType"] as? String ?? " "
                     let budget = planDict["budget"] as? Double ?? 0.0
                     let selectedDaysList = planDict["selectedDaysList"] as? [[String: Any]] ?? []
                     let planNumber = planDict["PlanNumber"] as? Int ?? 0
                     let hotelStars = planDict["HotelStars"] as? Int ?? 0
-                    let userID = planDict["userID"] as? String ?? ""
-                    let planId = planDict["planId"] as? String ?? ""
-                    let image2 = planDict["Image2"] as? String ?? ""
+                    let userID = planDict["userID"] as? String ?? " "
+                    let planId = planDict["planId"] as? String ?? " "
+                    let image2 = planDict["Image2"] as? String ?? " "
                     let selectNumberOfPersons = planDict["selectNumberOfPersons"] as? Int ?? 0
 
                     // Create a Plan object and add it to the fetchedPlans array

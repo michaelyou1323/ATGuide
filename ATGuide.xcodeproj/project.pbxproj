@@ -55,6 +55,7 @@
 		945E81C42B53E997009BC4EB /* Copy of Animation - 1705226473630.gif in Resources */ = {isa = PBXBuildFile; fileRef = 945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */; };
 		9464CEFF2B1EA7A20020299A /* DetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */; };
 		9466CF5F2B5890EF00217561 /* reservationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9466CF5E2B5890EF00217561 /* reservationModel.swift */; };
+		9466CF612B59062100217561 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9466CF602B59062100217561 /* SwiftUIView.swift */; };
 		9468E8792B3DB71F00DCD8A9 /* FavPlansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */; };
 		9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */; };
 		947788092B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */; };
@@ -141,6 +142,7 @@
 		945E81C32B53E997009BC4EB /* Copy of Animation - 1705226473630.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Copy of Animation - 1705226473630.gif"; sourceTree = "<group>"; };
 		9464CEFE2B1EA77D0020299A /* DetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsScreen.swift; sourceTree = "<group>"; };
 		9466CF5E2B5890EF00217561 /* reservationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reservationModel.swift; sourceTree = "<group>"; };
+		9466CF602B59062100217561 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavPlansModel.swift; sourceTree = "<group>"; };
 		9468E87A2B3DC5F600DCD8A9 /* PlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanModel.swift; sourceTree = "<group>"; };
 		947788082B25CF0E00C6AEA1 /* FavoriteScreenDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreenDetails.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				94BF61232B397AEE00591239 /* firebaseViewModel.swift */,
 				94BF61252B397BD800591239 /* ObjectDemo.swift */,
 				9468E8782B3DB71F00DCD8A9 /* FavPlansModel.swift */,
+				9466CF602B59062100217561 /* SwiftUIView.swift */,
 			);
 			path = ATGuide;
 			sourceTree = "<group>";
@@ -546,6 +549,7 @@
 				94984A752B5396F000768B02 /* YourPlans.swift in Sources */,
 				9468E87B2B3DC5F600DCD8A9 /* PlanModel.swift in Sources */,
 				9404A8832AD6D3F70039434D /* ThirdScreen.swift in Sources */,
+				9466CF612B59062100217561 /* SwiftUIView.swift in Sources */,
 				9404A8812AD6D3DF0039434D /* QRCodeScanner.swift in Sources */,
 				9408E85D2AD134F7006FF31A /* LoginScreen.swift in Sources */,
 				94D5332C2AE44BEE0087D117 /* FourthScreen.swift in Sources */,
